@@ -57,12 +57,6 @@ create_verb() / (ACTION("ROOT", "FLAT", V, D, X, "__") & GND("FLAT", X, K) & ID(
 
 create_verb() >> [show_line("\nverb creation done.")]
 
-# Named Entity Recognition production
-create_ner() / (NER("GPE", Y) & PREP("FLAT", D, K, Z) & GND("FLAT", Z, Y) & ID(I)) >> [show_line("\nCreating GPE NER: ", Y), -NER("GPE", Y), -PREP("FLAT", D, K, Z), -GND("FLAT", Z, Y), createPlace(I, Y), create_ner()]
-create_ner() / (NER("DATE", Y) & PREP("FLAT", D, K, Z) & GND("FLAT", Z, Y) & ID(I)) >> [show_line("\nCreating DATE NER: ", Y), -NER("DATE", Y), -PREP("FLAT", D, K, Z), -GND("FLAT", Z, Y), createDate(I, Y), create_ner()]
-create_ner() / (NER(X, Y) & ID(I)) >> [-NER(X, Y), create_ner()]
-create_ner() / ID(I) >> [show_line("\nNER creation done.")]
-
 
 #  COPULAR VERBS IMPLICATIONS
 
