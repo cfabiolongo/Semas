@@ -5,14 +5,9 @@ from actions import *
 
 # ONTOLOGY BUILDER
 
-process_onto() / ID(I) >> [aggr_ent(), valorize(), create_adj(), create_adv(), create_gnd_prep(), create_ner(), create_prep(), create_verb(), create_head(), create_body(), finalize_onto(), saveOnto(), -ID(I)]
+process_onto() / ID(I) >> [create_adj(), create_adv(), create_gnd_prep(), create_ner(), create_prep(), create_verb(), create_head(), create_body(), finalize_onto(), saveOnto(), -ID(I)]
 
-# Grounds aggregation
-aggr_ent() / (GND(X, Y, Z) & GND(X, Y, K) & neq(Z, K)) >> [show_line("\naggregating entity: ", Y), -GND(X, Y, Z), -GND(X, Y, K), aggrEntity(X, Y, Z, K), aggr_ent()]
-aggr_ent() >> [show_line("\nentities aggregation done.")]
-
-valorize() / (GND("FLAT", X, Y) & ADJ("FLAT", X, "Equal") & PREP("FLAT", X, "To", S) & VALUE("FLAT", S, V) & ID(I)) >> [show_line("\ngiving value: ", V), -ADJ("FLAT", X, "Equal"), -PREP("FLAT", X, "To", S), -VALUE("FLAT", S, V), createValue(I, Y, V)]
-valorize() >> [show_line("\nvalues attribution completed.")]
+init() >> [create_adj(), create_adv(), create_gnd_prep(), create_ner(), create_prep(), create_verb(), create_head(), create_body(), finalize_onto(), saveOnto(), -ID(I)]
 
 # Adjective production
 create_adj() / (GND("FLAT", X, K) & ADJ("FLAT", X, J) & ID(I)) >> [show_line("\ncreating adjective: ", J), -ADJ("FLAT", X, J), createAdj(I, K, J), create_adj()]

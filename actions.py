@@ -13,11 +13,32 @@ dav = itertools.count(1)
 LOG_ACTIVE = config.getboolean('AGENT', 'LOG_ACTIVE')
 FILE_NAME = config.get('AGENT', 'FILE_NAME')
 
+# Ontology initialization
+FILE_NAME = config.get('INIT', 'FILE_NAME')
+
+WORLDS = config.get('INIT', 'WORLDS').split(",")
+WORLDS_NAMES = config.get('INIT', 'WORLDS_NAMES').split(",")
+
+WORLDS_NAMES = World1_name
+AGENTS = Agent1, Agent2, Agent3
+# Intentions
+BELIEFS = Belief1, Belief2, Belief3
+BELIEFS_ID = BeliefID1, BeliefID2, BeliefID3
+# Desire
+DESIRES = Desire1, Desire2, Desire3
+DESIRES_ID = DesireID1, DesireID2, DesireID3
+# Intentions
+INTENTIONS = Intention1, Intention2, Intention3
+INTENTIONS_ID = IntID1, IntID2, IntID3
+# Plans
+PLANS = PLAN1, PLAN2, PLAN3
+PLANS_ID = PLANId1, PLANId2, PLANId3
+
 owl_obj_dict = {}
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
-    print("\nLoading existing "+FILE_NAME+" file...")
+    print("\nLoading worlds "+FILE_NAME+"...")
 except IOError:
     my_onto = get_ontology("http://test.org/"+FILE_NAME)
     print("\nCreating new "+FILE_NAME+" file...")
@@ -27,57 +48,68 @@ except IOError:
 
 
 with my_onto:
-    class Id(Thing):
+    class Belief(Thing):
         pass
 
-    class Verb(Thing):
+    class Agent(Thing):
         pass
 
-    class Transitive(Verb):
+    class World(Thing):
         pass
 
-    class Intransitive(Verb):
+    class Intention(Thing):
+        pass
+
+    class Plan(Thing):
+        pass
+
+    class Desire(Thing):
+        pass
+
+    class hasWorld(ObjectProperty):
+        pass
+
+    class hasDesire(ObjectProperty):
+        pass
+
+    class hasIntention(ObjectProperty):
+        pass
+
+    class hasName(ObjectProperty):
+        range = [str]
+
+    class hasDescription(ObjectProperty):
+        range = [str]
+
+    class hasPlan(ObjectProperty):
         pass
 
 
-    class Adjective(Thing):
-        pass
 
-    class Adverb(Thing):
-        pass
+# BDI-Actions
 
-    class Entity(Thing):
-        pass
+class process_belief(Action):
+    """create sparql query from MST"""
+    def execute(self, arg1):
+        print("\n--------- Processing belief Info---------\n ")
 
-    class Preposition(Thing):
-        pass
+        info = str(arg1).split("'")[3]
+        print(f"Operations on belief {info}...")
 
-    class hasAdj(ObjectProperty):
-        pass
+        self.assert_belief(DESIRE("ACHIEVED"))
 
-    class hasAdv(ObjectProperty):
-        pass
 
-    class hasObject(ObjectProperty):
-        pass
 
-    class hasSubject(ObjectProperty):
-        pass
+class check(ActiveBelief):
+    """check if var has an admissible value"""
+    def evaluate(self, arg):
 
-    class hasPrep(ObjectProperty):
-        pass
+        var = str(arg).split("'")[3]
 
-    class hasId(ObjectProperty):
-        pass
-
-    class hasDate(DataProperty):
-        pass
-
-    class hasPlace(DataProperty):
-        pass
-
-    class hasValue(DataProperty):
-        range = [int]
+        if var == "OK":
+            return True
+        else:
+            return False
 
 
 
@@ -98,61 +130,16 @@ class finalize_onto(Procedure): pass
 class create_ner(Procedure): pass
 class valorize(Procedure): pass
 
-# initialize Clauses Kb
-# mode reactors
-class LISTEN(Belief): pass
-class REASON(Belief): pass
-class IS_RULE(Belief): pass
-class WAIT(Belief): pass
-class ANSWER(Reactor): pass
+# Worlds Agents intialization
+class init(Procedure): pass
 
-# domotic reactive routines
-class r1(Procedure): pass
-class r2(Procedure): pass
-
-# domotic direct commands
-class d1(Procedure): pass
-class d2(Procedure): pass
-
-# domotic sensor simulatons
-class s1(Procedure): pass
-class s2(Procedure): pass
-
-# Fol reasoning utterances
-class c1(Procedure): pass
-class c2(Procedure): pass
-class c3(Procedure): pass
-class c4(Procedure): pass
-class c5(Procedure): pass
-class c6(Procedure): pass
-
-# normal requests beliefs
-class GROUND(Belief): pass
-class PRE_MOD(Belief): pass
-class MOD(Belief): pass
-class PRE_INTENT(Belief): pass
-class INTENT(Reactor): pass
-
+# Triggering Intentions/Plans
+class trigger(Procedure): pass
 
 
 # action
-class ACTION(Belief): pass
-# preposition
-class PREP(Belief): pass
-# ground
-class GND(Belief): pass
-# adverb
-class ADV(Belief): pass
-# adjective
-class ADJ(Belief): pass
-# id individual
-class ID(Belief): pass
-# rule accumulator
-class RULE(Belief): pass
-# subject accumulator
-class SUBJ(Belief): pass
-# subject accumulator
-class VALUE(Belief): pass
+class DESIRE(Belief): pass
+
 
 
 
@@ -414,20 +401,27 @@ class fillOpRule(Action):
         self.assert_belief(RULE(rule))
 
 
-class aggrEntity(Action):
-    """aggregate two entity beliefs in one"""
-    def execute(self, arg1, arg2, arg3, arg4):
 
-        id = str(arg1).split("'")[3]
-        var = str(arg2).split("'")[3]
-        label1 = str(arg3).split("'")[3]
-        label2 = str(arg4).split("'")[3]
-
-        conc_label = label2 + "_" + label1
-        self.assert_belief(GND(id, var, conc_label))
+class initDesire(Action):
+    """create an entity and apply an adj to it"""
+    def execute(self):
 
 
-class applyAdv(Action):
+        # creating subclass adjective
+        adv = types.new_class(adv_str, (Adverb,))
+        # adverb individual
+        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+
+        # creating subclass entity
+        new_sub = types.new_class(verb_str, (Verb,))
+        # creating entity individual
+        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+
+        # individual entity - hasAdv - adverb individual
+        new_ind.hasAdv.append(new_adv_ind)
+
+
+class initPlans(Action):
     """create an entity and apply an adj to it"""
     def execute(self, arg1, arg2, arg3):
 
@@ -449,7 +443,73 @@ class applyAdv(Action):
         new_ind.hasAdv.append(new_adv_ind)
 
 
-class createAdj(Action):
+class initIntentions(Action):
+    """create an entity and apply an adj to it"""
+    def execute(self, arg1, arg2, arg3):
+
+        id_str = str(arg1).split("'")[3]
+        verb_str = str(arg2).split("'")[3].replace(":", SEP)
+        adv_str = str(arg3).split("'")[3].replace(":", SEP)
+
+        # creating subclass adjective
+        adv = types.new_class(adv_str, (Adverb,))
+        # adverb individual
+        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+
+        # creating subclass entity
+        new_sub = types.new_class(verb_str, (Verb,))
+        # creating entity individual
+        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+
+        # individual entity - hasAdv - adverb individual
+        new_ind.hasAdv.append(new_adv_ind)
+
+
+class initBeliefs(Action):
+    """create an entity and apply an adj to it"""
+    def execute(self, arg1, arg2, arg3):
+
+        id_str = str(arg1).split("'")[3]
+        verb_str = str(arg2).split("'")[3].replace(":", SEP)
+        adv_str = str(arg3).split("'")[3].replace(":", SEP)
+
+        # creating subclass adjective
+        adv = types.new_class(adv_str, (Adverb,))
+        # adverb individual
+        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+
+        # creating subclass entity
+        new_sub = types.new_class(verb_str, (Verb,))
+        # creating entity individual
+        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+
+        # individual entity - hasAdv - adverb individual
+        new_ind.hasAdv.append(new_adv_ind)
+
+
+class initAgent(Action):
+    """create an entity and apply an adj to it"""
+    def execute(self, arg1, arg2, arg3):
+
+        id_str = str(arg1).split("'")[3]
+        verb_str = str(arg2).split("'")[3].replace(":", SEP)
+        adv_str = str(arg3).split("'")[3].replace(":", SEP)
+
+        # creating subclass adjective
+        adv = types.new_class(adv_str, (Adverb,))
+        # adverb individual
+        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+
+        # creating subclass entity
+        new_sub = types.new_class(verb_str, (Verb,))
+        # creating entity individual
+        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+
+        # individual entity - hasAdv - adverb individual
+        new_ind.hasAdv.append(new_adv_ind)
+
+
+class initWorld(Action):
     """create an entity and apply an adj to it"""
     def execute(self, arg0, arg1, arg2):
 
