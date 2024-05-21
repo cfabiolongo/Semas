@@ -1,7 +1,5 @@
-
 from phidias.Types import *
 import configparser
-from datetime import datetime
 from owlready2 import *
 
 config = configparser.ConfigParser()
@@ -10,29 +8,30 @@ config.read('config.ini')
 cnt = itertools.count(1)
 dav = itertools.count(1)
 
-LOG_ACTIVE = config.getboolean('AGENT', 'LOG_ACTIVE')
-FILE_NAME = config.get('AGENT', 'FILE_NAME')
+LOG_ACTIVE = config.getboolean('SERVICE', 'LOG_ACTIVE')
 
 # Ontology initialization
-FILE_NAME = config.get('INIT', 'FILE_NAME')
+FILE_NAME = config.get('WORLDS', 'FILE_NAME')
 
-WORLDS = config.get('INIT', 'WORLDS').split(",")
-WORLDS_NAMES = config.get('INIT', 'WORLDS_NAMES').split(",")
+# Number of worlds
+NUMBER_OF_WORLDS = config.get('WORLDS', 'FILE_NAME')
 
-WORLDS_NAMES = World1_name
-AGENTS = Agent1, Agent2, Agent3
-# Intentions
-BELIEFS = Belief1, Belief2, Belief3
-BELIEFS_ID = BeliefID1, BeliefID2, BeliefID3
-# Desire
-DESIRES = Desire1, Desire2, Desire3
-DESIRES_ID = DesireID1, DesireID2, DesireID3
-# Intentions
-INTENTIONS = Intention1, Intention2, Intention3
-INTENTIONS_ID = IntID1, IntID2, IntID3
-# Plans
-PLANS = PLAN1, PLAN2, PLAN3
-PLANS_ID = PLANId1, PLANId2, PLANId3
+WORLD_NAME = config.get('INIT-W1', 'WORLD_NAME')
+WORLD_ind = config.get('INIT-W1', 'WORLD_ind')
+
+BELIEFS = config.get('INIT-W1', 'BELIEFS').split(",")
+BELIEFS_ind = config.get('INIT-W1', 'BELIEFS_ind').split(",")
+
+DESIRES = config.get('INIT-W1', 'DESIRES').split(",")
+DESIRES_ind = config.get('INIT-W1', 'DESIRES_ind').split(",")
+
+INTENTIONS = config.get('INIT-W1', 'INTENTIONS').split(",")
+INTENTIONS_ind = config.get('INIT-W1', 'INTENTIONS_ind').split(",")
+
+PLANS = config.get('INIT-W1', 'PLANS').split(",")
+PLANS_ind = config.get('INIT-W1', 'PLANS_ind').split(",")
+
+AGENTS = config.get('INIT-W1', 'AGENTS').split(",")
 
 owl_obj_dict = {}
 
@@ -48,22 +47,22 @@ except IOError:
 
 
 with my_onto:
-    class Belief(Thing):
+    class BELIEF(Thing):
         pass
 
-    class Agent(Thing):
+    class AGENT(Thing):
         pass
 
-    class World(Thing):
+    class WORLD(Thing):
         pass
 
-    class Intention(Thing):
+    class INTENTION(Thing):
         pass
 
-    class Plan(Thing):
+    class PLAN(Thing):
         pass
 
-    class Desire(Thing):
+    class DESIRE(Thing):
         pass
 
     class hasWorld(ObjectProperty):
@@ -96,7 +95,7 @@ class process_belief(Action):
         info = str(arg1).split("'")[3]
         print(f"Operations on belief {info}...")
 
-        self.assert_belief(DESIRE("ACHIEVED"))
+        # self.assert_belief(DESIRE("ACHIEVED"))
 
 
 
@@ -112,36 +111,11 @@ class check(ActiveBelief):
             return False
 
 
-
-# Ontology creation procedures
-class create_onto(Procedure): pass
-class process_rule(Procedure): pass
-class process_onto(Procedure): pass
-class create_adj(Procedure): pass
-class create_adv(Procedure): pass
-class create_verb(Procedure): pass
-class create_assrule(Procedure): pass
-class create_gnd_prep(Procedure): pass
-class create_prep(Procedure): pass
-class aggr_ent(Procedure): pass
-class create_body(Procedure): pass
-class create_head(Procedure): pass
-class finalize_onto(Procedure): pass
-class create_ner(Procedure): pass
-class valorize(Procedure): pass
-
 # Worlds Agents intialization
 class init(Procedure): pass
 
 # Triggering Intentions/Plans
 class trigger(Procedure): pass
-
-
-# action
-class DESIRE(Belief): pass
-
-
-
 
 class feed_sparql(Procedure): pass
 class finalize_sparql(Procedure): pass
@@ -201,688 +175,171 @@ class declareRule(Action):
            rule.set_as_rule(rule_str)
 
 
-class fillActRule(Action):
-    """fills a rule with a verbal action"""
-    def execute(self, arg1, arg2, arg3, arg4, arg5):
 
-        rule = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3].replace(":", SEP)
-        dav = str(arg3).split("'")[3]
-        subj = str(arg4).split("'")[3]
-        obj = str(arg5).split("'")[3]
 
-        # creating subclass of Verb
-        types.new_class(verb, (Transitive,))
-
-        if rule[0] == "-":
-            rule = "hasSubject(?"+dav+", ?"+subj+"), hasObject(?"+dav+", ?"+obj+"), "+verb+"(?"+dav+") "+rule
-        else:
-            rule = "hasSubject(?"+dav+", ?"+subj+"), hasObject(?"+dav+", ?"+obj+"), "+verb+"(?"+dav+"), "+rule
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillPassActRule(Action):
-    """fills a rule with a passive verbal action"""
-    def execute(self, arg1, arg2, arg3, arg4):
-
-        rule = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3].replace(":", SEP)
-        dav = str(arg3).split("'")[3]
-        obj = str(arg4).split("'")[3].replace(":", SEP)
-
-        # creating subclass of Verb
-        types.new_class(verb, (Intransitive,))
-
-        if rule[0] == "-":
-            rule = "hasObject(?"+dav+", ?"+obj+"), "+verb+"(?"+dav+") "+rule
-        else:
-            rule = "hasObject(?"+dav+", ?"+obj+"), "+verb+"(?"+dav+"), "+rule
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillIntraActRule(Action):
-    """fills a rule with an intransitive verbal action"""
-    def execute(self, arg1, arg2, arg3, arg4):
-
-        rule = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3].replace(":", SEP)
-        dav = str(arg3).split("'")[3]
-        subj = str(arg4).split("'")[3].replace(":", SEP)
-
-        # creating subclass of Verb
-        types.new_class(verb, (Intransitive,))
-
-        if rule[0] == "-":
-            rule = "hasSubject(?"+dav+", ?"+subj+"), "+verb+"(?"+dav+") "+rule
-        else:
-            rule = "hasSubject(?"+dav+", ?"+subj+"), "+verb+"(?"+dav+"), "+rule
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillGndRule(Action):
-    """fills a rule with a ground"""
-    def execute(self, arg0, arg1, arg2, arg3):
-
-        hand_side = str(arg0).split("'")[1]
-        rule = str(arg1).split("'")[3]
-        var = str(arg2).split("'")[3]
-        value = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass of Entity
-        types.new_class(value, (Entity,))
-
-        if hand_side == "LEFT":
-            if rule[0] == "-":
-                rule = value+"(?"+var+") "+rule
-            else:
-                rule = value +"(?"+var+"), "+rule
-        else:
-            if rule[-1] == ">":
-                rule = rule+" "+value+"(?"+var+")"
-            else:
-                rule = rule+", "+value+"(?"+var+")"
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillHeadAdjRule(Action):
-    """fills a rule with an adjective"""
-    def execute(self, arg1, arg2, arg3):
-
-        rule = str(arg1).split("'")[3]
-        var = str(arg2).split("'")[3]
-        adj_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass of Adjective
-        types.new_class(adj_str, (Adjective,))
-
-        rule = rule+" "+adj_str+"(?"+var+")"
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillAdjRule(Action):
-    """fills a rule with an adjective"""
-    def execute(self, arg1, arg2, arg3):
-
-        rule = str(arg1).split("'")[3]
-        var = str(arg2).split("'")[3]
-        adj_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass of Adjective
-        types.new_class(adj_str, (Adjective,))
-
-        new_var = "x" + str(next(cnt))
-
-        if rule[0] == "-":
-            rule = "hasAdj(?"+var+", ?"+new_var+"), "+adj_str+"(?"+new_var+") "+rule
-        else:
-            rule = "hasAdj(?"+var+", ?"+new_var+"), "+adj_str+"(?"+new_var+"), "+rule
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillAdvRule(Action):
-    """fills a rule with an adverb"""
-    def execute(self, arg1, arg2, arg3):
-
-        rule = str(arg1).split("'")[3]
-        var = str(arg2).split("'")[3]
-        adv_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass of Adverb
-        types.new_class(adv_str, (Adverb,))
-
-        new_var = "x" + str(next(cnt))
-
-        if rule[0] == "-":
-            rule = "hasAdv(?"+var+", ?"+new_var+"), "+adv_str+"(?"+new_var+") "+rule
-        else:
-            rule = "hasAdv(?"+var+", ?"+new_var+"), "+adv_str+"(?"+new_var+"), "+rule
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillPrepRule(Action):
-    """fills a rule with a preposition"""
-    def execute(self, arg0, arg1, arg2, arg3, arg4):
-
-        hand_side = str(arg0).split("'")[1]
-        rule = str(arg1).split("'")[3]
-        var_master = str(arg2).split("'")[3]
-        value = str(arg3).split("'")[3].replace(":", SEP)
-        var_slave = str(arg4).split("'")[3]
-
-        # creating subclass of preposition
-        types.new_class(value, (Preposition,))
-        new_index_var = str(next(cnt))
-
-        if hand_side == "LEFT":
-            if rule[0] == "-":
-                rule = "hasPrep(?"+var_master+", ?x"+new_index_var+"), "+value+"(?x"+new_index_var+"), hasObject(?x"+new_index_var+", ?"+var_slave+") "+rule
-            else:
-                rule = "hasPrep(?"+var_master+", ?x"+new_index_var+"), "+value+"(?x"+new_index_var+"), hasObject(?x"+new_index_var+", ?"+var_slave+"), " + rule
-        else:
-            if rule[-1] == ">":
-                rule = rule+" hasPrep(?"+var_master+", ?x"+new_index_var+"), "+value+"(?x"+new_index_var+"), hasObject(?x"+new_index_var+", ?"+var_slave+")"
-            else:
-                rule = rule+", hasPrep(?"+var_master+", ?x"+new_index_var+"), "+value+"(?x"+new_index_var+"), hasObject(?x"+new_index_var+", ?"+var_slave+")"
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-class fillOpRule(Action):
-    """fills with comparison operators"""
-    def execute(self, arg1, arg2, arg3):
-
-        rule = str(arg1).split("'")[3]
-        var = str(arg2).split("'")[3]
-        val_str = str(arg3).split("'")[3]
-
-        new_index_var = str(next(cnt))
-
-        if rule[0] == "-":
-            rule = "hasValue(?"+var+", ?x"+new_index_var+"), greaterThan(?x"+new_index_var+", "+val_str+") "+rule
-        else:
-            rule = "hasValue(?"+var+", ?x"+new_index_var+"), greaterThan(?x"+new_index_var+", "+val_str+"), "+rule
-
-        print("rule: ", rule)
-        self.assert_belief(RULE(rule))
-
-
-
-class initDesire(Action):
-    """create an entity and apply an adj to it"""
-    def execute(self):
-
-
-        # creating subclass adjective
-        adv = types.new_class(adv_str, (Adverb,))
-        # adverb individual
-        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-
-        # creating subclass entity
-        new_sub = types.new_class(verb_str, (Verb,))
-        # creating entity individual
-        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-
-        # individual entity - hasAdv - adverb individual
-        new_ind.hasAdv.append(new_adv_ind)
-
-
-class initPlans(Action):
-    """create an entity and apply an adj to it"""
-    def execute(self, arg1, arg2, arg3):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        adv_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass adjective
-        adv = types.new_class(adv_str, (Adverb,))
-        # adverb individual
-        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-
-        # creating subclass entity
-        new_sub = types.new_class(verb_str, (Verb,))
-        # creating entity individual
-        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-
-        # individual entity - hasAdv - adverb individual
-        new_ind.hasAdv.append(new_adv_ind)
-
-
-class initIntentions(Action):
-    """create an entity and apply an adj to it"""
-    def execute(self, arg1, arg2, arg3):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        adv_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass adjective
-        adv = types.new_class(adv_str, (Adverb,))
-        # adverb individual
-        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-
-        # creating subclass entity
-        new_sub = types.new_class(verb_str, (Verb,))
-        # creating entity individual
-        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-
-        # individual entity - hasAdv - adverb individual
-        new_ind.hasAdv.append(new_adv_ind)
-
-
-class initBeliefs(Action):
-    """create an entity and apply an adj to it"""
-    def execute(self, arg1, arg2, arg3):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        adv_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass adjective
-        adv = types.new_class(adv_str, (Adverb,))
-        # adverb individual
-        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-
-        # creating subclass entity
-        new_sub = types.new_class(verb_str, (Verb,))
-        # creating entity individual
-        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-
-        # individual entity - hasAdv - adverb individual
-        new_ind.hasAdv.append(new_adv_ind)
-
-
-class initAgent(Action):
-    """create an entity and apply an adj to it"""
-    def execute(self, arg1, arg2, arg3):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        adv_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # creating subclass adjective
-        adv = types.new_class(adv_str, (Adverb,))
-        # adverb individual
-        new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-
-        # creating subclass entity
-        new_sub = types.new_class(verb_str, (Verb,))
-        # creating entity individual
-        new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-
-        # individual entity - hasAdv - adverb individual
-        new_ind.hasAdv.append(new_adv_ind)
-
+# class initDesire(Action):
+#     """create an entity and apply an adj to it"""
+#     def execute(self):
+#
+#
+#         # creating subclass adjective
+#         adv = types.new_class(adv_str, (Adverb,))
+#         # adverb individual
+#         new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+#
+#         # creating subclass entity
+#         new_sub = types.new_class(verb_str, (Verb,))
+#         # creating entity individual
+#         new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+#
+#         # individual entity - hasAdv - adverb individual
+#         new_ind.hasAdv.append(new_adv_ind)
+
+
+# class initPlans(Action):
+#     """create an entity and apply an adj to it"""
+#     def execute(self, arg1, arg2, arg3):
+#
+#         id_str = str(arg1).split("'")[3]
+#         verb_str = str(arg2).split("'")[3].replace(":", SEP)
+#         adv_str = str(arg3).split("'")[3].replace(":", SEP)
+#
+#         # creating subclass adjective
+#         adv = types.new_class(adv_str, (Adverb,))
+#         # adverb individual
+#         new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+#
+#         # creating subclass entity
+#         new_sub = types.new_class(verb_str, (Verb,))
+#         # creating entity individual
+#         new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+#
+#         # individual entity - hasAdv - adverb individual
+#         new_ind.hasAdv.append(new_adv_ind)
+
+
+# class initIntentions(Action):
+#     """create an entity and apply an adj to it"""
+#     def execute(self, arg1, arg2, arg3):
+#
+#         id_str = str(arg1).split("'")[3]
+#         verb_str = str(arg2).split("'")[3].replace(":", SEP)
+#         adv_str = str(arg3).split("'")[3].replace(":", SEP)
+#
+#         # creating subclass adjective
+#         adv = types.new_class(adv_str, (Adverb,))
+#         # adverb individual
+#         new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
+#
+#         # creating subclass entity
+#         new_sub = types.new_class(verb_str, (Verb,))
+#         # creating entity individual
+#         new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
+#
+#         # individual entity - hasAdv - adverb individual
+#         new_ind.hasAdv.append(new_adv_ind)
+
+
+# class initBeliefs(Action):
+#     """create an entity and apply an adj to it"""
+#     def execute(self):
+#
+#         for i in range(AGENTS):
+#             # creating subclass AGENT
+#             agent = types.new_class(AGENTS[i], (AGENT,))
+#             # AGENT individual
+#             new_agent = agent(AGENTS[i] + "-0" + str(i))
+#
+#             # individual entity - hasAdv - adverb individual
+#             new_agent.hasName.append(WORLD_NAMES[i])
+
+
+# class initAgent(Action):
+#     """create an entity and apply an adj to it"""
+#     def execute(self):
+#
+#         for i in range(AGENTS):
+#             # creating subclass AGENT
+#             agent = types.new_class(AGENTS[i], (AGENT,))
+#             # AGENT individual
+#             new_agent = agent(AGENTS[i] + "-0" + str(i))
+#
+#             # individual entity - hasAdv - adverb individual
+#             new_agent.hasName.append(WORLD_NAMES[i])
 
 class initWorld(Action):
     """create an entity and apply an adj to it"""
-    def execute(self, arg0, arg1, arg2):
+    def execute(self):
+
+        # creating subclass WORLD
+        world = types.new_class(WORLD_NAME, (WORLD,))
+        # WORLD individual
+        new_world = world(WORLD_ind)
+
+        for i in range(len(BELIEFS)):
+            # creating subclass BELIEF
+            belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
+            # BELIEF individual
+            new_belief = belief(BELIEFS_ind[i].strip())
+
+        for i in range(len(DESIRES)):
+            # creating subclass DESIRES
+            desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
+            # DESIRE individual
+            new_desire = desire(DESIRES_ind[i].strip())
+
+        for i in range(len(INTENTIONS)):
+            # creating subclass INTENTION
+            desire = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
+            # INTENTION individual
+            new_desire = desire(INTENTIONS_ind[i].strip())
+
+        for i in range(len(PLANS)):
+            # creating subclass PLAN
+            plan = types.new_class(PLANS[i].strip(), (PLAN,))
+            # INTENTION PLAN
+            new_plan = plan(PLANS_ind[i].strip())
+
+        for i in range(len(AGENTS)):
+            # creating subclass AGENT
+            agent = types.new_class(AGENTS[i].strip(), (AGENT,))
+            AGT_IND = config.get('INIT-W1', AGENTS[i].strip()+'_ind').split(",")
+
+            # AGENT individuals
+            for j in range(len(AGT_IND)):
+                new_agent = agent(AGT_IND[j].strip())
+
+
+# class createSubCustVerb(Action):
+#     """Creating a subclass of the class Verb"""
+#     def execute(self, arg1, arg2, arg3, arg4):
+#
+#         id_str = str(arg1).split("'")[3]
+#         verb_str = str(arg2).split("'")[3].replace(":", SEP)
+#         subj_str = str(arg3).split("'")[3].replace(":", SEP)
+#         obj_str = str(arg4).split("'")[3].replace(":", SEP)
+#
+#         # subclasses
+#         new_sub_verb = types.new_class(verb_str, (Transitive,))
+#         new_sub_subj = types.new_class(subj_str, (Entity,))
+#         new_sub_obj = types.new_class(obj_str, (Entity,))
+#
+#         # entities individual
+#         new_ind_id = Id(id_str)
+#         new_ind_verb = new_sub_verb(parser.clean_from_POS(verb_str)+"."+id_str)
+#         new_ind_subj = new_sub_subj(parser.clean_from_POS(subj_str)+"."+id_str)
+#         new_ind_obj = new_sub_obj(parser.clean_from_POS(obj_str)+"."+id_str)
+#
+#         # individual entity - hasSubject - subject individual
+#         new_ind_verb.hasSubject = [new_ind_subj]
+#         # individual entity - hasObject - Object individual
+#         new_ind_verb.hasObject = [new_ind_obj]
+#         # storing action's id
+#         new_ind_verb.hasId = [new_ind_id]
 
-        id_str = str(arg0).split("'")[3]
-        ent_str = str(arg1).split("'")[3].replace(":", SEP)
-        adj_str = str(arg2).split("'")[3].replace(":", SEP)
 
-        # creating subclass adjective
-        adv = types.new_class(adj_str, (Adjective,))
-        # adverb individual
-        new_adj_ind = adv(parser.clean_from_POS(adj_str)+"."+id_str)
 
-        # creating subclass entity
-        ent_sub = types.new_class(ent_str, (Entity,))
-        # creating entity individual
-        new_ind = ent_sub(parser.clean_from_POS(ent_str)+"."+id_str)
 
-        # individual entity - hasAdv - adverb individual
-        new_ind.hasAdj.append(new_adj_ind)
-
-
-class createSubCustVerb(Action):
-    """Creating a subclass of the class Verb"""
-    def execute(self, arg1, arg2, arg3, arg4):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        subj_str = str(arg3).split("'")[3].replace(":", SEP)
-        obj_str = str(arg4).split("'")[3].replace(":", SEP)
-
-        # subclasses
-        new_sub_verb = types.new_class(verb_str, (Transitive,))
-        new_sub_subj = types.new_class(subj_str, (Entity,))
-        new_sub_obj = types.new_class(obj_str, (Entity,))
-
-        # entities individual
-        new_ind_id = Id(id_str)
-        new_ind_verb = new_sub_verb(parser.clean_from_POS(verb_str)+"."+id_str)
-        new_ind_subj = new_sub_subj(parser.clean_from_POS(subj_str)+"."+id_str)
-        new_ind_obj = new_sub_obj(parser.clean_from_POS(obj_str)+"."+id_str)
-
-        # individual entity - hasSubject - subject individual
-        new_ind_verb.hasSubject = [new_ind_subj]
-        # individual entity - hasObject - Object individual
-        new_ind_verb.hasObject = [new_ind_obj]
-        # storing action's id
-        new_ind_verb.hasId = [new_ind_id]
-
-
-class createSubVerb(Action):
-    """Creating a subclass of the class Verb"""
-    def execute(self, arg1, arg2, arg3, arg4):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        subj_str = str(arg3).split("'")[3].replace(":", SEP)
-        obj_str = str(arg4).split("'")[3].replace(":", SEP)
-
-        # subclasses
-        new_sub_verb = types.new_class(verb_str, (Transitive,))
-        new_sub_subj = types.new_class(subj_str, (Entity,))
-        new_sub_obj = types.new_class(obj_str, (Entity,))
-
-        # entities individual
-        new_ind_id = Id(id_str)
-        new_ind_verb = new_sub_verb(parser.clean_from_POS(verb_str)+"."+id_str)
-        new_ind_subj = new_sub_subj(parser.clean_from_POS(subj_str)+"."+id_str)
-        new_ind_obj = new_sub_obj(parser.clean_from_POS(obj_str)+"."+id_str)
-
-        # individual entity - hasSubject - subject individual
-        new_ind_verb.hasSubject = [new_ind_subj]
-        # individual entity - hasObject - Object individual
-        new_ind_verb.hasObject = [new_ind_obj]
-        # storing action's id
-        new_ind_verb.hasId = [new_ind_id]
-
-
-class createEmbVerbs(Action):
-    """Creating subclasses of the class Verb/Entity + embedded individuals"""
-    def execute(self, arg1, arg2, arg3, arg4, arg5, arg6):
-
-        id_str = str(arg1).split("'")[3]
-        main_verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        main_subj_str = str(arg3).split("'")[3].replace(":", SEP)
-        emb_verb_str = str(arg4).split("'")[3].replace(":", SEP)
-        emb_subj_str = str(arg5).split("'")[3].replace(":", SEP)
-        emb_obj_str = str(arg6).split("'")[3].replace(":", SEP)
-
-        # subclasses
-        main_sub_verb = types.new_class(main_verb_str, (Transitive,))
-        main_sub_subj = types.new_class(main_subj_str, (Entity,))
-        emb_sub_verb = types.new_class(emb_verb_str, (Transitive,))
-        emb_sub_subj = types.new_class(emb_subj_str, (Entity,))
-        emb_sub_obj = types.new_class(emb_obj_str, (Entity,))
-
-        # individuals
-        new_ind_id = Id(id_str)
-        new_ind_main_verb = main_sub_verb(parser.clean_from_POS(main_verb_str)+"."+id_str)
-        new_ind_main_subj = main_sub_subj(parser.clean_from_POS(main_subj_str)+"."+id_str)
-
-        new_ind_emb_verb = emb_sub_verb(parser.clean_from_POS(emb_verb_str)+"."+id_str)
-        new_ind_emb_subj = emb_sub_subj(parser.clean_from_POS(emb_subj_str)+"."+id_str)
-        new_ind_emb_obj = emb_sub_obj(parser.clean_from_POS(emb_obj_str)+"."+id_str)
-
-        # main
-        new_ind_main_verb.hasSubject = [new_ind_main_subj]
-        new_ind_main_verb.hasObject = [new_ind_emb_verb]
-
-        # embedded
-        new_ind_emb_verb.hasSubject = [new_ind_emb_subj]
-        new_ind_emb_verb.hasObject = [new_ind_emb_obj]
-
-        # storing action's id
-        new_ind_main_verb.hasId = [new_ind_id]
-        new_ind_emb_verb.hasId = [new_ind_id]
-
-
-
-
-
-class createAssRule(Action):
-    """Creating new assignment rule between entities"""
-    def execute(self, arg1, arg2):
-
-        ent1 = str(arg1).split("'")[3].replace(":", SEP)
-        ent2 = str(arg2).split("'")[3].replace(":", SEP)
-
-        types.new_class(ent1, (Entity,))
-        types.new_class(ent2, (Entity,))
-
-        rule_str = ent1+"(?x) -> "+ent2+"(?x)"
-
-        rule_adj_legacy = ent1+"(?x2), "+ent2+"(?x1), hasAdj(?x1, ?x3), Adjective(?x3) -> hasAdj(?x2, ?x3)"
-
-        print("New assignment rule: ", rule_str)
-        print("New legacy rule: ", rule_adj_legacy)
-
-        with my_onto:
-           rule1 = Imp()
-           rule1.set_as_rule(rule_str)
-
-           rule2 = Imp()
-           rule2.set_as_rule(rule_adj_legacy)
-
-
-class createPassSubVerb(Action):
-    """Creating a subclass of the class Verb (passive)"""
-    def execute(self, arg1, arg2, arg3):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        obj_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # subclasses
-        new_sub_verb = types.new_class(verb_str, (Verb,))
-        new_sub_obj = types.new_class(obj_str, (Entity,))
-
-        # entities individual
-        new_ind_id = Id(id_str)
-        new_ind_verb = new_sub_verb(parser.clean_from_POS(verb_str)+"."+id_str)
-        new_ind_obj = new_sub_obj(parser.clean_from_POS(obj_str)+"."+id_str)
-
-        # individual entity - hasObject - Object individual
-        new_ind_verb.hasObject = [new_ind_obj]
-        # storing action's id
-        new_ind_verb.hasId = [new_ind_id]
-
-
-class createIntrSubVerb(Action):
-    """Creating a subclass of the class Verb (Intransitive)"""
-    def execute(self, arg1, arg2, arg3):
-
-        id_str = str(arg1).split("'")[3]
-        verb_str = str(arg2).split("'")[3].replace(":", SEP)
-        subj_str = str(arg3).split("'")[3].replace(":", SEP)
-
-        # subclasses
-        new_sub_verb = types.new_class(verb_str, (Intransitive, ))
-        new_sub_subj = types.new_class(subj_str, (Entity,))
-
-        # entities individual
-        new_ind_id = Id(id_str)
-        new_ind_verb = new_sub_verb(parser.clean_from_POS(verb_str)+"."+id_str)
-        # new_ind_verb.is_a.append(Intransitive)
-
-        new_ind_subj = new_sub_subj(parser.clean_from_POS(subj_str)+"."+id_str)
-
-        # individual entity - hasSubject - subject individual
-        new_ind_verb.hasSubject = [new_ind_subj]
-        # storing action's id
-        new_ind_verb.hasId = [new_ind_id]
-
-
-class createSubPrep(Action):
-    """Creating a subclass of depending action preposition"""
-    def execute(self, arg0, arg1, arg2, arg3):
-
-        id_str = str(arg0).split("'")[3]
-        verb = str(arg1).split("'")[3].replace(":", SEP)
-        prep = str(arg2).split("'")[3].replace(":", SEP)
-        ent = str(arg3).split("'")[3].replace(":", SEP)
-
-        v = parser.clean_from_POS(verb) + "." + id_str
-
-        if v in owl_obj_dict:
-            print("Getting objects from dict....", owl_obj_dict[v])
-            # Getting object from dict
-            new_ind_verb = owl_obj_dict[v]
-        else:
-            print("Creating objects....")
-            # Creating subclass of Verb and individual
-            new_sub_verb = types.new_class(verb, (Transitive,))
-            new_ind_verb = new_sub_verb(v)
-            # Updating owl object dict
-            owl_obj_dict[verb] = new_sub_verb
-            owl_obj_dict[v] = new_ind_verb
-
-        # Creating subclass of Preposition and individual
-        new_sub_prep = types.new_class(prep, (Preposition,))
-        new_ind_prep = new_sub_prep(parser.clean_from_POS(prep) + "." + id_str)
-
-        # Creating subclass of Entity and individual
-        new_sub_ent = types.new_class(ent, (Entity,))
-        new_ind_ent = new_sub_ent(parser.clean_from_POS(ent) + "." + id_str)
-
-        # Creating objects properties
-        new_ind_verb.hasPrep.append(new_ind_prep)
-        new_ind_prep.hasObject.append(new_ind_ent)
-
-
-class createSubPassPrep(Action):
-    """Creating a subclass of depending passive action preposition"""
-    def execute(self, arg0, arg1, arg2, arg3):
-
-        id_str = str(arg0).split("'")[3]
-        verb = str(arg1).split("'")[3].replace(":", SEP)
-        prep = str(arg2).split("'")[3].replace(":", SEP)
-        ent = str(arg3).split("'")[3].replace(":", SEP)
-
-        v = parser.clean_from_POS(verb) + "." + id_str
-
-        if v in owl_obj_dict:
-            print("Getting objects from dict....", owl_obj_dict[v])
-            # Getting object from dict
-            new_ind_verb = owl_obj_dict[v]
-        else:
-            print("Creating objects....")
-            # Creating subclass of Verb and individual
-            new_sub_verb = types.new_class(verb, (Intransitive,))
-            new_ind_verb = new_sub_verb(v)
-            # Updating owl object dict
-            owl_obj_dict[verb] = new_sub_verb
-            owl_obj_dict[v] = new_ind_verb
-
-        # Creating subclass of Preposition and individual
-        new_sub_prep = types.new_class(prep, (Preposition,))
-        new_ind_prep = new_sub_prep(parser.clean_from_POS(prep) + "." + id_str)
-
-        # Creating subclass of Entity and individual
-        new_sub_ent = types.new_class(ent, (Entity,))
-        new_ind_ent = new_sub_ent(parser.clean_from_POS(ent) + "." + id_str)
-
-        # Creating objects properties
-        new_ind_verb.hasPrep.append(new_ind_prep)
-        new_ind_prep.hasObject.append(new_ind_ent)
-
-
-class createSubIntrPrep(Action):
-    """Creating a subclass of depending intransitive action preposition"""
-    def execute(self, arg0, arg1, arg2, arg3):
-
-        id_str = str(arg0).split("'")[3]
-        verb = str(arg1).split("'")[3].replace(":", SEP)
-        prep = str(arg2).split("'")[3].replace(":", SEP)
-        ent = str(arg3).split("'")[3].replace(":", SEP)
-
-        v = parser.clean_from_POS(verb) + "." + id_str
-
-        if v in owl_obj_dict:
-            print("Getting objects from dict....", owl_obj_dict[v])
-            # Getting object from dict
-            new_ind_verb = owl_obj_dict[v]
-        else:
-            print("Creating objects....")
-            # Creating subclass of Verb and individual
-            new_sub_verb = types.new_class(verb, (Intransitive,))
-            new_ind_verb = new_sub_verb(v)
-            # Updating owl object dict
-            owl_obj_dict[verb] = new_sub_verb
-            owl_obj_dict[v] = new_ind_verb
-
-        # Creating subclass of Preposition and individual
-        new_sub_prep = types.new_class(prep, (Preposition,))
-        new_ind_prep = new_sub_prep(parser.clean_from_POS(prep) + "." + id_str)
-
-        # Creating subclass of Entity and individual
-        new_sub_ent = types.new_class(ent, (Entity,))
-        new_ind_ent = new_sub_ent(parser.clean_from_POS(ent) + "." + id_str)
-
-        # Creating objects properties
-        new_ind_verb.hasPrep.append(new_ind_prep)
-        new_ind_prep.hasObject.append(new_ind_ent)
-
-
-
-class createSubGndPrep(Action):
-    """Creating a subclass of depending gnd preposition"""
-    def execute(self, arg0, arg1, arg2, arg3):
-
-        id_str = str(arg0).split("'")[3]
-        ent_master = str(arg1).split("'")[3].replace(":", SEP)
-        prep = str(arg2).split("'")[3].replace(":", ".")
-        ent_slave = str(arg3).split("'")[3].replace(":", SEP)
-
-        # Creating subclasses of Entity and individuals
-        new_sub_ent_master = types.new_class(ent_master, (Entity,))
-        new_ind_ent_master = new_sub_ent_master(parser.clean_from_POS(ent_master)+"."+id_str)
-        new_sub_ent_slave = types.new_class(ent_slave, (Entity,))
-        new_ind_ent_slave = new_sub_ent_slave(parser.clean_from_POS(ent_slave)+"."+id_str)
-
-        # Creating subclass of Preposition and individual
-        new_sub_prep = types.new_class(prep, (Preposition,))
-        new_ind_prep = new_sub_prep(parser.clean_from_POS(prep) + "." + id_str)
-
-        # Creating objects properties
-        new_ind_ent_master.hasPrep.append(new_ind_prep)
-        new_ind_prep.hasObject.append(new_ind_ent_slave)
-
-
-class createPlace(Action):
-    """Creating DataProperty from NER Place"""
-    def execute(self, arg1, arg2):
-
-        id_str = str(arg1).split("'")[3]
-        place_str = str(arg2).split("'")[3]
-
-        # entities individual
-        new_ind_id = Id(id_str)
-
-        # storing id features
-        new_ind_id.hasPlace = [place_str]
-
-
-class createDate(Action):
-    """Creating DataProperty from NER Date"""
-    def execute(self, arg1, arg2):
-
-        id_str = str(arg1).split("'")[3]
-        date_str = str(arg2).split("'")[3]
-
-        # entities individual
-        new_ind_id = Id(id_str)
-
-        # storing id features
-        new_ind_id.hasDate = [date_str]
-
-
-class createValue(Action):
-    """Creating DataProperty fro a given value to entity"""
-    def execute(self, arg0, arg1, arg2):
-
-        id_str = str(arg0).split("'")[3]
-        ent_str = str(arg1).split("'")[3]
-        value_str = str(arg2).split("'")[3]
-
-        # creating subclass of entity
-        new_sub_obj = types.new_class(ent_str, (Entity,))
-
-        # entities individual
-        new_ind_ent = new_sub_obj(parser.clean_from_POS(ent_str)+"."+id_str)
-
-        # storing value
-        new_ind_ent.hasValue = [int(value_str)]
 
 
 class saveOnto(Action):
@@ -891,37 +348,7 @@ class saveOnto(Action):
         with my_onto:
             #sync_reasoner_pellet()
             my_onto.save(file=FILE_NAME, format="rdfxml")
-
-
-class InitOnto(Action):
-    """Generating sentence id individual"""
-    def execute(self):
-        dateTimeObj = datetime.datetime.now()
-        id_ind = str(dateTimeObj.microsecond)
-        self.assert_belief(ID(id_ind))
-
-
-class COP(ActiveBelief):
-    """ActiveBelief for checking whether a lemma can generate an assignment rule"""
-    def evaluate(self, arg1):
-
-        lemma = str(arg1).split("'")[3]
-        lemma_decomposed = lemma.split(":")
-
-        POS_ADMITTED = False
-
-        if len(lemma_decomposed) > 1:
-            if lemma_decomposed[1] in ASSIGN_RULES_POS:
-                POS_ADMITTED = True
-        else:
-            POS_ADMITTED = True
-
-        # Checking for proper lemma
-        if lemma_decomposed[0] in ASSIGN_RULES_LEMMAS and POS_ADMITTED is True:
-           return True
-        else:
-           return False
-
+            print("Ontology saved.")
 
 
 
@@ -1553,140 +980,3 @@ class join_cmps(Action):
 
         new_var = val2+"_"+val1
         self.assert_belief(MST_VAR(var, new_var))
-
-
-
-# --------------------------------------
-# --------- LODO-to-LF Section ---------
-# --------------------------------------
-
-
-class build_pre(Action):
-    """Feed Query Sparql parser"""
-    def execute(self, arg1, arg2, arg3, arg4):
-
-        id = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3]
-        sub = str(arg3).split("'")[3]
-        obj = str(arg4).split("'")[3]
-
-        print(id)
-        print(verb)
-        print(sub)
-        print(obj)
-
-        verb = verb.split(".")[0] + "("
-        sub = sub.split(".")[0]
-        obj = obj.split(".")[0] + ")"
-
-        self.assert_belief(PRE_LF(id, verb, sub, obj))
-
-
-
-class join_adj_subj(Action):
-    """Feed Query Sparql parser"""
-    def execute(self, arg1, arg2, arg3, arg4, arg5):
-
-        id = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3].split(".")[0]
-        sub = str(arg3).split("'")[3].split(".")[0]
-        obj = str(arg4).split("'")[3].split(".")[0]
-        adj = str(arg5).split("'")[3].split(".")[0]
-
-        sub = adj+"("+sub+")"
-
-        self.assert_belief(PRE_LF(id, verb, sub, obj))
-
-
-
-
-class join_adj_obj(Action):
-    """Add adj to obj"""
-    def execute(self, arg1, arg2, arg3, arg4, arg5):
-
-        id = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3]
-        sub = str(arg3).split("'")[3]
-        obj = str(arg4).split("'")[3]
-        adj = str(arg5).split("'")[3].split(".")[0]
-
-        obj = adj + "(" + obj + ")"
-
-        self.assert_belief(PRE_LF(id, verb, sub, obj))
-
-
-class join_prep_verb(Action):
-    """Feed Query Sparql parser"""
-    def execute(self, arg1, arg2, arg3, arg4, arg5, arg6):
-
-        id = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3]
-        sub = str(arg3).split("'")[3]
-        obj = str(arg4).split("'")[3]
-        prep = str(arg5).split("'")[3].split(".")[0]
-        prep_obj = str(arg6).split("'")[3].split(".")[0]
-
-        verb = prep + "(" + verb
-        obj = obj+", "+prep_obj+")"
-
-        self.assert_belief(PRE_LF(id, verb, sub, obj))
-
-
-
-class join_prep_subj(Action):
-    """Feed Query Sparql parser"""
-    def execute(self, arg1, arg2, arg3, arg4, arg5, arg6):
-
-        id = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3]
-        sub = str(arg3).split("'")[3]
-        obj = str(arg4).split("'")[3]
-        prep = str(arg5).split("'")[3].split(".")[0]
-        prep_obj = str(arg6).split("'")[3].split(".")[0]
-
-        sub = prep+"("+sub+", "+prep_obj+")"
-
-        self.assert_belief(PRE_LF(id, verb, sub, obj))
-
-
-class join_prep_obj(Action):
-    """Feed Query Sparql parser"""
-
-    def execute(self, arg1, arg2, arg3, arg4, arg5, arg6):
-        id = str(arg1).split("'")[3]
-        verb = str(arg2).split("'")[3]
-        sub = str(arg3).split("'")[3]
-        obj = str(arg4).split("'")[3]
-        prep = str(arg5).split("'")[3].split(".")[0]
-        prep_obj = str(arg6).split("'")[3].split(".")[0]
-
-        obj = prep + "(" + obj + ", " + prep_obj + ")"
-
-        self.assert_belief(PRE_LF(id, verb, sub, obj))
-
-
-class build_pre_lf(Action):
-    """Feed Query Sparql parser"""
-    def execute(self, arg1, arg2, arg3):
-
-        verb = str(arg1).split("'")[3]
-        sub = str(arg2).split("'")[3]
-        obj = str(arg3).split("'")[3]
-
-        logical_form = verb+sub+", "+obj
-
-        self.assert_belief(LF(logical_form))
-
-
-
-
-# -------------------------------
-# --------- LLM Section ---------
-# -------------------------------
-
-class llm_get(Action):
-    """get LLM result"""
-    def execute(self, *args):
-        a = str(args).split("'")[5]
-        result = parser.get_LLM(a)
-        print(result)

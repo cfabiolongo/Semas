@@ -18,25 +18,25 @@ class PLAN(Belief): pass
 class INTENT(Belief): pass
 
 # Worlds Agents initialization
-init() >> [initWorld(), initAgent(), initBeliefs(), initIntentions(), initPlans(), initDesire(), saveOnto()]
+init() >> [initWorld(), saveOnto()]
 
 
 # Intention (Case #1)
 
-INFO(I) / (PLAN(X) & INTENT(Y)) >> [show_line("\nGot Belief: ",I,"\n"), -INFO(I), process_belief(I)]
-DESIRE(D) / (PLAN(X) & INTENT(Y)) >> [show_line("\nDesire achieved with value: ",D,"\n")]
++INFO(I) / (PLAN(X) & INTENT(Y)) >> [show_line("\nGot Belief: ",I,"\n"), -INFO(I), process_belief(I)]
++DESIRE(D) / (PLAN(X) & INTENT(Y)) >> [show_line("\nDesire achieved with value: ",D,"\n")]
 
 
 # Intention (Case #2) - with Conditionals (COND)
 
-INFO(X) >> [show_line("\nGot it Belief: ",X,"\n"), process_belief(X), -INFO(X)]
-DESIRE(X) / COND(Y) >> [show_line("\nDesire achieved with value: ",X," and conditional: ",Y," \n")]
++INFO(X) >> [show_line("\nGot it Belief: ",X,"\n"), process_belief(X), -INFO(X)]
++DESIRE(X) / COND(Y) >> [show_line("\nDesire achieved with value: ",X," and conditional: ",Y," \n")]
 
 
 # Intention (Case #1) - with Active Belief (check)
 
-INFO(X) / check(X) >> [show_line("\nGot it Belief: ",X,"\n"), process_belief(X), -INFO(X)]
-DESIRE(X) >> [show_line("\nDesire achieved with value: ",X,"\n")]
++INFO(X) / check(X) >> [show_line("\nGot it Belief: ",X,"\n"), process_belief(X), -INFO(X)]
++DESIRE(X) >> [show_line("\nDesire achieved with value: ",X,"\n")]
 
 
 #+Q(X) >> [reset_ct(), log("Q", X), show_ct(), +ALL(X), feed_sparql()]

@@ -1,7 +1,7 @@
 # SEMAS
 
-This is the repository of the Python (3.7+) implementation of SEMAS (**SE**mantic **M**ulti-**A**gent **S**ystem), which integrates
-Multi-Agent systems with the Semantic Web. 
+This is the repository of the Python (3.7+) implementation of SEMAS (**SE**mantic **M**ulti-**A**gent **S**ystem), which integrates 
+Multi-Agent systems with the Semantic Web. SEMAS is built on top of the framework [PHIDIAS](https://ceur-ws.org/Vol-2502/paper5.pdf).
 
 ![Image 1](images/QuLIO-XR.jpg)
 
