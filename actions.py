@@ -83,6 +83,9 @@ with my_onto:
     class hasPlan(ObjectProperty):
         pass
 
+    class hasAgent(ObjectProperty):
+        pass
+
 
 
 # BDI-Actions
@@ -308,6 +311,7 @@ class initWorld(Action):
             # AGENT individuals
             for j in range(len(AGT_IND)):
                 new_agent = agent(AGT_IND[j].strip())
+                new_agent.hasWorld = [new_world]
 
 
 # class createSubCustVerb(Action):
