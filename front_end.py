@@ -18,7 +18,7 @@ class PLAN(Belief): pass
 class INTENT(Belief): pass
 
 # Worlds Agents initialization
-init() >> [initWorld(), saveOnto()]
+init() >> [initWorld(), declareRules(), saveOnto()]
 
 
 # Intention (Case #1)

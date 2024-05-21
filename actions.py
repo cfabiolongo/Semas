@@ -166,16 +166,17 @@ class WFR(ActiveBelief):
             return False
 
 
-class declareRule(Action):
+class declareRules(Action):
     """assert an SWRL rule"""
-    def execute(self, arg1):
-        rule_str = str(arg1).split("'")[3]
-
-        print("FINALE: ", rule_str)
-
+    def execute(self):
+        number_of_rules = int(config.get('SWRL', 'NUMBER_OF_RULES'))
         with my_onto:
            rule = Imp()
-           rule.set_as_rule(rule_str)
+
+           for i in range(number_of_rules):
+               rule_str = config.get('SWRL', 'RULE'+str(i+1))
+               print(f"\nadding the following rules to ontology: {rule_str}")
+               rule.set_as_rule(rule_str)
 
 
 
