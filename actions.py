@@ -86,6 +86,9 @@ with my_onto:
     class hasAgent(ObjectProperty):
         pass
 
+    class hasBelief(ObjectProperty):
+        pass
+
 
 
 # BDI-Actions
@@ -179,100 +182,8 @@ class declareRules(Action):
                rule.set_as_rule(rule_str)
 
 
-
-
-# class initDesire(Action):
-#     """create an entity and apply an adj to it"""
-#     def execute(self):
-#
-#
-#         # creating subclass adjective
-#         adv = types.new_class(adv_str, (Adverb,))
-#         # adverb individual
-#         new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-#
-#         # creating subclass entity
-#         new_sub = types.new_class(verb_str, (Verb,))
-#         # creating entity individual
-#         new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-#
-#         # individual entity - hasAdv - adverb individual
-#         new_ind.hasAdv.append(new_adv_ind)
-
-
-# class initPlans(Action):
-#     """create an entity and apply an adj to it"""
-#     def execute(self, arg1, arg2, arg3):
-#
-#         id_str = str(arg1).split("'")[3]
-#         verb_str = str(arg2).split("'")[3].replace(":", SEP)
-#         adv_str = str(arg3).split("'")[3].replace(":", SEP)
-#
-#         # creating subclass adjective
-#         adv = types.new_class(adv_str, (Adverb,))
-#         # adverb individual
-#         new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-#
-#         # creating subclass entity
-#         new_sub = types.new_class(verb_str, (Verb,))
-#         # creating entity individual
-#         new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-#
-#         # individual entity - hasAdv - adverb individual
-#         new_ind.hasAdv.append(new_adv_ind)
-
-
-# class initIntentions(Action):
-#     """create an entity and apply an adj to it"""
-#     def execute(self, arg1, arg2, arg3):
-#
-#         id_str = str(arg1).split("'")[3]
-#         verb_str = str(arg2).split("'")[3].replace(":", SEP)
-#         adv_str = str(arg3).split("'")[3].replace(":", SEP)
-#
-#         # creating subclass adjective
-#         adv = types.new_class(adv_str, (Adverb,))
-#         # adverb individual
-#         new_adv_ind = adv(parser.clean_from_POS(adv_str)+"."+id_str)
-#
-#         # creating subclass entity
-#         new_sub = types.new_class(verb_str, (Verb,))
-#         # creating entity individual
-#         new_ind = new_sub(parser.clean_from_POS(verb_str)+"."+id_str)
-#
-#         # individual entity - hasAdv - adverb individual
-#         new_ind.hasAdv.append(new_adv_ind)
-
-
-# class initBeliefs(Action):
-#     """create an entity and apply an adj to it"""
-#     def execute(self):
-#
-#         for i in range(AGENTS):
-#             # creating subclass AGENT
-#             agent = types.new_class(AGENTS[i], (AGENT,))
-#             # AGENT individual
-#             new_agent = agent(AGENTS[i] + "-0" + str(i))
-#
-#             # individual entity - hasAdv - adverb individual
-#             new_agent.hasName.append(WORLD_NAMES[i])
-
-
-# class initAgent(Action):
-#     """create an entity and apply an adj to it"""
-#     def execute(self):
-#
-#         for i in range(AGENTS):
-#             # creating subclass AGENT
-#             agent = types.new_class(AGENTS[i], (AGENT,))
-#             # AGENT individual
-#             new_agent = agent(AGENTS[i] + "-0" + str(i))
-#
-#             # individual entity - hasAdv - adverb individual
-#             new_agent.hasName.append(WORLD_NAMES[i])
-
 class initWorld(Action):
-    """create an entity and apply an adj to it"""
+    """World entities initialization"""
     def execute(self):
 
         # creating subclass WORLD
@@ -311,8 +222,32 @@ class initWorld(Action):
 
             # AGENT individuals
             for j in range(len(AGT_IND)):
-                new_agent = agent(AGT_IND[j].strip())
-                new_agent.hasWorld = [new_world]
+                new_agent_ind = agent(AGT_IND[j].strip())
+                new_agent_ind.hasWorld = [new_world]
+                new_world.hasAgent.append(new_agent_ind)
+
+                AGT_BELIEF_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_beliefs').split(",")
+                for agent_belief in AGT_BELIEF_LIST:
+                    bel = agent_belief.strip().split(".")[0]
+                    new_agent_ind.hasBelief.append(BELIEF(bel))
+
+                AGT_DESIRE_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_desires').split(",")
+                for agent_desire in AGT_DESIRE_LIST:
+                    des = agent_desire.strip().split(".")[0]
+                    new_agent_ind.hasDesire.append(DESIRE(des))
+
+                AGT_INTENTIONS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_intentions').split(",")
+                for agent_intention in AGT_INTENTIONS_LIST:
+                    intent = agent_intention.strip().split(".")[0]
+                    new_agent_ind.hasIntention.append(INTENTION(intent))
+
+                AGT_PLANS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_plans').split(",")
+                for agent_plan in AGT_PLANS_LIST:
+                    plan = agent_plan.strip().split(".")[0]
+                    new_agent_ind.hasPlan.append(PLAN(plan))
+
+
+
 
 
 # class createSubCustVerb(Action):

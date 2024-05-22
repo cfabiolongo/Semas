@@ -3,7 +3,7 @@ from actions import *
 
 # Beliefs declaration
 
-class INFO(Belief): pass
+# class INFO(Belief): pass
 
 # Informative beliefs about current desires
 class DESIRE(Belief): pass
@@ -17,6 +17,32 @@ class PLAN(Belief): pass
 # Informative beliefs about occurring intentions
 class INTENT(Belief): pass
 
+
+
+def crea_classe_info(nome_classe, base_class, **attributi):
+    # Crea un dizionario di attributi per la nuova classe
+    attributi_classe = attributi
+    # Crea la nuova classe dinamicamente
+    nuova_classe = type(nome_classe, (base_class,), attributi_classe)
+    return nuova_classe
+
+# Parametri per la nuova classe
+nome_classe = "INFO"
+
+# Creazione della nuova classe
+INFO = crea_classe_info(nome_classe, Belief)
+
+# Verifica della nuova classe e dei suoi attributi
+#print(INFO.__name__)  # Output: INFO
+#
+# Creazione di un'istanza della nuova classe
+info_instance = INFO()
+
+
+
+
+
+
 # Worlds Agents initialization
 init() >> [initWorld(), declareRules(), saveOnto()]
 
@@ -27,10 +53,11 @@ init() >> [initWorld(), declareRules(), saveOnto()]
 +DESIRE(D) / (PLAN(X) & INTENT(Y)) >> [show_line("\nDesire achieved with value: ",D,"\n")]
 
 
-# Intention (Case #2) - with Conditionals (COND)
+# Intention (Case #2) - with/without Conditionals (COND)
 
 +INFO(X) >> [show_line("\nGot it Belief: ",X,"\n"), process_belief(X), -INFO(X)]
-+DESIRE(X) / COND(Y) >> [show_line("\nDesire achieved with value: ",X," and conditional: ",Y," \n")]
++DESIRE(X) / COND(Y) >> [show_line("\nDesire achieved with value: ",X," and conditional: ",Y,"\n")]
++DESIRE(X) >> [show_line("\nDesire achieved with value: ",X,"\n")]
 
 
 # Intention (Case #1) - with Active Belief (check)
