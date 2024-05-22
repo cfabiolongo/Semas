@@ -1,9 +1,14 @@
 from phidias.Lib import *
 from actions import *
 
+
+
+
+
+
 # Beliefs declaration
 
-# class INFO(Belief): pass
+#class INFO(Belief): pass
 
 # Informative beliefs about current desires
 class DESIRE(Belief): pass
@@ -19,27 +24,16 @@ class INTENT(Belief): pass
 
 
 
-def crea_classe_info(nome_classe, base_class, **attributi):
-    # Crea un dizionario di attributi per la nuova classe
-    attributi_classe = attributi
-    # Crea la nuova classe dinamicamente
-    nuova_classe = type(nome_classe, (base_class,), attributi_classe)
-    return nuova_classe
 
-# Parametri per la nuova classe
-nome_classe = "INFO"
+var = "INFO"
 
-# Creazione della nuova classe
-INFO = crea_classe_info(nome_classe, Belief)
+# Creazione della classe dinamicamente e assegnazione al namespace globale
+globals()[var] = type(var, (Belief,), {})
 
-# Verifica della nuova classe e dei suoi attributi
-#print(INFO.__name__)  # Output: INFO
-#
-# Creazione di un'istanza della nuova classe
-info_instance = INFO()
+# Ora puoi creare un'istanza della classe
+istanza = globals()[var]()
 
-
-
+print(type(istanza))  # <class '__main__.ciao'>
 
 
 
