@@ -118,18 +118,6 @@ class log(Action):
 
 
 
-class create_sparql(Action):
-    """create sparql query from MST"""
-    def execute(self, *args):
-        print("\n--------- MST ---------\n ")
-
-        MST = parser.get_last_MST()
-        print("\nMST: \n" + str(MST))
-        print("\nGMC_SUPP: \n" + str(parser.GMC_SUPP))
-        print("\nGMC_SUPP_REV: \n" + str(parser.GMC_SUPP_REV))
-        print("\nLCD: \n" + str(parser.LCD))
-
-
 # ---------------------- Ontology creation Section
 
 
