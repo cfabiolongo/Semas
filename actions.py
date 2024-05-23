@@ -47,13 +47,14 @@ except IOError:
 
 
 with my_onto:
+
+    class ENTITY(Thing):
+        pass
+
     class BELIEF(Thing):
         pass
 
-    class AGENT(Thing):
-        pass
-
-    class WORLD(Thing):
+    class DESIRE(Thing):
         pass
 
     class INTENTION(Thing):
@@ -62,32 +63,7 @@ with my_onto:
     class PLAN(Thing):
         pass
 
-    class DESIRE(Thing):
-        pass
 
-    class hasWorld(ObjectProperty):
-        pass
-
-    class hasDesire(ObjectProperty):
-        pass
-
-    class hasIntention(ObjectProperty):
-        pass
-
-    class hasName(ObjectProperty):
-        range = [str]
-
-    class hasDescription(ObjectProperty):
-        range = [str]
-
-    class hasPlan(ObjectProperty):
-        pass
-
-    class hasAgent(ObjectProperty):
-        pass
-
-    class hasBelief(ObjectProperty):
-        pass
 
 
 
