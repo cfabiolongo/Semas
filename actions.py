@@ -21,6 +21,11 @@ PREFIX = PREFIX + f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
 # BDI-CLASSES Section
 ENTITIES = config.get('BDI-CLASSES', 'Entities').split(",")
 
+# Properties
+BELIEFS = config.get('BDI-CLASSES', 'Beliefs').split(",")
+DESIRES = config.get('BDI-CLASSES', 'Desires').split(",")
+INTENTIONS = config.get('BDI-CLASSES', 'Intentions').split(",")
+
 
 
 
@@ -143,13 +148,27 @@ class initWorld(Action):
         # Entities
         for i in range(len(ENTITIES)):
             # creating subclasses ENTITY
-            belief = types.new_class(ENTITIES[i].strip(), (ENTITY,))
+            entity = types.new_class(ENTITIES[i].strip(), (ENTITY,))
 
             ENT_INDS = config.get('BDI-INDIVIDUALS', ENTITIES[i].strip()).split(",")
 
             # creating ENTITY individuals
             for j in range(len(ENT_INDS)):
-                new_belief = belief(ENT_INDS[j].strip())
+                new_entity = entity(ENT_INDS[j].strip())
+
+        for i in range(len(BELIEFS)):
+            # creating subclasses BELIEFS
+            new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
+
+        for i in range(len(DESIRES)):
+            # creating subclasses BELIEFS
+            new_desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
+
+        for i in range(len(INTENTIONS)):
+            # creating subclasses BELIEFS
+            new_intention = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
+
+
 
         # for i in range(len(DESIRES)):
         #     # creating subclass DESIRES

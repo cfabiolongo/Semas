@@ -34,7 +34,8 @@ print(type(istanza))  # <class '__main__.ciao'>
 
 
 # Worlds Agents initialization
-init() >> [initWorld(), declareRules(), saveOnto()]
+# declareRules()
+init() >> [initWorld(), saveOnto()]
 
 
 # Intention (Case #1)
