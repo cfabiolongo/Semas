@@ -54,6 +54,35 @@ with my_onto:
     class PLAN(Thing):
         pass
 
+    class coAuthorWith(ObjectProperty):
+        pass
+
+    class hasAffiliationWith(ObjectProperty):
+        pass
+
+    class isTopAuthorIn(ObjectProperty):
+        pass
+
+    class selectedFor(ObjectProperty):
+        pass
+
+
+    class beTopAuthorOwnField(ObjectProperty):
+        pass
+
+
+    class ProposeCoauthorship(ObjectProperty):
+        pass
+
+
+
+
+
+
+
+
+
+
 
 # Declaring Phidias belief from OWL
 for i in range(len(BELIEFS)):
@@ -146,14 +175,13 @@ class initWorld(Action):
         for i in range(len(BELIEFS)):
             # creating subclasses BELIEFS
             new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
+            BDI_INDS = config.get('BDI-INDIVIDUALS', BELIEFS[i].strip()).split(" & ")
 
-            globals()[BELIEFS[i].strip()] = type(BELIEFS[i].strip(), (Belief,), {})
-            # Ora puoi creare un'istanza della classe
-            istanza = globals()[BELIEFS[i].strip()]()
-            print(type(istanza))
+            for j in range(len(BDI_INDS)):
+                print(BDI_INDS[j].strip())
 
-            for j in range(len(BELIEFS[i].strip())):
-                pass
+            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> QUI!!!!!!!!!!!!
+
 
         for i in range(len(DESIRES)):
             # creating subclasses BELIEFS
