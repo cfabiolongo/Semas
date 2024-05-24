@@ -20,7 +20,7 @@ get_triples() >> [show_line("\nImporting all triples...\n")]
 
 
 # Importing related triples
-pre_process() / (CoAuthorship(X,Y) & Affiliation(X, Z)) >> [show_line("\nImporting related triples...\n"), process_belief(X)]
+pre_process(X) >> [show_line("\nImporting ",X," triples...\n"), process_belief(X)]
 
 # Only after get_triple() | pre_process()
 process() / (CoAuthorship(X,Y) & Affiliation(X, Z)) >> [show_line("\nSearching co-authors with ",X,"...\n"), process_belief(X)]
