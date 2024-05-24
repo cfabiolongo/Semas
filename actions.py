@@ -160,6 +160,9 @@ class initWorld(Action):
             # creating subclasses BELIEFS
             new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
 
+            for j in range(len(BELIEFS[i].strip())):
+                pass
+
         for i in range(len(DESIRES)):
             # creating subclasses BELIEFS
             new_desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
