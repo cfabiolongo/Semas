@@ -3,44 +3,27 @@ import configparser
 from owlready2 import *
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('acad_mob.ini')
 
-cnt = itertools.count(1)
-dav = itertools.count(1)
-
+# SERVICE section
 LOG_ACTIVE = config.getboolean('SERVICE', 'LOG_ACTIVE')
 
-# Number of worlds
-NUMBER_OF_WORLDS = config.get('WORLDS', 'FILE_NAME')
+# ONTOLOGY section
+FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
+ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
 
-WORLD_NAME = config.get('INIT-W1', 'WORLD_NAME')
-WORLD_ind = config.get('INIT-W1', 'WORLD_ind')
-
-BELIEFS = config.get('INIT-W1', 'BELIEFS').split(",")
-BELIEFS_ind = config.get('INIT-W1', 'BELIEFS_ind').split(",")
-
-DESIRES = config.get('INIT-W1', 'DESIRES').split(",")
-DESIRES_ind = config.get('INIT-W1', 'DESIRES_ind').split(",")
-
-INTENTIONS = config.get('INIT-W1', 'INTENTIONS').split(",")
-INTENTIONS_ind = config.get('INIT-W1', 'INTENTIONS_ind').split(",")
-
-PLANS = config.get('INIT-W1', 'PLANS').split(",")
-PLANS_ind = config.get('INIT-W1', 'PLANS_ind').split(",")
-
-AGENTS = config.get('INIT-W1', 'AGENTS').split(",")
-
-# Ontology initialization
-FILE_NAME = config.get('WORLDS', 'FILE_NAME')
-ONTO_NAME = config.get('WORLDS', 'ONTO_NAME')
+# REASONING Section
+REASONER = config.get('REASONING', 'REASONER').split(",")
 PREFIXES = config.get('REASONING', 'PREFIXES').split(",")
 PREFIX = " ".join(PREFIXES)
 PREFIX = PREFIX + f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
 
+# BDI-CLASSES Section
+ENTITIES = config.get('BDI-CLASSES', 'Entities').split(",")
 
 
 
-owl_obj_dict = {}
+
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -157,65 +140,65 @@ class initWorld(Action):
     """World entities initialization"""
     def execute(self):
 
-        # creating subclass WORLD
-        world = types.new_class(WORLD_NAME, (WORLD,))
-        # WORLD individual
-        new_world = world(WORLD_ind)
+        # Entities
+        for i in range(len(ENTITIES)):
+            # creating subclasses ENTITY
+            belief = types.new_class(ENTITIES[i].strip(), (ENTITY,))
 
-        for i in range(len(BELIEFS)):
-            # creating subclass BELIEF
-            belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
-            # BELIEF individual
-            new_belief = belief(BELIEFS_ind[i].strip())
+            ENT_INDS = config.get('BDI-INDIVIDUALS', ENTITIES[i].strip()).split(",")
 
-        for i in range(len(DESIRES)):
-            # creating subclass DESIRES
-            desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
-            # DESIRE individual
-            new_desire = desire(DESIRES_ind[i].strip())
+            # creating ENTITY individuals
+            for j in range(len(ENT_INDS)):
+                new_belief = belief(ENT_INDS[j].strip())
 
-        for i in range(len(INTENTIONS)):
-            # creating subclass INTENTION
-            desire = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
-            # INTENTION individual
-            new_desire = desire(INTENTIONS_ind[i].strip())
-
-        for i in range(len(PLANS)):
-            # creating subclass PLAN
-            plan = types.new_class(PLANS[i].strip(), (PLAN,))
-            # INTENTION PLAN
-            new_plan = plan(PLANS_ind[i].strip())
-
-        for i in range(len(AGENTS)):
-            # creating subclass AGENT
-            agent = types.new_class(AGENTS[i].strip(), (AGENT,))
-            AGT_IND = config.get('INIT-W1', AGENTS[i].strip()+'_ind').split(",")
-
-            # AGENT individuals
-            for j in range(len(AGT_IND)):
-                new_agent_ind = agent(AGT_IND[j].strip())
-                new_agent_ind.hasWorld = [new_world]
-                new_world.hasAgent.append(new_agent_ind)
-
-                AGT_BELIEF_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_beliefs').split(",")
-                for agent_belief in AGT_BELIEF_LIST:
-                    bel = agent_belief.strip().split(".")[0]
-                    new_agent_ind.hasBelief.append(BELIEF(bel))
-
-                AGT_DESIRE_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_desires').split(",")
-                for agent_desire in AGT_DESIRE_LIST:
-                    des = agent_desire.strip().split(".")[0]
-                    new_agent_ind.hasDesire.append(DESIRE(des))
-
-                AGT_INTENTIONS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_intentions').split(",")
-                for agent_intention in AGT_INTENTIONS_LIST:
-                    intent = agent_intention.strip().split(".")[0]
-                    new_agent_ind.hasIntention.append(INTENTION(intent))
-
-                AGT_PLANS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_plans').split(",")
-                for agent_plan in AGT_PLANS_LIST:
-                    plan = agent_plan.strip().split(".")[0]
-                    new_agent_ind.hasPlan.append(PLAN(plan))
+        # for i in range(len(DESIRES)):
+        #     # creating subclass DESIRES
+        #     desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
+        #     # DESIRE individual
+        #     new_desire = desire(DESIRES_ind[i].strip())
+        #
+        # for i in range(len(INTENTIONS)):
+        #     # creating subclass INTENTION
+        #     desire = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
+        #     # INTENTION individual
+        #     new_desire = desire(INTENTIONS_ind[i].strip())
+        #
+        # for i in range(len(PLANS)):
+        #     # creating subclass PLAN
+        #     plan = types.new_class(PLANS[i].strip(), (PLAN,))
+        #     # INTENTION PLAN
+        #     new_plan = plan(PLANS_ind[i].strip())
+        #
+        # for i in range(len(AGENTS)):
+        #     # creating subclass AGENT
+        #     agent = types.new_class(AGENTS[i].strip(), (AGENT,))
+        #     AGT_IND = config.get('INIT-W1', AGENTS[i].strip()+'_ind').split(",")
+        #
+        #     # AGENT individuals
+        #     for j in range(len(AGT_IND)):
+        #         new_agent_ind = agent(AGT_IND[j].strip())
+        #         new_agent_ind.hasWorld = [new_world]
+        #         new_world.hasAgent.append(new_agent_ind)
+        #
+        #         AGT_BELIEF_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_beliefs').split(",")
+        #         for agent_belief in AGT_BELIEF_LIST:
+        #             bel = agent_belief.strip().split(".")[0]
+        #             new_agent_ind.hasBelief.append(BELIEF(bel))
+        #
+        #         AGT_DESIRE_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_desires').split(",")
+        #         for agent_desire in AGT_DESIRE_LIST:
+        #             des = agent_desire.strip().split(".")[0]
+        #             new_agent_ind.hasDesire.append(DESIRE(des))
+        #
+        #         AGT_INTENTIONS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_intentions').split(",")
+        #         for agent_intention in AGT_INTENTIONS_LIST:
+        #             intent = agent_intention.strip().split(".")[0]
+        #             new_agent_ind.hasIntention.append(INTENTION(intent))
+        #
+        #         AGT_PLANS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_plans').split(",")
+        #         for agent_plan in AGT_PLANS_LIST:
+        #             plan = agent_plan.strip().split(".")[0]
+        #             new_agent_ind.hasPlan.append(PLAN(plan))
 
 
 

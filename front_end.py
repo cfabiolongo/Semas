@@ -2,10 +2,6 @@ from phidias.Lib import *
 from actions import *
 
 
-
-
-
-
 # Beliefs declaration
 
 #class INFO(Belief): pass
