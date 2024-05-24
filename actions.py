@@ -10,9 +10,6 @@ dav = itertools.count(1)
 
 LOG_ACTIVE = config.getboolean('SERVICE', 'LOG_ACTIVE')
 
-# Ontology initialization
-FILE_NAME = config.get('WORLDS', 'FILE_NAME')
-
 # Number of worlds
 NUMBER_OF_WORLDS = config.get('WORLDS', 'FILE_NAME')
 
@@ -32,6 +29,16 @@ PLANS = config.get('INIT-W1', 'PLANS').split(",")
 PLANS_ind = config.get('INIT-W1', 'PLANS_ind').split(",")
 
 AGENTS = config.get('INIT-W1', 'AGENTS').split(",")
+
+# Ontology initialization
+FILE_NAME = config.get('WORLDS', 'FILE_NAME')
+ONTO_NAME = config.get('WORLDS', 'ONTO_NAME')
+PREFIXES = config.get('REASONING', 'PREFIXES').split(",")
+PREFIX = " ".join(PREFIXES)
+PREFIX = PREFIX + f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
+
+
+
 
 owl_obj_dict = {}
 
@@ -270,11 +277,7 @@ class seek_prep(Action):
         subject = str(arg1).split("'")[3]
         print(subject)
 
-        p = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-        p = p + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-        p = p + f"PREFIX lodo: <http://test.org/{FILE_NAME}#> "
-
-        q = p + f" SELECT ?prep ?obj"+" WHERE { "
+        q = PREFIX + f" SELECT ?prep ?obj"+" WHERE { "
         q = q + f"lodo:{subject} lodo:hasPrep ?prep. ?prep lodo:hasObject ?obj. "+"}"
 
         my_world = owlready2.World()
@@ -309,11 +312,7 @@ class seek_adj(Action):
         subject = str(arg1).split("'")[3]
         print(subject)
 
-        p = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-        p = p + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-        p = p + f"PREFIX lodo: <http://test.org/{FILE_NAME}#> "
-
-        q = p + f" SELECT ?adj"+" WHERE { "
+        q = PREFIX + f" SELECT ?adj"+" WHERE { "
         q = q + f"lodo:{subject} lodo:hasAdj ?adj. "+"}"
 
         my_world = owlready2.World()
