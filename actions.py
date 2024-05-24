@@ -3,7 +3,7 @@ import configparser
 from owlready2 import *
 
 config = configparser.ConfigParser()
-config.read('acad_mob.ini')
+config.read('config.ini')
 
 # SERVICE section
 LOG_ACTIVE = config.getboolean('SERVICE', 'LOG_ACTIVE')
@@ -25,10 +25,6 @@ ENTITIES = config.get('BDI-CLASSES', 'Entities').split(",")
 BELIEFS = config.get('BDI-CLASSES', 'Beliefs').split(",")
 DESIRES = config.get('BDI-CLASSES', 'Desires').split(",")
 INTENTIONS = config.get('BDI-CLASSES', 'Intentions').split(",")
-
-
-
-
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -59,10 +55,17 @@ with my_onto:
         pass
 
 
+# Declaring Phidias belief from OWL
+for i in range(len(BELIEFS)):
+    # creating subclasses BELIEFS
+    new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
+
+    globals()[BELIEFS[i].strip()] = type(BELIEFS[i].strip(), (Belief,), {})
+    # Ora puoi creare un'istanza della classe
+    istanza = globals()[BELIEFS[i].strip()]()
 
 
-
-# BDI-Actions
+# Phidias Actions
 
 class process_belief(Action):
     """create sparql query from MST"""
@@ -71,8 +74,6 @@ class process_belief(Action):
 
         info = str(arg1).split("'")[3]
         print(f"Operations on belief {info}...")
-
-        # self.assert_belief(DESIRE("ACHIEVED"))
 
 
 
@@ -86,20 +87,6 @@ class check(ActiveBelief):
             return True
         else:
             return False
-
-
-# Worlds Agents intialization
-class init(Procedure): pass
-
-# Triggering Intentions/Plans
-class trigger(Procedure): pass
-
-class feed_sparql(Procedure): pass
-class finalize_sparql(Procedure): pass
-
-
-# Nominal query sparql belief
-class SPARQL(Reactor): pass
 
 
 class log(Action):
@@ -160,6 +147,11 @@ class initWorld(Action):
             # creating subclasses BELIEFS
             new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
 
+            globals()[BELIEFS[i].strip()] = type(BELIEFS[i].strip(), (Belief,), {})
+            # Ora puoi creare un'istanza della classe
+            istanza = globals()[BELIEFS[i].strip()]()
+            print(type(istanza))
+
             for j in range(len(BELIEFS[i].strip())):
                 pass
 
@@ -170,7 +162,6 @@ class initWorld(Action):
         for i in range(len(INTENTIONS)):
             # creating subclasses BELIEFS
             new_intention = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
-
 
 
         # for i in range(len(DESIRES)):
