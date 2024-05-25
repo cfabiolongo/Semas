@@ -172,13 +172,28 @@ class initWorld(Action):
             for j in range(len(ENT_INDS)):
                 new_entity = entity(ENT_INDS[j].strip())
 
+
+
+            for i in entity.instances():
+                print(i)
+
         for i in range(len(BELIEFS)):
             # creating subclasses BELIEFS
             new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
             BDI_INDS = config.get('BDI-INDIVIDUALS', BELIEFS[i].strip()).split(" & ")
 
             for j in range(len(BDI_INDS)):
-                print(BDI_INDS[j].strip())
+                triple = BDI_INDS[j].strip()
+
+                subject = triple.split(",")[0][1:]
+                prop = triple.split(",")[1]
+                object = triple.split(",")[2][:-1]
+
+                print(subject, prop, object)
+
+
+
+                #print(entity[subject])
 
             # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> QUI!!!!!!!!!!!!
 
