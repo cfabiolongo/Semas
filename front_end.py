@@ -14,7 +14,7 @@ class pre_process(Procedure): pass
 
 # Worlds Agents initialization
 # declareRules()
-init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), saveOnto()]
+init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 # Triples import from OWL
 get_triples() >> [show_line("\nImporting all triples...\n")]
 

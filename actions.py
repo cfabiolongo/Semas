@@ -23,8 +23,6 @@ ENTITIES = config.get('BDI-CLASSES', 'Entities').split(",")
 
 # Properties
 BELIEFS = config.get('BDI-CLASSES', 'Beliefs').split(",")
-DESIRES = config.get('BDI-CLASSES', 'Desires').split(",")
-INTENTIONS = config.get('BDI-CLASSES', 'Intentions').split(",")
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -71,16 +69,12 @@ with my_onto:
         pass
 
 
-    class ProposeCoauthorship(ObjectProperty):
+    class publish(ObjectProperty):
         pass
 
 
-
-
-
-
-
-
+    class proposeCoauthorship(ObjectProperty):
+        pass
 
 
 
@@ -94,42 +88,56 @@ for i in range(len(BELIEFS)):
     istanza = globals()[BELIEFS[i].strip()]()
 
 
-# Phidias Actions
-
-class process_belief(Action):
-    """create sparql query from MST"""
-    def execute(self, arg1):
-        print("\n--------- Processing belief Info---------\n ")
-
-        info = str(arg1).split("'")[3]
-        print(f"Operations on belief {info}...")
-
-
-
-class check(ActiveBelief):
-    """check if var has an admissible value"""
-    def evaluate(self, arg):
-
-        var = str(arg).split("'")[3]
-
-        if var == "OK":
-            return True
-        else:
-            return False
-
-
-class log(Action):
-    """log direct assertions from keyboard"""
-    def execute(self, *args):
-        a = str(args).split("'")
-
-        if LOG_ACTIVE:
-            with open("log.txt", "a") as myfile:
-                myfile.write("\n"+a[1]+": "+a[5])
-
 
 
 # ---------------------- Ontology creation Section
+
+
+class initWorld(Action):
+    """World entities initialization"""
+    def execute(self):
+
+        # instances name/instances dictionary
+        dict_ent = {}
+
+        # Entities
+        for i in range(len(ENTITIES)):
+            # creating subclasses ENTITY
+            entity = types.new_class(ENTITIES[i].strip(), (ENTITY,))
+
+            ENT_INDS = config.get('BDI-INDIVIDUALS', ENTITIES[i].strip()).split(",")
+
+            # creating ENTITY individuals
+            for j in range(len(ENT_INDS)):
+                new_entity = entity(ENT_INDS[j].strip())
+                dict_ent[ENT_INDS[j].strip()] = new_entity
+
+        for i in range(len(BELIEFS)):
+            BDI_INDS = config.get('BDI-INDIVIDUALS', BELIEFS[i].strip()).split(" & ")
+
+            for j in range(len(BDI_INDS)):
+                triple = BDI_INDS[j].strip()
+
+                subject = triple.split(",")[0][1:].strip()
+                prop = triple.split(",")[1].strip()
+                object = triple.split(",")[2][:-1].strip()
+
+                print(subject, prop, object)
+
+                if prop == "coAuthorWith":
+                    dict_ent[subject].coAuthorWith.append(dict_ent[object])
+                elif prop == "hasAffiliationWith":
+                    dict_ent[subject].hasAffiliationWith.append(dict_ent[object])
+                elif prop == "isTopAuthorIn":
+                    dict_ent[subject].isTopAuthorIn.append(dict_ent[object])
+                elif prop == "selectedFor":
+                    dict_ent[subject].selectedFor.append(dict_ent[object])
+                elif prop == "beTopAuthorOwnField":
+                    dict_ent[subject].beTopAuthorOwnField.append(dict_ent[object])
+                elif prop == "publish":
+                    dict_ent[subject].publish.append(dict_ent[object])
+                elif prop == "proposeCoauthorship":
+                    dict_ent[subject].proposeCoauthorship.append(dict_ent[object])
 
 
 class WFR(ActiveBelief):
@@ -155,107 +163,6 @@ class declareRules(Action):
                rule_str = config.get('SWRL', 'RULE'+str(i+1))
                print(f"\nadding the following rules to ontology: {rule_str}")
                rule.set_as_rule(rule_str)
-
-
-class initWorld(Action):
-    """World entities initialization"""
-    def execute(self):
-
-        # Entities
-        for i in range(len(ENTITIES)):
-            # creating subclasses ENTITY
-            entity = types.new_class(ENTITIES[i].strip(), (ENTITY,))
-
-            ENT_INDS = config.get('BDI-INDIVIDUALS', ENTITIES[i].strip()).split(",")
-
-            # creating ENTITY individuals
-            for j in range(len(ENT_INDS)):
-                new_entity = entity(ENT_INDS[j].strip())
-
-
-
-            for i in entity.instances():
-                print(i)
-
-        for i in range(len(BELIEFS)):
-            # creating subclasses BELIEFS
-            new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
-            BDI_INDS = config.get('BDI-INDIVIDUALS', BELIEFS[i].strip()).split(" & ")
-
-            for j in range(len(BDI_INDS)):
-                triple = BDI_INDS[j].strip()
-
-                subject = triple.split(",")[0][1:]
-                prop = triple.split(",")[1]
-                object = triple.split(",")[2][:-1]
-
-                print(subject, prop, object)
-
-
-
-                #print(entity[subject])
-
-            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> QUI!!!!!!!!!!!!
-
-
-        for i in range(len(DESIRES)):
-            # creating subclasses BELIEFS
-            new_desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
-
-        for i in range(len(INTENTIONS)):
-            # creating subclasses BELIEFS
-            new_intention = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
-
-
-        # for i in range(len(DESIRES)):
-        #     # creating subclass DESIRES
-        #     desire = types.new_class(DESIRES[i].strip(), (DESIRE,))
-        #     # DESIRE individual
-        #     new_desire = desire(DESIRES_ind[i].strip())
-        #
-        # for i in range(len(INTENTIONS)):
-        #     # creating subclass INTENTION
-        #     desire = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
-        #     # INTENTION individual
-        #     new_desire = desire(INTENTIONS_ind[i].strip())
-        #
-        # for i in range(len(PLANS)):
-        #     # creating subclass PLAN
-        #     plan = types.new_class(PLANS[i].strip(), (PLAN,))
-        #     # INTENTION PLAN
-        #     new_plan = plan(PLANS_ind[i].strip())
-        #
-        # for i in range(len(AGENTS)):
-        #     # creating subclass AGENT
-        #     agent = types.new_class(AGENTS[i].strip(), (AGENT,))
-        #     AGT_IND = config.get('INIT-W1', AGENTS[i].strip()+'_ind').split(",")
-        #
-        #     # AGENT individuals
-        #     for j in range(len(AGT_IND)):
-        #         new_agent_ind = agent(AGT_IND[j].strip())
-        #         new_agent_ind.hasWorld = [new_world]
-        #         new_world.hasAgent.append(new_agent_ind)
-        #
-        #         AGT_BELIEF_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_beliefs').split(",")
-        #         for agent_belief in AGT_BELIEF_LIST:
-        #             bel = agent_belief.strip().split(".")[0]
-        #             new_agent_ind.hasBelief.append(BELIEF(bel))
-        #
-        #         AGT_DESIRE_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_desires').split(",")
-        #         for agent_desire in AGT_DESIRE_LIST:
-        #             des = agent_desire.strip().split(".")[0]
-        #             new_agent_ind.hasDesire.append(DESIRE(des))
-        #
-        #         AGT_INTENTIONS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_intentions').split(",")
-        #         for agent_intention in AGT_INTENTIONS_LIST:
-        #             intent = agent_intention.strip().split(".")[0]
-        #             new_agent_ind.hasIntention.append(INTENTION(intent))
-        #
-        #         AGT_PLANS_LIST = config.get('INIT-W1', AGT_IND[j].strip() + '_plans').split(",")
-        #         for agent_plan in AGT_PLANS_LIST:
-        #             plan = agent_plan.strip().split(".")[0]
-        #             new_agent_ind.hasPlan.append(PLAN(plan))
-
 
 
 
@@ -300,6 +207,41 @@ class saveOnto(Action):
             my_onto.save(file=FILE_NAME, format="rdfxml")
             print("Ontology saved.")
 
+
+
+
+# Phidias Actions
+
+class process_belief(Action):
+    """create sparql query from MST"""
+    def execute(self, arg1):
+        print("\n--------- Processing belief Info---------\n ")
+
+        info = str(arg1).split("'")[3]
+        print(f"Operations on belief {info}...")
+
+
+
+class check(ActiveBelief):
+    """check if var has an admissible value"""
+    def evaluate(self, arg):
+
+        var = str(arg).split("'")[3]
+
+        if var == "OK":
+            return True
+        else:
+            return False
+
+
+class log(Action):
+    """log direct assertions from keyboard"""
+    def execute(self, *args):
+        a = str(args).split("'")
+
+        if LOG_ACTIVE:
+            with open("log.txt", "a") as myfile:
+                myfile.write("\n"+a[1]+": "+a[5])
 
 
 
