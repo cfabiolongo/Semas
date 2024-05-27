@@ -23,6 +23,7 @@ ENTITIES = config.get('BDI-CLASSES', 'Entities').split(",")
 
 # Properties
 BELIEFS = config.get('BDI-CLASSES', 'Beliefs').split(",")
+PROPERTIES = config.get('BDI-CLASSES', 'Properties').split(",")
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -33,6 +34,12 @@ except IOError:
     print("\nPlease Re-Run Semas.")
     my_onto.save(file=FILE_NAME, format="rdfxml")
     exit()
+
+
+# instances name/instances dictionary
+dict_ent = {}
+# properties name/properites dictionary
+dict_prop = {}
 
 
 with my_onto:
@@ -52,29 +59,13 @@ with my_onto:
     class PLAN(Thing):
         pass
 
-    class coAuthorWith(ObjectProperty):
-        pass
 
-    class hasAffiliationWith(ObjectProperty):
-        pass
+    # Declaring Owlready properties
+    for i in range(len(PROPERTIES)):
+        globals()[PROPERTIES[i].strip()] = type(PROPERTIES[i].strip(), (ObjectProperty,), {})
+        istanza = globals()[PROPERTIES[i].strip()]()
 
-    class isTopAuthorIn(ObjectProperty):
-        pass
-
-    class selectedFor(ObjectProperty):
-        pass
-
-
-    class beTopAuthorOwnField(ObjectProperty):
-        pass
-
-
-    class publish(ObjectProperty):
-        pass
-
-
-    class proposeCoauthorship(ObjectProperty):
-        pass
+        dict_prop[PROPERTIES[i].strip()] = istanza
 
 
 
@@ -84,8 +75,12 @@ for i in range(len(BELIEFS)):
     new_belief = types.new_class(BELIEFS[i].strip(), (BELIEF,))
 
     globals()[BELIEFS[i].strip()] = type(BELIEFS[i].strip(), (Belief,), {})
-    # Ora puoi creare un'istanza della classe
     istanza = globals()[BELIEFS[i].strip()]()
+
+
+
+
+
 
 
 
@@ -96,9 +91,6 @@ for i in range(len(BELIEFS)):
 class initWorld(Action):
     """World entities initialization"""
     def execute(self):
-
-        # instances name/instances dictionary
-        dict_ent = {}
 
         # Entities
         for i in range(len(ENTITIES)):
@@ -122,22 +114,8 @@ class initWorld(Action):
                 prop = triple.split(",")[1].strip()
                 object = triple.split(",")[2][:-1].strip()
 
-                print(subject, prop, object)
+                getattr(dict_ent[subject], prop).append(dict_ent[object])
 
-                if prop == "coAuthorWith":
-                    dict_ent[subject].coAuthorWith.append(dict_ent[object])
-                elif prop == "hasAffiliationWith":
-                    dict_ent[subject].hasAffiliationWith.append(dict_ent[object])
-                elif prop == "isTopAuthorIn":
-                    dict_ent[subject].isTopAuthorIn.append(dict_ent[object])
-                elif prop == "selectedFor":
-                    dict_ent[subject].selectedFor.append(dict_ent[object])
-                elif prop == "beTopAuthorOwnField":
-                    dict_ent[subject].beTopAuthorOwnField.append(dict_ent[object])
-                elif prop == "publish":
-                    dict_ent[subject].publish.append(dict_ent[object])
-                elif prop == "proposeCoauthorship":
-                    dict_ent[subject].proposeCoauthorship.append(dict_ent[object])
 
 
 class WFR(ActiveBelief):
