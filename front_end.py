@@ -4,20 +4,16 @@ from actions import *
 # Ontology intialization
 class init(Procedure): pass
 
-# Import OWL triples
-class get_triples(Procedure): pass
-
 # Processing beliefs
 class process(Procedure): pass
 
+# Import OWL triples
 class pre_process(Procedure): pass
+
 
 # Worlds Agents initialization
 # declareRules()
 init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
-# Triples import from OWL
-get_triples() >> [show_line("\nImporting all triples...\n")]
-
 
 # Importing related triples
 pre_process() >> [show_line("\nAsserting OWL 2 beliefs triples...\n"), assert_beliefs_triples()]
