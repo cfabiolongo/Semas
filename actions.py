@@ -20,7 +20,10 @@ PREFIX = PREFIX + f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
 ENTITIES = config.get('CLASSES', 'Entities').split(",")
 
 # Properties
-BELIEFS = config.get('CLASSES', 'Beliefs').split(",")
+BELIEFS = config.get('CLASSES', 'PHI-Beliefs').split(",")
+DESIRES = config.get('CLASSES', 'PHI-Desires').split(",")
+INTENTIONS = config.get('CLASSES', 'PHI-Intentions').split(",")
+
 PROPERTIES = config.get('CLASSES', 'Properties').split(",")
 
 try:
@@ -80,6 +83,20 @@ for i in range(len(BELIEFS)):
 
     globals()[BELIEFS[i].strip()] = type(BELIEFS[i].strip(), (Belief,), {})
     istanza = globals()[BELIEFS[i].strip()]()
+
+for i in range(len(DESIRES)):
+    # creating subclasses DESIRES
+    new_belief = types.new_class(DESIRES[i].strip(), (DESIRE,))
+
+    globals()[DESIRES[i].strip()] = type(DESIRES[i].strip(), (Belief,), {})
+    istanza = globals()[DESIRES[i].strip()]()
+
+for i in range(len(INTENTIONS)):
+    # creating subclasses INTENTIONS
+    new_belief = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
+
+    globals()[INTENTIONS[i].strip()] = type(INTENTIONS[i].strip(), (Belief,), {})
+    istanza = globals()[INTENTIONS[i].strip()]()
 
 
 # ---------------------------------------------

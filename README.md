@@ -88,6 +88,6 @@ Unless you delete the owl file or choose to create another ontology, the agent w
 After having started Semas....
 
 ```sh
-eShell: main > +FEED("sentence")
+eShell: main > init()
 ```
 
