@@ -171,7 +171,7 @@ class assert_beliefs_triples(Action):
 
         q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
         # q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:BELIEF. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:BELIEF. " + "}"
-        q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
+        q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
 
         my_world = owlready2.World()
         my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
@@ -184,8 +184,18 @@ class assert_beliefs_triples(Action):
         graph = my_world.as_rdflib_graph()
         result = list(graph.query(q))
 
-        print(result)
+        for res in result:
 
+            subj = str(res).split(",")[0]
+            subj = subj.split("#")[1][:-2]
+
+            prop = str(res).split(",")[1]
+            prop = prop.split("#")[1][:-2]
+
+            obj = str(res).split(",")[2]
+            obj = obj.split("#")[1][:-3]
+
+            print(subj, prop, obj)
 
 
 
