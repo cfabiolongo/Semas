@@ -13,6 +13,7 @@ FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
 
 # REASONING Section
+REASONING_ACTIVE = config.getboolean('REASONING', 'ACTIVE')
 REASONER = config.get('REASONING', 'REASONER').split(",")
 PREFIXES = config.get('REASONING', 'PREFIXES').split(",")
 PREFIX = " ".join(PREFIXES)
@@ -81,10 +82,6 @@ for i in range(len(BELIEFS)):
 
 
 
-
-
-
-
 # ---------------------- Ontology creation Section
 
 
@@ -144,39 +141,6 @@ class declareRules(Action):
 
 
 
-
-# class createSubCustVerb(Action):
-#     """Creating a subclass of the class Verb"""
-#     def execute(self, arg1, arg2, arg3, arg4):
-#
-#         id_str = str(arg1).split("'")[3]
-#         verb_str = str(arg2).split("'")[3].replace(":", SEP)
-#         subj_str = str(arg3).split("'")[3].replace(":", SEP)
-#         obj_str = str(arg4).split("'")[3].replace(":", SEP)
-#
-#         # subclasses
-#         new_sub_verb = types.new_class(verb_str, (Transitive,))
-#         new_sub_subj = types.new_class(subj_str, (Entity,))
-#         new_sub_obj = types.new_class(obj_str, (Entity,))
-#
-#         # entities individual
-#         new_ind_id = Id(id_str)
-#         new_ind_verb = new_sub_verb(parser.clean_from_POS(verb_str)+"."+id_str)
-#         new_ind_subj = new_sub_subj(parser.clean_from_POS(subj_str)+"."+id_str)
-#         new_ind_obj = new_sub_obj(parser.clean_from_POS(obj_str)+"."+id_str)
-#
-#         # individual entity - hasSubject - subject individual
-#         new_ind_verb.hasSubject = [new_ind_subj]
-#         # individual entity - hasObject - Object individual
-#         new_ind_verb.hasObject = [new_ind_obj]
-#         # storing action's id
-#         new_ind_verb.hasId = [new_ind_id]
-
-
-
-
-
-
 class saveOnto(Action):
     """Creating a subclass of the class Verb"""
     def execute(self):
@@ -197,6 +161,33 @@ class process_belief(Action):
 
         info = str(arg1).split("'")[3]
         print(f"Operations on belief {info}...")
+
+
+
+class assert_beliefs_triples(Action):
+    """create sparql query from MST"""
+    def execute(self):
+        print("\n--------- Asserting beliefs triples---------\n ")
+
+        q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
+        # q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:BELIEF. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:BELIEF. " + "}"
+        q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
+
+        my_world = owlready2.World()
+        my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
+
+        if REASONING_ACTIVE:
+            # sync_reasoner_pellet(my_world, infer_property_values = True, infer_data_property_values = True)
+            sync_reasoner_hermit(my_world, infer_property_values=True)
+            # sync_reasoner_hermit(my_world)
+
+        graph = my_world.as_rdflib_graph()
+        result = list(graph.query(q))
+
+        print(result)
+
+
+
 
 
 
