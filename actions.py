@@ -17,11 +17,11 @@ PREFIX = " ".join(PREFIXES)
 PREFIX = PREFIX + f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
 
 # BDI-CLASSES Section
-ENTITIES = config.get('BDI-CLASSES', 'Entities').split(",")
+ENTITIES = config.get('CLASSES', 'Entities').split(",")
 
 # Properties
-BELIEFS = config.get('BDI-CLASSES', 'Beliefs').split(",")
-PROPERTIES = config.get('BDI-CLASSES', 'Properties').split(",")
+BELIEFS = config.get('CLASSES', 'Beliefs').split(",")
+PROPERTIES = config.get('CLASSES', 'Properties').split(",")
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -96,7 +96,7 @@ class initWorld(Action):
             # creating subclasses ENTITY
             entity = types.new_class(ENTITIES[i].strip(), (ENTITY,))
 
-            ENT_INDS = config.get('BDI-INDIVIDUALS', ENTITIES[i].strip()).split(",")
+            ENT_INDS = config.get('INDIVIDUALS', ENTITIES[i].strip()).split(",")
 
             # creating ENTITY individuals
             for j in range(len(ENT_INDS)):
@@ -104,7 +104,7 @@ class initWorld(Action):
                 dict_ent[ENT_INDS[j].strip()] = new_entity
 
         for i in range(len(BELIEFS)):
-            BDI_INDS = config.get('BDI-INDIVIDUALS', BELIEFS[i].strip()).split(" & ")
+            BDI_INDS = config.get('INDIVIDUALS', BELIEFS[i].strip()).split(" & ")
 
             for j in range(len(BDI_INDS)):
                 triple = BDI_INDS[j].strip()
