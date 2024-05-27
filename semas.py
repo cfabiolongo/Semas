@@ -2,13 +2,11 @@ from phidias.Main import *
 from phidias.Types import *
 
 
-
-def_vars('X', 'Y', 'Z', 'T', 'W', 'K', 'J', 'M', 'N', "D", "I", "V", "L", "O", "E", "U", "S", "R", "H", "A", "Q", "P", "O")
+def_vars('X', 'Y', 'Z')
 
 from actions import *
 # from onto_builder import *
 from front_end import *
-
 
 
 # instantiate the engine
