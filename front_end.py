@@ -31,6 +31,9 @@ process() >> [show_line("\nAsserting triples ended.\n")]
 # Desires/Intentions
 publish(Z) / (CoAuthorship(X, Y) & TopAuthorship(Y, Z)) >> [show_line("\nCoauthor with ",X," if you want to publish in ",Z,".\n")]
 
+# Propose co-authorship in the field
+# betop(Z) / (CoAuthorship(X, Y) & TopAuthorship(Y, Z)) >> [show_line("\nCoauthor with ",X," if you want to publish in ",Z,".\n")]
+
 
 
 
