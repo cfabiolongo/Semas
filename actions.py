@@ -5,9 +5,6 @@ from owlready2 import *
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# SERVICE section
-LOG_ACTIVE = config.getboolean('SERVICE', 'LOG_ACTIVE')
-
 # ONTOLOGY section
 FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
@@ -170,7 +167,6 @@ class assert_beliefs_triples(Action):
         print("\n--------- Asserting beliefs triples---------\n ")
 
         q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
-        # q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:BELIEF. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:BELIEF. " + "}"
         q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
 
         my_world = owlready2.World()
@@ -211,18 +207,6 @@ class check(ActiveBelief):
             return True
         else:
             return False
-
-
-class log(Action):
-    """log direct assertions from keyboard"""
-    def execute(self, *args):
-        a = str(args).split("'")
-
-        if LOG_ACTIVE:
-            with open("log.txt", "a") as myfile:
-                myfile.write("\n"+a[1]+": "+a[5])
-
-
 
 
 # ----------------------------------
