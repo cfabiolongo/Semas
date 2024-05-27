@@ -10,8 +10,8 @@ class process(Procedure): pass
 # Import OWL triples
 class pre_process(Procedure): pass
 
-class query(Procedure): pass
-
+class publish(Procedure): pass
+class betop(Procedure): pass
 
 
 # Worlds Agents initialization
@@ -28,7 +28,7 @@ process() / TRIPLE(X, "isTopAuthorIn", Y) >> [show_line("\nAsserting triples...\
 process() / TRIPLE(X, "selectedFor", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "selectedFor", Y), +Selectionship(X, Y), process()]
 process() >> [show_line("\nAsserting triples ended.\n")]
 
-query() / (CoAuthorship(X, Y) & TopAuthorship(Y, 'Applied-Ontology')) >> [show_line("\nCoauthor with ",X, " if you want to publish in Applied-Ontology.")]
+publish(Z) / (CoAuthorship(X, Y) & TopAuthorship(Y, Z)) >> [show_line("\nCoauthor with ",X," if you want to publish in ",Z,".\n")]
 
 
 
