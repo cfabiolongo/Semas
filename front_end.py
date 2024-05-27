@@ -11,13 +11,24 @@ class process(Procedure): pass
 class pre_process(Procedure): pass
 
 
+
 # Worlds Agents initialization
 # declareRules()
 init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 
 # Importing related triples
-pre_process() >> [show_line("\nAsserting OWL 2 beliefs triples...\n"), assert_beliefs_triples()]
+pre_process() >> [show_line("\nAsserting all OWL 2 beliefs triples...\n"), assert_beliefs_triples()]
 
 # Only after get_triple() | pre_process()
-process() / (CoAuthorship(X,Y) & Affiliation(X, Z)) >> [show_line("\nSearching co-authors with ",X,"...\n"), process_belief(X)]
+process() / TRIPLE(X, "coAuthorWith", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "coAuthorWith", Y), +CoAuthorship(X, Y), process()]
+process() / TRIPLE(X, "hasAffiliationWith", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "hasAffiliationWith", Y), +Affiliation(X, Y), process()]
+process() / TRIPLE(X, "isTopAuthorIn", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "isTopAuthorIn", Y), +TopAuthorship(X, Y), process()]
+process() / TRIPLE(X, "selectedFor", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "selectedFor", Y), +Selectionship(X, Y), process()]
+process() / TRIPLE(X, "beTopAuthorOwnField", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "beTopAuthorOwnField", Y), +BeTopAuthorship(X, Y), process()]
+process() / TRIPLE(X, "publish", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "publish", Y), +Publicationship(X, Y), process()]
+process() / TRIPLE(X, "proposeCoauthorship", Y) >> [show_line("\nAsserting triples...\n"), -TRIPLE(X, "proposeCoauthorship", Y), +ProposeCoauthorship(X, Y), process()]
+process() >> [show_line("\nAsserting triples ended.\n")]
+
+
+
 

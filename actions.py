@@ -40,6 +40,12 @@ dict_ent = {}
 dict_prop = {}
 
 
+# Phidias belief containing OWL triples
+class TRIPLE(Belief):
+    pass
+
+
+
 with my_onto:
 
     class ENTITY(Thing):
@@ -192,3 +198,5 @@ class assert_beliefs_triples(Action):
             obj = obj.split("#")[1][:-3]
 
             print(subj, prop, obj)
+
+            self.assert_belief(TRIPLE(subj, prop, obj))
