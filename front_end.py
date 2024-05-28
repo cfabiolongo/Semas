@@ -36,4 +36,7 @@ pre_process() >> [show_line("\nAsserting triples ended.\n")]
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nDirect match: Coauthor with ",Y," if you want to publish in ",X,", at ",U,".\n"), +ProposeCoauthorship(Y, X)]
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,", at ",U,".\n"), +ProposeCoauthorship(Z, X)]
 
+# Plan to became top author in the field X, e.g. +BeTopAuthorship("Artificial Intelligence")
+BeTopAuthorship(X) >> [show_line("\nPlan to become top Authorship in the field ",X,"....\n")]
+
 +ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," in the field  ",Y,".\n")]
