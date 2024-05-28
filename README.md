@@ -11,11 +11,11 @@ Multi-Agent systems with the Semantic Web. SEMAS is built on top of the framewor
 
 This repository has been tested on Python 3.7.3 64bit (Windows 10/PopOs linux), with the following packages versions:
 
-* [Phidias](https://github.com/corradosantoro/phidias) (release 1.3.4.alpha) 
+* [PHIDIAS](https://github.com/corradosantoro/phidias) (release 1.3.4.alpha) 
 * [Owlready2](https://pypi.org/project/Owlready2/) (ver. 0.26)
 
 
-### Phidias
+### PHIDIAS
 
 ---------------
 
@@ -81,11 +81,14 @@ eShell: main >
 Now Semas is ready.
 Unless you delete the owl file or choose to create another ontology, the agent will try to load every time the specified file in confi.ini.
 
-### Ontology Learning
+### Ontology initialization
 
 ---------------
+The current version runs on a toy domain defined int config.ini as it follows:
 
-After having started Semas....
+
+
+
 
 ```sh
 eShell: main > init()

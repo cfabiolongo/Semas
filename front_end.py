@@ -13,12 +13,11 @@ class pre_process(Procedure): pass
 
 # Desires
 class publish(Procedure): pass
-class betop(Procedure): pass
 
 
 # World initialization
 # declareRules()
-init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), saveOnto()]
+init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 
 # Importing related triples
 pre_process() >> [show_line("\nAsserting all OWL 2 beliefs triples...\n"), assert_beliefs_triples(), process()]
@@ -33,12 +32,11 @@ process() >> [show_line("\nAsserting triples ended.\n")]
 
 # Desires/Intentions
 
-# Publish in the field X
-publish(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X)) >> [show_line("\nCoauthor with ",Z," if you want to publish in ",X,".\n")]
+# Publish in the field X (return coauthor only), e.g.  publish("Applied-Ontology"), publish("Artificial-Intelligence")
+# publish(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X)) >> [show_line("\nCoauthor with ",Z," if you want to publish in ",X,".\n")]
 
-# Propose co-authorship in the field
-# betop(Z) / (CoAuthorship(X, Y) & TopAuthorship(Y, Z)) >> [show_line("\nCoauthor with ",X," if you want to publish in ",Z,".\n")]
-
-
+# Publish in the field X (return author/coauthor+university)
+publish(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nCoauthor with ",Y," if you want to publish in ",X,", at ",U,".\n")]
+publish(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("\nCoauthor with ",Z," if you want to publish in ",X,", at ",U,".\n")]
 
 
