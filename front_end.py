@@ -30,7 +30,7 @@ pre_process() >> [show_line("\nAsserting triples ended.\n")]
 # Desires/Intentions
 
 # Publish in the field X (return coauthor only), e.g.  Publicationship("Applied-Ontology"), Publicationship("Artificial-Intelligence")
-# publish(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,".\n")]
+# publish(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,".\n"), +ProposeCoauthorship(Z, X)]
 
 # Publish in the field X (return author/coauthor+university)
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nDirect match: Coauthor with ",Y," if you want to publish in ",X,", at ",U,".\n"), +ProposeCoauthorship(Y, X)]
