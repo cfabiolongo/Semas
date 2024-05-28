@@ -33,7 +33,7 @@ pre_process() >> [show_line("\nAsserting triples ended.\n")]
 # publish(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,".\n")]
 
 # Publish in the field X (return author/coauthor+university)
-Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nDirect match: Coauthor with ",Y," if you want to publish in ",X,", at ",U,".\n")]
-Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,", at ",U,".\n")]
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nDirect match: Coauthor with ",Y," if you want to publish in ",X,", at ",U,".\n"), +ProposeCoauthorship(Y, X)]
+Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,", at ",U,".\n"), +ProposeCoauthorship(Z, X)]
 
-
++ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," in the field  ",Y,".\n")]

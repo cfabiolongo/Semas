@@ -92,7 +92,7 @@ for i in range(len(INTENTIONS)):
     # creating subclasses INTENTIONS
     new_belief = types.new_class(INTENTIONS[i].strip(), (INTENTION,))
 
-    globals()[INTENTIONS[i].strip()] = type(INTENTIONS[i].strip(), (Belief,), {})
+    globals()[INTENTIONS[i].strip()] = type(INTENTIONS[i].strip(), (Reactor,), {})
     istanza = globals()[INTENTIONS[i].strip()]()
 
 
