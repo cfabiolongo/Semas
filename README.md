@@ -52,7 +52,7 @@ from prompt:
 
 First of all, you must create the ontology. In order to do that, you must follow three preliminar steps:
 
-* Choose the owl file name, by setting the variable FILE_NAME (within AGENT) in the config.ini (test.owl for instance)
+* Choose the owl file name, by setting the variable FILE_NAME (ONTOLOGY Section) in the config.ini (test.owl for instance)
 * Execute semas.py
 
 ```sh
@@ -87,10 +87,22 @@ Unless you delete the owl file or choose to create another ontology, the agent w
 The current version runs on a toy domain defined int config.ini as it follows:
 
 
-
-
-
 ```sh
 eShell: main > init()
 ```
+
+### Agent's mental attitudes
+
+---------------
+The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively the information, motivational and deliberative
+states of the agent.
+
+
+| BDI-Model  | OWL 2      | PHIDIAS    |
+|------------|------------|------------|
+| Beliefs    | Properties | Beliefs    |
+| Desires    | Properties | Procedures |
+| Intentions | Properties | Reactors   |
+
+
 
