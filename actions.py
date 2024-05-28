@@ -63,9 +63,6 @@ with my_onto:
     class INTENTION(Thing):
         pass
 
-    class PLAN(Thing):
-        pass
-
 
     # Declaring Owlready properties
     for i in range(len(PROPERTIES)):
@@ -88,7 +85,7 @@ for i in range(len(DESIRES)):
     # creating subclasses DESIRES
     new_belief = types.new_class(DESIRES[i].strip(), (DESIRE,))
 
-    globals()[DESIRES[i].strip()] = type(DESIRES[i].strip(), (Belief,), {})
+    globals()[DESIRES[i].strip()] = type(DESIRES[i].strip(), (Procedure,), {})
     istanza = globals()[DESIRES[i].strip()]()
 
 for i in range(len(INTENTIONS)):
@@ -213,7 +210,5 @@ class assert_beliefs_triples(Action):
 
             obj = str(res).split(",")[2]
             obj = obj.split("#")[1][:-3]
-
-            print(subj, prop, obj)
 
             self.assert_belief(TRIPLE(subj, prop, obj))
