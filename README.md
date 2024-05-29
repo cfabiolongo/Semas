@@ -175,6 +175,13 @@ The detail of the above formalization are defined in config.ini. Both OWL 2 onto
 
 ```sh
 eShell: main > init()
+
+Initialiting Ontology...
+
+eShell: main >
+Adding the following 1 rules to ontology: 
+Rule 1: Scholar(?x), coAuthorWith(?x,?y), Scholar(?y) -> coAuthorWith(?y,?x)
+Ontology saved.
 ```
 After the *init()* procedure execution, the ontology (whose file name is defined in **FILE_NAME**, Section [ONTOLOGY] in config.ini) will be as follows:
 

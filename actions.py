@@ -150,9 +150,10 @@ class declareRules(Action):
         with my_onto:
            rule = Imp()
 
+           print(f"\nAdding the following {number_of_rules} rules to ontology: ")
            for i in range(number_of_rules):
                rule_str = config.get('SWRL', 'RULE'+str(i+1))
-               print(f"\nadding the following rules to ontology: {rule_str}")
+               print(f"Rule {str(i+1)}: {rule_str}")
                rule.set_as_rule(rule_str)
 
 
