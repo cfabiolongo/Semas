@@ -245,7 +245,7 @@ Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Di
 
 ```
 
-In this case the outcome will be as follows:
+the outcome will be as follows:
 
 ```sh
 eShell: main > Publicationship("Applied-Ontology")
