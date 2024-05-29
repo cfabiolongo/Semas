@@ -232,6 +232,7 @@ TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-
 
 ### SEMAS inference
 
+---------------
 To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*
 and *BeTopAuthorship()*. Both of them can be used with many arguments number. For instance, supposing one want
 to publish in the field of Applied Ontology, a minimal usage is: *Publicationship("Applied-Ontology")*. By virtue of
