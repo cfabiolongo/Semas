@@ -200,4 +200,14 @@ Asserting triples ended.
 
 Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
 by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
-constrainct the results. the query execution can also be preceeded by reasoning (with HERMIT/PELLET).
+constrainct the results. The query execution can also be preceded by OWL reasoning (with HERMIT/PELLET).
+After ontology import, the KB can be inspected with the following outocome:
+
+
+```sh
+eShell: main > kb
+CoAuthorship('Fabio', 'Misael')         CoAuthorship('Misael', 'Rocco')         
+Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
+TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
+TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
+```
