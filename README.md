@@ -164,7 +164,7 @@ Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), who
 
 ---------------
 This case-study provides a formalization about interacton between entities in the field of Academic Moblity, in order to choose, on the basis of Co-Authorship
-interaction in specific field, the best choice of University affiliation.
+interaction in specific fields, the best choice of University affiliation.
 
 
 ### Ontology initialization
