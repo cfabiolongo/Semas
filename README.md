@@ -229,3 +229,26 @@ Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-B
 TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
 TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
 ```
+
+### SEMAS inference
+
+To achieve inference, on of the defined DESIRES must be employed as Procedure, which are: Publicationship()
+and BeTopAuthorship(). Both of them can be used with many arguments number. For instance, supposing one want
+to publish in the field of Applied Ontology, a minimal usage is: Publicationship("Applied-Ontology"). By virtue of
+the following defined rule in front_end.py: <br>
+
+```sh
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nDirect coathor match with ",Y," to publish in ",X," at ",U,".\n"), +ProposeCoauthorship(Y, X)]
++ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," in the field ",Y,".\n")]
+```
+
+The outcome will be as follows:
+
+```sh
+eShell: main > Publicationship("Applied-Ontology")
+
+Direct coathor match with Rocco to publish in Applied-Ontology at Alma-Mater-Bologna.
+
+Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
+```
+
