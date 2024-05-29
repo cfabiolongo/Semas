@@ -155,7 +155,7 @@ of one or more arguments.
 4. **Intentions**: since in PHIDIAS Intentions are implicitly represented by one or more productions rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
 which does not pass through the knowledge base but can (as like as beliefs) interact with the production rules, thus executed their plan.
 
-5. **Data linking**: all OWL-PHIDIAS linking must be defined in Section [CLASSES] of config.ini
+5. **Data linking**: all OWL-PHIDIAS linking must be defined in Section [CLASSES] of config.ini.
 
 
 
