@@ -119,6 +119,10 @@ Each plan is invoked within a production rule which follows the sintax: <BR><CEN
 * **[TRIGGERING EVENT]**: the triggering event can be a **Belief**, a **Reactor** (a special belief which interact with production rule but without residing in the Knowledge base), or a **Procedure**
 which is a way for manually trigger a corresponding rule.
 * **[CONDITIONS]**: (optional) one or more **Belief**, or **Active Belief** (a special belief which returon *True*/*False* on the basis of Python code)
+* **[PLAN]**: a plan can me made of belief assertion/retraction or execution of high level languege invoked by the so called **Action**. 
+
+For more information about PHIDIAS the reader is referred [here](https://www.dmi.unict.it/santoro/teaching/psr/slides/PHIDIAS.pdf).
+
 
 ### OWL Beliefs, Desires, Intentions
 
