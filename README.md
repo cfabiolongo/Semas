@@ -238,8 +238,11 @@ to publish in the field of Applied Ontology, a minimal usage is: *Publicationshi
 the following defined rule in front_end.py: <br>
 
 ```sh
-Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\nDirect coathor match with ",Y," to publish in ",X," at ",U,".\n"), +ProposeCoauthorship(Y, X)]
-+ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," in the field ",Y,".\n")]
+Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+
++ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n")]
+
 ```
 
 In this case the outcome will be as follows:
