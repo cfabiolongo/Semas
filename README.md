@@ -175,10 +175,12 @@ The detail of the above formalization are defined in config.ini. Both OWL 2 onto
 ```sh
 eShell: main > init()
 ```
+After the *init()* procedure execution, the ontology (whose file name is defined in **FILE_NAME**, Section [ONTOLOGY] in config.ini) will be as follows:
 
 ![Image 2](images/classes.png)
 
-
+All OWL beliefs/desires/intentions are defined by properties of individuals which are instances of subclasses of **ENTITY**. In regard of classes **BELIEF**,
+**DESIRE** and **INTENTIONS*, their subclasses expreess the linkage with the corresponding Beliefs/Procesures/Reactors in the PHIDIAS environment.
 
 
 
