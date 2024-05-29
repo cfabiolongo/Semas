@@ -94,8 +94,8 @@ eShell: main > init()
 ### Agent's mental attitudes
 
 ---------------
-The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively the information, motivational and deliberative
-states of the agent.
+The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively the **information**, **motivational** and **deliberative**
+states of the agent. SEMAS aim to integrate distinct models about agent's mental attitudes, in order to leverage all their features, by considering the following schema:
 
 
 | BDI-Model  | OWL 2      | PHIDIAS    |
@@ -104,5 +104,14 @@ states of the agent.
 | Desires    | Properties | Procedures |
 | Intentions | Properties | Reactors   |
 
+PHIDIAS mental attitudes are built starting from [this](https://cdn.aaai.org/ICMAS/1995/ICMAS95-042.pdf) paper, by considering the following assumptions:
+
+1. We esplicitly represent only beliefs about *current* state of the world.
+2. We represent the information about means of achieving certain future world states amd the option available to the agent as *plans*, which can be viewed as a special form of beliefs.
+Each plan has a *body* describing the primitive actions os subgoal that have to be achieved for plan execution to be successful. The conditions under which a plan can be chosen as an obtion
+are specified by an *invocation condition* and (possibly) one (or more) *pre-conditions*. The invocation condition specifies the "triggering" event that is necessary for invocation of the plan,
+and the pre-conditions specifies the situation thst must hold for the plan to be executable.
+3. Each intention tht the system forms by adopting certain plans is represented implicitly using a conventional run-time stack of hierarchically related plans (similar to how Prolog interpreter
+handles clauses). Multiple intentions stacks can coexist, either running in parallel, suspended until some conditions occurs, or ordered for execution in some way.
 
 
