@@ -158,6 +158,10 @@ which does not pass through the KB but it can (as like as beliefs) interact with
 5. **Data linking**: all OWL-PHIDIAS linking must be defined in Section [CLASSES] of config.ini.
 
 
+### Reasoning
+Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), whom will interact with the ontology when the variable **ACTIVE** set to *true*.   
+
+
 
 
 
