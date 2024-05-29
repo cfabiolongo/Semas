@@ -219,7 +219,7 @@ TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-
 ```
 
 In case of activated inference with PELLET/HERMIT before the query SPARQL, the outcome after *load()* 
-will be as follows, by the virtue of the defined SWRL rule which specifies the mutual Coauthorship.
+will be as follows, by the virtue of the defined SWRL rule which specifies the simmetric mutual Coauthorship.
 
 ```sh
 eShell: main > kb
