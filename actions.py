@@ -184,7 +184,6 @@ class process_belief(Action):
 class assert_beliefs_triples(Action):
     """create sparql query from MST"""
     def execute(self):
-        print("\n--------- Asserting beliefs triples---------\n ")
 
         q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
         q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"

@@ -135,13 +135,13 @@ heuristic:
 > kb
 ```
 
-2. **Beliefs**: Each belief can be asserted in the KB as follows (in this case the belief *SALUTO* contains the string *Hello*), by PHIDIAS shell of inside a production rule:
+2. **Beliefs**: Each belief can be asserted in the KB as follows (in this case the belief *SALUTATION* contains the string *Hello*), by PHIDIAS shell of inside a production rule:
 ```sh
-> +SALUTO("Hello")
+> +SALUTATION("Hello")
 ```
 Similarly, the belief can be retracted from the KB:
 ```sh
-> -SALUTO("Hello")
+> -SALUTATION("Hello")
 ```
 
 3. **Desires**: by convention we have chosen to represent Desires with Procedures, which can be used to trigger manually part of the productions rules stack, taking in account (or not)
@@ -185,3 +185,15 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
+The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
+
+```sh
+eShell: main > load()
+
+Asserting all OWL 2 beliefs triples...
+Asserting triples ended.
+```
+
+Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
+by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
+constrainct the results. the query execution can also be preceeded by reasoning (with HERMIT/PELLET).
