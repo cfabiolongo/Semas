@@ -81,15 +81,6 @@ eShell: main >
 Now Semas is ready.
 Unless you delete the owl file or choose to create another ontology, the agent will try to load every time the specified file in confi.ini.
 
-### Ontology initialization
-
----------------
-The current version runs on a toy domain defined in config.ini, which must be initialised as it follows:
-
-
-```sh
-eShell: main > init()
-```
 
 ## SEMAS agent's **mental attitudes**
 
@@ -171,7 +162,19 @@ Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), who
 
 ## Case-study: Co-Authorship and Academic Mobility
 
+---------------
+This case-study provides a formalization about interacton between entities in the field of Academic Moblity, in order to choose, on the basis of Co-Authorship
+interaction in specific field, the best choice of University affiliation.
 
+
+### Ontology initialization
+
+---------------
+The detail of the above formalization are defined in config.ini. Both OWL 2 ontology and PHIDIAS variable can be initialised as it follows:
+
+```sh
+eShell: main > init()
+```
 
 
 
