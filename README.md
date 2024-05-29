@@ -170,11 +170,15 @@ interaction in specific fields, the best choice of University affiliation.
 ### Ontology initialization
 
 ---------------
-The detail of the above formalization are defined in config.ini. Both OWL 2 ontology and PHIDIAS variable can be initialised as it follows:
+The detail of the above formalization are defined in config.ini. Both OWL 2 ontology and PHIDIAS variable can be initialised withe command *init()* as follows:
 
 ```sh
 eShell: main > init()
 ```
+
+![Image 2](images/classes.png)
+
+
 
 
 
