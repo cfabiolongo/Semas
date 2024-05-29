@@ -163,7 +163,7 @@ Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), who
 ## Case-study: Co-Authorship and Academic Mobility
 
 ---------------
-This case-study provides a formalization about interacton between entities in the field of Academic Moblity, in order to choose, on the basis of Co-Authorship
+This case-study provides a formalization about interactuons between Scholars in the field of Academic Mobility, in order to choose, on the basis of Co-Authorship
 interaction in specific fields, the best choice of University affiliation.
 
 
