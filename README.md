@@ -84,14 +84,14 @@ Unless you delete the owl file or choose to create another ontology, the agent w
 ### Ontology initialization
 
 ---------------
-The current version runs on a toy domain defined int config.ini as it follows:
+The current version runs on a toy domain defined in config.ini, which must be initialised as it follows:
 
 
 ```sh
 eShell: main > init()
 ```
 
-### Agent's mental attitudes
+## SEMAS agent's **mental attitudes**
 
 ---------------
 The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively the **information**, **motivational** and **deliberative**
@@ -108,10 +108,33 @@ PHIDIAS mental attitudes are built starting from [this](https://cdn.aaai.org/ICM
 
 1. We esplicitly represent only beliefs about *current* state of the world.
 2. We represent the information about means of achieving certain future world states amd the option available to the agent as *plans*, which can be viewed as a special form of beliefs.
-Each plan has a *body* describing the primitive actions os subgoal that have to be achieved for plan execution to be successful. The conditions under which a plan can be chosen as an obtion
+Each plan has a *body* describing the primitive actions os subgoal that have to be achieved for plan execution to be successful. The conditions under which a plan can be chosen as an option
 are specified by an *invocation condition* and (possibly) one (or more) *pre-conditions*. The invocation condition specifies the "triggering" event that is necessary for invocation of the plan,
 and the pre-conditions specifies the situation thst must hold for the plan to be executable.
 3. Each intention tht the system forms by adopting certain plans is represented implicitly using a conventional run-time stack of hierarchically related plans (similar to how Prolog interpreter
 handles clauses). Multiple intentions stacks can coexist, either running in parallel, suspended until some conditions occurs, or ordered for execution in some way.
+
+Each plan is invoked within a production rule which follows the sintax: <BR><CENTER>**[TRIGGERING EVENT] / [CONDITIONS] >> [PLAN]**</CENTER>
+
+* **[TRIGGERING EVENT]**: the triggering event can be a **Belief**, a **Reactor** (a special belief which interact with production rule but without residing in the Knowledge base), or a **Procedure**
+which is a way for manually trigger a corresponding rule.
+* **[CONDITIONS]**: (optional) one or more **Belief**, or **Active Belief** (a special belief which returon *True*/*False* on the basis of Python code)
+
+### OWL Beliefs, Desires, Intentions
+
+---------------
+
+All OWL Semantic mental attitudes are represented by classes, subclasses, individuals and their properties, under the shape of triples. All involved entities ust be specified in config.ini
+(which by default they describe a toy domain), in Section [CLASSES] with the variable **Entities**. All individuals under the Section [INDIVIDUALS]. Beliefs, Desires and Intentions are
+represented with individuals properties defined in [CLASSES] and grounded as triples with variables having the same name in Section [INDIVIDUALS].
+
+### PHIDIAS correspondence for Beliefs, Desires, Intentions
+
+---------------
+
+As highlighted above in PHIDIAS some of typical BDI features are implicitly defined. In order to create a bridge between the two models, by considering the above schema, we employ the following
+heuristic:
+
+1. Beliefs: 
 
 
