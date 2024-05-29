@@ -132,9 +132,27 @@ represented with individuals properties defined in [CLASSES] and grounded as tri
 
 ---------------
 
-As highlighted above in PHIDIAS some of typical BDI features are implicitly defined. In order to create a bridge between the two models, by considering the above schema, we employ the following
+As highlighted above in PHIDIAS (thus also in SEMAS) some of typical BDI features are implicitly defined. In order to create a bridge between the two models, by considering the above schema, we employ the following
 heuristic:
 
-1. Beliefs: 
+1. Knowledge Base
+The Knowledge Base (KB) can be inspected with the following command:
+```sh
+> kb
+```
+
+1. Beliefs
+
+Each belief can be asserted in the KB as follows (in this case the belief *SALUTO* contains the string *Hello*) :
+```sh
+> +SALUTO("Hello")
+```
+Similarly, the belief can be retracted from the KB:
+```sh
+> -SALUTO("Hello")
+```
+
+
+
 
 
