@@ -183,5 +183,5 @@ After the *init()* procedure execution, the ontology (whose file name is defined
 All OWL beliefs/desires/intentions are defined by properties of individuals which are instances of subclasses of **ENTITY**. In regard of classes **BELIEF**,
 **DESIRE** and **INTENTIONS**, their subclasses expreess the linkage with the corresponding Beliefs/Procedures/Reactors in the PHIDIAS environment.
 
-
+![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
