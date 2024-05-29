@@ -159,6 +159,9 @@ which does not pass through the KB but it can (as like as beliefs) interact with
 
 
 ### Reasoning
+
+---------------
+
 Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), whom will interact with the ontology when the variable **ACTIVE** set to *true*.   
 
 
