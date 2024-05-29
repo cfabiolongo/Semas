@@ -178,7 +178,6 @@ eShell: main > init()
 
 Initialiting Ontology...
 
-eShell: main >
 Adding the following 1 rules to ontology: 
 Rule 1: Scholar(?x), coAuthorWith(?x,?y), Scholar(?y) -> coAuthorWith(?y,?x)
 Ontology saved.
