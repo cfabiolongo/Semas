@@ -242,7 +242,7 @@ Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("\n
 +ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," in the field ",Y,".\n")]
 ```
 
-The outcome will be as follows:
+In this case the outcome will be as follows:
 
 ```sh
 eShell: main > Publicationship("Applied-Ontology")
