@@ -149,6 +149,12 @@ Similarly, the belief can be retracted from the KB:
 > -SALUTO("Hello")
 ```
 
+3. **Desires**: by convention we have chosen to represent Desires with Procedures, which can be used to trigger manually part of the productions rules stack, taking in account (or not)
+of one or more arguments.
+
+4. **Intentions**: since in PHIDIAS Intentions are implicitly represented by one or more productions rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
+which does not pass through the knowledge base but can (as like as beliefs) interact with the production rules, thus executed their plan.
+
 
 
 
