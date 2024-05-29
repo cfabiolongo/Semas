@@ -141,9 +141,9 @@ The Knowledge Base (KB) can be inspected with the following command:
 > kb
 ```
 
-1. Beliefs
+2. Beliefs
 
-Each belief can be asserted in the KB as follows (in this case the belief *SALUTO* contains the string *Hello*) :
+Each belief can be asserted in the KB as follows (in this case the belief *SALUTO* contains the string *Hello*), by PHIDIAS shell of inside a production rule:
 ```sh
 > +SALUTO("Hello")
 ```
@@ -151,6 +151,8 @@ Similarly, the belief can be retracted from the KB:
 ```sh
 > -SALUTO("Hello")
 ```
+
+
 
 
 
