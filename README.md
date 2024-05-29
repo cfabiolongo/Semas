@@ -185,6 +185,10 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
+### Ontology import
+
+---------------
+
 The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
 
 ```sh
