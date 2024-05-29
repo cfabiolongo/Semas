@@ -86,7 +86,7 @@ Unless you delete the owl file or choose to create another ontology, the agent w
 
 ---------------
 The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively the **information**, **motivational** and **deliberative**
-states of the agent. SEMAS aim to integrate distinct models about agent's mental attitudes, in order to leverage all their features, by considering the following schema:
+states of the agent. SEMAS aims to integrate distinct models' mental attitudes, in order to leverage all their features, by considering the following schema:
 
 
 | BDI-Model  | OWL 2      | PHIDIAS    |
@@ -213,6 +213,18 @@ After ontology import, the KB can be inspected with the following outcome:
 ```sh
 eShell: main > kb
 CoAuthorship('Fabio', 'Misael')         CoAuthorship('Misael', 'Rocco')         
+Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
+TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
+TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
+```
+
+In case of activated inference with PELLET/HERMIT before the query SPARQL, the outcome after *load()* 
+will be as follows, by the virtue of the defined SWRL rule which specifies the mutual Coauthorship.
+
+```sh
+eShell: main > kb
+CoAuthorship('Misael', 'Fabio')         CoAuthorship('Fabio', 'Misael')         
+CoAuthorship('Rocco', 'Misael')         CoAuthorship('Misael', 'Rocco')         
 Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
 TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
 TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
