@@ -222,7 +222,7 @@ TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artifi
 TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
 ```
 
-In case of activated inference with PELLET/HERMIT before the query SPARQL, the outcome after *load()* 
+In case of active inference with PELLET/HERMIT before the SPARQL query, the outcome after *load()* 
 will be as follows, by the virtue of the defined SWRL rule which specifies the simmetric mutual Coauthorship.
 
 ```sh
