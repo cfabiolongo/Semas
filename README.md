@@ -164,7 +164,7 @@ The variable **REASONER** indicates which of the integrated reasoners (HERMIT/PE
 
 ---------------
 This case-study provides a formalization about interactions between Scholars in the field of Academic Mobility, in order to choose, on the basis of Co-Authorship
-interaction in specific fields, the best choice of University affiliation.
+interaction in specific fields, the best University affiliation.
 
 
 ### Ontology initialization
