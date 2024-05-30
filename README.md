@@ -156,8 +156,8 @@ which does not pass through the KB but it can (as like as beliefs) interact with
 
 ---------------
 
-Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), whom will interact with the ontology when the variable **ACTIVE** is set to *true*.
-The variable **REASONER** (in Section [REASONING]) indicates which of the integrated reasoners (HERMIT/PELLET) must be employed before every SPARQL query in some Action's PLAN.
+Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), whom will interact with the ontology when the variable **ACTIVE** (in Section [REASONING]) is set to *true*.
+The variable **REASONER** indicates which of the integrated reasoners (HERMIT/PELLET) must be employed before every SPARQL query in some Action's PLAN.
 
 
 ## Case-study: Co-Authorship and Academic Mobility
