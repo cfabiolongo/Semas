@@ -194,7 +194,7 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ---------------
 
-First, the Knowledge Base (KB) can be inspected any time with the following command:
+First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the following command:
 ```sh
 > kb
 ```
