@@ -139,6 +139,10 @@ Similarly, the belief can be retracted from the KB:
 > -SALUTATION("Hello")
 ```
 
+Since in Python code there cannot exist classes with same names but distinct usage, we are forced to choose distinct name for OWL beliefs (which are individuals properties) and PHIDIAS beliefs.
+Whem imported from OWL each triple is asserted in the shame "TRIPLE(object, property, subject)" (for instance *TRIPLE(Fabio, coAuthorWith, Misael)*). Afterward, a production rule system
+invoked by a procedure (load) will retract such belief and assert a new one as defined in the correspondence entry in config.ini (CoAuthorship(Fabio, Misael)).
+
 2. **Desires**: by convention we have chosen to represent Desires with **Procedures**, which can be used to trigger manually part of the productions rules stack, taking in account (or not)
 of one or more arguments.
 
