@@ -148,7 +148,7 @@ which does not pass through the KB but it can (as like as beliefs) interact with
 4. **Data linking**: all OWL-PHIDIAS mental attitudes must be linked to each other, in order to interoperate, as defined in Section [CLASSES] of config.ini (under the comments "OWL-PHIDIAS beliefs/desire/intentions linking").
 
 
-### Reasoning
+### OWL Reasoning
 
 ---------------
 
