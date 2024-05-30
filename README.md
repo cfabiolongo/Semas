@@ -107,10 +107,10 @@ handles clauses). Multiple intentions stacks can coexist, either running in para
 
 Each plan is invoked within a production rule which follows the sintax: <BR><CENTER>**[TRIGGERING EVENT] / [CONDITIONS] >> [PLAN]**</CENTER>
 
-* **[TRIGGERING EVENT]**: the triggering event can be a **Belief**, a **Reactor** (a special belief which interact with production rule but without residing in the Knowledge base), or a **Procedure**
+* **[TRIGGERING EVENT]**: the triggering event can be a **Belief**, a **Reactor** (a special belief which interact with production rules but without residing in the Knowledge base), or a **Procedure**
 which is a way for manually trigger a corresponding rule.
 * **[CONDITIONS]** (optional): one or more **Belief**, or **Active Belief** (a special belief which returns *True*/*False* on the basis of Python code execution)
-* **[PLAN]**: a plan can me made of belief assertion/retraction or execution of high level languege invoked by the so called **Action**. 
+* **[PLAN]**: a plan can be made of beliefs assertion/retraction or execution of high level language code invoked by instances of the PHIDIAS class **Action**. 
 
 For more information about PHIDIAS the reader is referred [here](https://www.dmi.unict.it/santoro/teaching/sr/slides/PHIDIAS.pdf).
 
