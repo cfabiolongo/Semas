@@ -145,7 +145,7 @@ of one or more arguments.
 3. **Intentions**: since in PHIDIAS Intentions are implicitly represented by one or more productions rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
 which does not pass through the KB but it can (as like as beliefs) interact with the production rules, thus possibly execute their plan.
 
-4. **Data linking**: all OWL-PHIDIAS mental attitudes must linked to each other as defined in Section [CLASSES] of config.ini (under the comments "OWL-PHIDIAS beliefs/desire/intentions linking").
+4. **Data linking**: all OWL-PHIDIAS mental attitudes must be linked to each other, in order to interoperate, as defined in Section [CLASSES] of config.ini (under the comments "OWL-PHIDIAS beliefs/desire/intentions linking").
 
 
 ### Reasoning
