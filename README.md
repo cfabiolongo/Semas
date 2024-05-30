@@ -121,7 +121,7 @@ For more information about PHIDIAS the reader is referred [here](https://www.dmi
 
 All OWL Semantic mental attitudes are represented by classes, subclasses, individuals and their properties, under the shape of triples. All involved entities must be specified in config.ini
 (which by default they describe a toy domain as case-study), in Section [CLASSES] with the variable **Entities**. All individuals are defined under the Section [INDIVIDUALS] with corresponding
-items names. Beliefs, Desires and Intentions are represented with individuals properties defined in [CLASSES] and grounded as triples with variables having the same name in Section [INDIVIDUALS].
+items names. Beliefs, Desires and Intentions are represented with individuals properties defined in [CLASSES] and grounded as triples with variables having same name in Section [INDIVIDUALS].
 
 ### PHIDIAS correspondence for Beliefs, Desires, Intentions
 
