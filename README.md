@@ -105,9 +105,8 @@ and the pre-conditions specifies the situation that must hold for the plan to be
 3. Each intention that the system forms by adopting certain plans is represented implicitly using a conventional run-time stack of hierarchically related plans (similar to how Prolog interpreter
 handles clauses). Multiple intentions stacks can coexist, either running in parallel, suspended until some conditions occurs, or ordered for execution in some way.
 
-Each plan is invoked within a production rule which follows the sintax: <br>
+Each plan is invoked within a production rule which follows the sintax: <BR><CENTER>**[TRIGGERING EVENT] / [CONDITIONS] >> [PLAN]**</CENTER>
 
-<CENTER>**[TRIGGERING EVENT] / [CONDITIONS] >> [PLAN]**</CENTER>
 
 * **[TRIGGERING EVENT]**: the triggering event can be a **Belief**, a **Reactor** (a special belief which interact with production rules but without residing in the Knowledge base), or a **Procedure**
 which is a way for manually trigger a corresponding rule.
