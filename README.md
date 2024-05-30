@@ -146,7 +146,7 @@ invoked by a procedure (load) will retract such belief and assert a new one as d
 2. **Desires**: by convention we have chosen to represent Desires with **Procedures**, which can be used to trigger manually part of the production rules stack, taking in account (or not)
 of one or more arguments.
 
-3. **Intentions**: since in PHIDIAS Intentions are implicitly represented by one or more production rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
+3. **Intentions**: since PHIDIAS Intentions are implicitly represented by one or more production rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
 which does not pass through the KB but it can (as like as beliefs) interact with the production rules, thus possibly execute their plan.
 
 4. **Data linking**: all OWL-PHIDIAS mental attitudes must be linked to each other, in order to interoperate, as defined in Section [CLASSES] of config.ini (under the comments "OWL-PHIDIAS beliefs/desire/intentions linking").
