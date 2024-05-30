@@ -130,12 +130,7 @@ items names. Beliefs, Desires and Intentions are represented with individuals pr
 As highlighted above in PHIDIAS (thus also in SEMAS) some of typical BDI features are implicitly defined. In order to create a bridge between the two models, by considering the above schema, we employ the following
 heuristic:
 
-1. **Knowledge Base**: The Knowledge Base (KB) can be inspected with the following command:
-```sh
-> kb
-```
-
-2. **Beliefs**: Each belief can be asserted in the KB as follows (in this case the belief *SALUTATION* contains the string *Hello*), by PHIDIAS shell of inside a production rule:
+1. **Beliefs**: Each belief can be asserted in the KB as follows (in this case the belief *SALUTATION* contains the string *Hello*), by PHIDIAS shell of inside a production rule:
 ```sh
 > +SALUTATION("Hello")
 ```
@@ -144,13 +139,13 @@ Similarly, the belief can be retracted from the KB:
 > -SALUTATION("Hello")
 ```
 
-3. **Desires**: by convention we have chosen to represent Desires with Procedures, which can be used to trigger manually part of the productions rules stack, taking in account (or not)
+2. **Desires**: by convention we have chosen to represent Desires with Procedures, which can be used to trigger manually part of the productions rules stack, taking in account (or not)
 of one or more arguments.
 
-4. **Intentions**: since in PHIDIAS Intentions are implicitly represented by one or more productions rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
+3. **Intentions**: since in PHIDIAS Intentions are implicitly represented by one or more productions rules, by convention we have chosen to represent them with the PHIDIAS **Reactor**
 which does not pass through the KB but it can (as like as beliefs) interact with the production rules, thus possibly execute their plan.
 
-5. **Data linking**: all OWL-PHIDIAS linking must be defined in Section [CLASSES] of config.ini.
+4. **Data linking**: all OWL-PHIDIAS linking must be defined in Section [CLASSES] of config.ini.
 
 
 ### Reasoning
@@ -194,6 +189,11 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 ### Ontology import
 
 ---------------
+
+First, tThe Knowledge Base (KB) can be inspected with the following command:
+```sh
+> kb
+```
 
 The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
 
