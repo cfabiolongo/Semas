@@ -266,3 +266,8 @@ Propose co-authorship with Misael to publish in the field of Applied-Ontology.
 Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 ```
 
+### Multi-Agent
+
+---------------
+
+(to be addedd soon)
