@@ -270,4 +270,4 @@ Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 
 ---------------
 
-(to be addedd soon)
+(to be added soon)
