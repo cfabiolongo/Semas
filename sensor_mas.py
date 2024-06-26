@@ -7,8 +7,6 @@ import random
 
 sys.path.insert(0, "../lib")
 
-from phidias.Types  import *
-from phidias.Main import *
 from phidias.Lib import *
 from phidias.Agent import *
 
