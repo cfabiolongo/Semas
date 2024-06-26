@@ -11,7 +11,7 @@ num_turtles = 20
 # Inizializzare lo schermo
 screen = turtle.Screen()
 screen.setup(N, N)
-screen.title("MAS rendering ")
+screen.title("MAS rendering")
 screen.tracer(0)  # Disabilita l'aggiornamento automatico dello schermo
 
 # Creare una lista per memorizzare le tartarughe
