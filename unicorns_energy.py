@@ -5,7 +5,7 @@ from tkinter import Tk, Scale, HORIZONTAL, Label, IntVar, Checkbutton
 # Definire le dimensioni iniziali del canvas
 N = 500
 
-# Numero iniziale di automobili
+# Numero iniziale di unicorni
 num_unicorns = 10
 
 # Dimensione iniziale di ogni step
@@ -14,7 +14,7 @@ step_size = 5
 # Velocità iniziale (in millisecondi)
 speed = 50
 
-# Energia iniziale di ogni automobile
+# Energia iniziale di ogni unicorno
 initial_energy = 100
 
 # Variabile per il trigger di visibilità dell'energia
@@ -31,11 +31,11 @@ def setup_screen():
     screen.register_shape("turtles/icons8-unicorn_color.gif")
 
 
-# Creare una lista per memorizzare le automobili
+# Creare una lista per memorizzare gli unicorni
 unicorns = []
 
 
-# Funzione per inizializzare le automobili
+# Funzione per inizializzare gli unicorni
 def create_unicorns(num):
     for _ in range(num):
         unicorn = turtle.Turtle()
@@ -44,19 +44,19 @@ def create_unicorns(num):
         unicorn.speed(0)
         unicorn.setpos(random.randint(-N // 2, N // 2), random.randint(-N // 2, N // 2))
         unicorn.setheading(random.randint(0, 360))
-        unicorn.energy = initial_energy  # Inizializza l'energia dell'automobile
+        unicorn.energy = initial_energy  # Inizializza l'energia dell'unicorno
         unicorn.energy_display = turtle.Turtle(visible=False)
         unicorns.append(unicorn)
 
 
-# Funzione per aggiornare il numero di automobili
+# Funzione per aggiornare il numero di unicorni
 def update_unicorns(num):
     remove_inactive_unicorns()
     while len(unicorns) < num:
         create_unicorns(1)  # Aggiungi automobili finché non raggiungi il numero desiderato
 
 
-# Funzione per rimuovere un'automobile specifica
+# Funzione per rimuovere un unicorno specifico
 def remove_unicorn(unicorn):
     if unicorn in unicorns:
         unicorn.hideturtle()
@@ -65,7 +65,7 @@ def remove_unicorn(unicorn):
         unicorns.remove(unicorn)
 
 
-# Funzione per rimuovere tutte le automobili con energia zero
+# Funzione per rimuovere tutti gli unicorni con energia zero
 def remove_inactive_unicorns():
     for unicorn in unicorns[:]:  # Itera sulla copia della lista per evitare problemi di modifica durante l'iterazione
         if unicorn.energy <= 0:
@@ -102,7 +102,7 @@ def check_unicorn_collision(unicorn1, unicorn2):
     return False
 
 
-# Funzione per aggiornare il display dell'energia sotto ogni automobile
+# Funzione per aggiornare il display dell'energia sotto ogni unicorno
 def update_energy_display(unicorn):
     if show_energy:
         unicorn.energy_display.clear()
@@ -117,7 +117,7 @@ def update_energy_display(unicorn):
         unicorn.energy_display.hideturtle()
 
 
-# Funzione per far muovere le automobili
+# Funzione per far muovere gli unicorni
 def move_unicorns():
     unicorns_to_remove = []
     for unicorn in unicorns[:]:  # Iteriamo sulla copia della lista per evitare problemi di modifica durante l'iterazione
@@ -171,7 +171,7 @@ root.title("Agents parameters")
 # Impostare le dimensioni della finestra di tkinter
 root.geometry("450x400")  # Larghezza x Altezza
 
-# Slider per il numero di automobili
+# Slider per il numero di unicorni
 Label(root, text="Agent number").pack()
 unicorn_slider = Scale(root, from_=1, to=50, orient=HORIZONTAL, length=400)
 unicorn_slider.set(num_unicorns)
@@ -236,10 +236,10 @@ show_energy_checkbox.pack()
 # Inizializzare lo schermo di turtle
 setup_screen()
 
-# Creare le automobili iniziali
+# Creazione automobili iniziali
 create_unicorns(num_unicorns)
 
-# Iniziare il movimento delle automobili
+# Iniziare il movimento degli unicorni
 root.after(speed, move_unicorns)
 
 # Avviare il main loop di tkinter
