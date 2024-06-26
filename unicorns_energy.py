@@ -6,7 +6,7 @@ from tkinter import Tk, Scale, HORIZONTAL, Label, IntVar, Checkbutton
 N = 500
 
 # Numero iniziale di automobili
-num_cars = 10
+num_unicorns = 10
 
 # Dimensione iniziale di ogni step
 step_size = 5
@@ -32,120 +32,120 @@ def setup_screen():
 
 
 # Creare una lista per memorizzare le automobili
-cars = []
+unicorns = []
 
 
 # Funzione per inizializzare le automobili
-def create_cars(num):
+def create_unicorns(num):
     for _ in range(num):
-        car = turtle.Turtle()
-        car.shape("turtles/icons8-unicorn_color.gif")
-        car.penup()
-        car.speed(0)
-        car.setpos(random.randint(-N // 2, N // 2), random.randint(-N // 2, N // 2))
-        car.setheading(random.randint(0, 360))
-        car.energy = initial_energy  # Inizializza l'energia dell'automobile
-        car.energy_display = turtle.Turtle(visible=False)
-        cars.append(car)
+        unicorn = turtle.Turtle()
+        unicorn.shape("turtles/icons8-unicorn_color.gif")
+        unicorn.penup()
+        unicorn.speed(0)
+        unicorn.setpos(random.randint(-N // 2, N // 2), random.randint(-N // 2, N // 2))
+        unicorn.setheading(random.randint(0, 360))
+        unicorn.energy = initial_energy  # Inizializza l'energia dell'automobile
+        unicorn.energy_display = turtle.Turtle(visible=False)
+        unicorns.append(unicorn)
 
 
 # Funzione per aggiornare il numero di automobili
-def update_cars(num):
-    remove_inactive_cars()
-    while len(cars) < num:
-        create_cars(1)  # Aggiungi automobili finché non raggiungi il numero desiderato
+def update_unicorns(num):
+    remove_inactive_unicorns()
+    while len(unicorns) < num:
+        create_unicorns(1)  # Aggiungi automobili finché non raggiungi il numero desiderato
 
 
 # Funzione per rimuovere un'automobile specifica
-def remove_car(car):
-    if car in cars:
-        car.hideturtle()
-        car.energy_display.clear()
-        car.energy_display.hideturtle()
-        cars.remove(car)
+def remove_unicorn(unicorn):
+    if unicorn in unicorns:
+        unicorn.hideturtle()
+        unicorn.energy_display.clear()
+        unicorn.energy_display.hideturtle()
+        unicorns.remove(unicorn)
 
 
 # Funzione per rimuovere tutte le automobili con energia zero
-def remove_inactive_cars():
-    for car in cars[:]:  # Itera sulla copia della lista per evitare problemi di modifica durante l'iterazione
-        if car.energy <= 0:
-            remove_car(car)
+def remove_inactive_unicorns():
+    for unicorn in unicorns[:]:  # Itera sulla copia della lista per evitare problemi di modifica durante l'iterazione
+        if unicorn.energy <= 0:
+            remove_unicorn(unicorn)
 
 
 # Funzione per controllare le collisioni con le pareti e diminuire l'energia
-def check_wall_collision(car):
-    x, y = car.position()
+def check_wall_collision(unicorn):
+    x, y = unicorn.position()
     if abs(x) > N // 2 or abs(y) > N // 2:
-        car.right(180)
-        car.energy -= 10  # Diminuisci energia dopo una collisione con la parete
-        if car.energy <= 0:
-            remove_car(car)
-        update_energy_display(car)
+        unicorn.right(180)
+        unicorn.energy -= 10  # Diminuisci energia dopo una collisione con la parete
+        if unicorn.energy <= 0:
+            remove_unicorn(unicorn)
+        update_energy_display(unicorn)
         return True
     return False
 
 
 # Funzione per controllare le collisioni tra automobili e diminuire l'energia
-def check_car_collision(car1, car2):
-    if car1.distance(car2) < 20:  # Considera una collisione se la distanza è inferiore a 20 pixel
-        car1.right(180)
-        car2.right(180)
-        car1.energy -= 10  # Diminuisci energia dopo una collisione con un'altra automobile
-        car2.energy -= 10
-        if car1.energy <= 0:
-            remove_car(car1)
-        if car2.energy <= 0:
-            remove_car(car2)
-        update_energy_display(car1)
-        update_energy_display(car2)
+def check_unicorn_collision(unicorn1, unicorn2):
+    if unicorn1.distance(unicorn2) < 20:  # Considera una collisione se la distanza è inferiore a 20 pixel
+        unicorn1.right(180)
+        unicorn2.right(180)
+        unicorn1.energy -= 10  # Diminuisci energia dopo una collisione con un'altra automobile
+        unicorn2.energy -= 10
+        if unicorn1.energy <= 0:
+            remove_unicorn(unicorn1)
+        if unicorn2.energy <= 0:
+            remove_unicorn(unicorn2)
+        update_energy_display(unicorn1)
+        update_energy_display(unicorn2)
         return True
     return False
 
 
 # Funzione per aggiornare il display dell'energia sotto ogni automobile
-def update_energy_display(car):
+def update_energy_display(unicorn):
     if show_energy:
-        car.energy_display.clear()
-        car.energy_display.hideturtle()
-        if car.energy > 0:
-            car.energy_display.penup()
-            car.energy_display.setpos(car.xcor(), car.ycor() - 20)
-            car.energy_display.write(car.energy, align="center", font=("Arial", 12, "normal"))
-            car.energy_display.showturtle()
+        unicorn.energy_display.clear()
+        unicorn.energy_display.hideturtle()
+        if unicorn.energy > 0:
+            unicorn.energy_display.penup()
+            unicorn.energy_display.setpos(unicorn.xcor(), unicorn.ycor() - 20)
+            unicorn.energy_display.write(unicorn.energy, align="center", font=("Arial", 12, "normal"))
+            unicorn.energy_display.showturtle()
     else:
-        car.energy_display.clear()
-        car.energy_display.hideturtle()
+        unicorn.energy_display.clear()
+        unicorn.energy_display.hideturtle()
 
 
 # Funzione per far muovere le automobili
-def move_cars():
-    cars_to_remove = []
-    for car in cars[:]:  # Iteriamo sulla copia della lista per evitare problemi di modifica durante l'iterazione
-        car.forward(step_size)  # Usa la dimensione di ogni step
+def move_unicorns():
+    unicorns_to_remove = []
+    for unicorn in unicorns[:]:  # Iteriamo sulla copia della lista per evitare problemi di modifica durante l'iterazione
+        unicorn.forward(step_size)  # Usa la dimensione di ogni step
 
         # Controllare collisioni con le pareti
-        if check_wall_collision(car):
-            if car.energy <= 0:
-                cars_to_remove.append(car)
+        if check_wall_collision(unicorn):
+            if unicorn.energy <= 0:
+                unicorns_to_remove.append(unicorn)
             continue
 
         # Controllare collisioni con altre automobili
-        for other in cars:
-            if car != other and check_car_collision(car, other):
-                if car.energy <= 0:
-                    cars_to_remove.append(car)
+        for other in unicorns:
+            if unicorn != other and check_unicorn_collision(unicorn, other):
+                if unicorn.energy <= 0:
+                    unicorns_to_remove.append(unicorn)
                 if other.energy <= 0:
-                    cars_to_remove.append(other)
+                    unicorns_to_remove.append(other)
                 break  # Cambiare direzione una sola volta per ciclo
 
-        update_energy_display(car)  # Aggiorna la posizione del display dell'energia
+        update_energy_display(unicorn)  # Aggiorna la posizione del display dell'energia
 
     # Rimuovere le automobili con energia zero
-    for car in cars_to_remove:
-        remove_car(car)
+    for unicorn in unicorns_to_remove:
+        remove_unicorn(unicorn)
 
     screen.update()  # Aggiornare lo schermo
-    root.after(speed, move_cars)  # Richiama questa funzione dopo "speed" millisecondi
+    root.after(speed, move_unicorns)  # Richiama questa funzione dopo "speed" millisecondi
 
 
 # Funzione per aggiornare le dimensioni del canvas
@@ -153,15 +153,15 @@ def update_canvas_size(size):
     global N
     N = size
     screen.setup(N, N)
-    remove_inactive_cars()  # Rimuovi automobili fuori dai limiti del nuovo canvas
+    remove_inactive_unicorns()  # Rimuovi automobili fuori dai limiti del nuovo canvas
 
 
 # Funzione per gestire il trigger per la visibilità dell'energia
 def toggle_energy_visibility():
     global show_energy
     show_energy = not show_energy
-    for car in cars:
-        update_energy_display(car)
+    for unicorn in unicorns:
+        update_energy_display(unicorn)
 
 
 # Configurare l'interfaccia di controllo con tkinter
@@ -173,18 +173,18 @@ root.geometry("450x400")  # Larghezza x Altezza
 
 # Slider per il numero di automobili
 Label(root, text="Agent number").pack()
-car_slider = Scale(root, from_=1, to=50, orient=HORIZONTAL, length=400)
-car_slider.set(num_cars)
-car_slider.pack()
+unicorn_slider = Scale(root, from_=1, to=50, orient=HORIZONTAL, length=400)
+unicorn_slider.set(num_unicorns)
+unicorn_slider.pack()
 
 
-def on_car_slider_change(value):
-    global num_cars
-    num_cars = int(value)
-    update_cars(num_cars)
+def on_unicorn_slider_change(value):
+    global num_unicorns
+    num_unicorns = int(value)
+    update_unicorns(num_unicorns)
 
 
-car_slider.config(command=on_car_slider_change)
+unicorn_slider.config(command=on_unicorn_slider_change)
 
 # Slider per la dimensione del canvas
 Label(root, text="Canvas size").pack()
@@ -237,10 +237,10 @@ show_energy_checkbox.pack()
 setup_screen()
 
 # Creare le automobili iniziali
-create_cars(num_cars)
+create_unicorns(num_unicorns)
 
 # Iniziare il movimento delle automobili
-root.after(speed, move_cars)
+root.after(speed, move_unicorns)
 
 # Avviare il main loop di tkinter
 root.mainloop()
