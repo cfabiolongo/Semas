@@ -17,12 +17,17 @@ screen.tracer(0)  # Disabilita l'aggiornamento automatico dello schermo
 # Creare una lista per memorizzare le tartarughe
 turtles = []
 
+# Additional icons (.gif) are available here: https://icons8.com/icons
+
+# Registrare l'immagine dell'automobile
+screen.register_shape("turtles/icons8-unicorn_color.gif")
+
 
 # Funzione per inizializzare le tartarughe
 def create_turtles(num):
     for _ in range(num):
         t = turtle.Turtle()
-        t.shape("turtle")
+        t.shape("turtles/icons8-unicorn_color.gif")
         t.penup()
         t.speed(0)
         t.setpos(random.randint(-N // 2, N // 2), random.randint(-N // 2, N // 2))
