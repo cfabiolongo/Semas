@@ -1,7 +1,5 @@
 import sys
-
 import time
-
 import threading
 import random
 
@@ -9,14 +7,6 @@ sys.path.insert(0, "../lib")
 
 from phidias.Lib import *
 from phidias.Agent import *
-
-class number(Belief): pass
-
-class solve(Reactor): pass
-
-class sieve(Procedure): pass
-class show_all(Procedure): pass
-class generate(Procedure): pass
 
 class go(Procedure): pass
 class work(Procedure): pass
