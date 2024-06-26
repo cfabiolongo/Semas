@@ -26,9 +26,9 @@ def setup_screen():
     global screen
     screen = turtle.Screen()
     screen.setup(N, N)
-    screen.title("Automobili che si muovono in maniera randomica")
+    screen.title("Randomic unicorns")
     screen.tracer(0)  # Disabilita l'aggiornamento automatico dello schermo
-    screen.register_shape("turtles/icons8-crab.gif")
+    screen.register_shape("turtles/icons8-unicorn_color.gif")
 
 
 # Creare una lista per memorizzare le automobili
@@ -39,7 +39,7 @@ cars = []
 def create_cars(num):
     for _ in range(num):
         car = turtle.Turtle()
-        car.shape("turtles/icons8-crab.gif")
+        car.shape("turtles/icons8-unicorn_color.gif")
         car.penup()
         car.speed(0)
         car.setpos(random.randint(-N // 2, N // 2), random.randint(-N // 2, N // 2))
@@ -58,10 +58,11 @@ def update_cars(num):
 
 # Funzione per rimuovere un'automobile specifica
 def remove_car(car):
-    car.hideturtle()
-    car.energy_display.clear()
-    car.energy_display.hideturtle()
-    cars.remove(car)
+    if car in cars:
+        car.hideturtle()
+        car.energy_display.clear()
+        car.energy_display.hideturtle()
+        cars.remove(car)
 
 
 # Funzione per rimuovere tutte le automobili con energia zero
@@ -118,19 +119,30 @@ def update_energy_display(car):
 
 # Funzione per far muovere le automobili
 def move_cars():
+    cars_to_remove = []
     for car in cars[:]:  # Iteriamo sulla copia della lista per evitare problemi di modifica durante l'iterazione
         car.forward(step_size)  # Usa la dimensione di ogni step
 
         # Controllare collisioni con le pareti
         if check_wall_collision(car):
+            if car.energy <= 0:
+                cars_to_remove.append(car)
             continue
 
         # Controllare collisioni con altre automobili
         for other in cars:
             if car != other and check_car_collision(car, other):
+                if car.energy <= 0:
+                    cars_to_remove.append(car)
+                if other.energy <= 0:
+                    cars_to_remove.append(other)
                 break  # Cambiare direzione una sola volta per ciclo
 
         update_energy_display(car)  # Aggiorna la posizione del display dell'energia
+
+    # Rimuovere le automobili con energia zero
+    for car in cars_to_remove:
+        remove_car(car)
 
     screen.update()  # Aggiornare lo schermo
     root.after(speed, move_cars)  # Richiama questa funzione dopo "speed" millisecondi
@@ -154,13 +166,13 @@ def toggle_energy_visibility():
 
 # Configurare l'interfaccia di controllo con tkinter
 root = Tk()
-root.title("Parametri Agenti")
+root.title("Agents parameters")
 
 # Impostare le dimensioni della finestra di tkinter
-root.geometry("450x350")  # Larghezza x Altezza
+root.geometry("450x400")  # Larghezza x Altezza
 
 # Slider per il numero di automobili
-Label(root, text="Numero di automobili").pack()
+Label(root, text="Agent number").pack()
 car_slider = Scale(root, from_=1, to=50, orient=HORIZONTAL, length=400)
 car_slider.set(num_cars)
 car_slider.pack()
@@ -175,7 +187,7 @@ def on_car_slider_change(value):
 car_slider.config(command=on_car_slider_change)
 
 # Slider per la dimensione del canvas
-Label(root, text="Dimensione del canvas").pack()
+Label(root, text="Canvas size").pack()
 canvas_slider = Scale(root, from_=200, to=800, orient=HORIZONTAL, length=400)
 canvas_slider.set(N)
 canvas_slider.pack()
@@ -188,7 +200,7 @@ def on_canvas_slider_change(value):
 canvas_slider.config(command=on_canvas_slider_change)
 
 # Slider per la dimensione di ogni step
-Label(root, text="Dimensione di ogni step").pack()
+Label(root, text="Step size").pack()
 step_slider = Scale(root, from_=1, to=20, orient=HORIZONTAL, length=400)
 step_slider.set(step_size)
 step_slider.pack()
@@ -202,7 +214,7 @@ def on_step_slider_change(value):
 step_slider.config(command=on_step_slider_change)
 
 # Slider per la velocità
-Label(root, text="Velocità (ms)").pack()
+Label(root, text="Speed (ms)").pack()
 speed_slider = Scale(root, from_=10, to=200, orient=HORIZONTAL, length=400)
 speed_slider.set(speed)
 speed_slider.pack()
@@ -216,8 +228,8 @@ def on_speed_slider_change(value):
 speed_slider.config(command=on_speed_slider_change)
 
 # Checkbox per la visibilità dell'energia
-show_energy_var = IntVar()
-show_energy_checkbox = Checkbutton(root, text="Mostra energia", variable=show_energy_var,
+show_energy_var = IntVar(value=1)
+show_energy_checkbox = Checkbutton(root, text="Show energy", variable=show_energy_var,
                                    command=toggle_energy_visibility)
 show_energy_checkbox.pack()
 
