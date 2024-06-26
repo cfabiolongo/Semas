@@ -17,7 +17,7 @@ speed = 50
 # Inizializzare lo schermo
 screen = turtle.Screen()
 screen.setup(N, N)
-screen.title("Automobili che si muovono in maniera randomica")
+screen.title("Agents collisions canvas")
 screen.tracer(0)  # Disabilita l'aggiornamento automatico dello schermo
 
 # Registrare l'immagine dell'automobile
@@ -99,8 +99,8 @@ root.title("Agents parameters control")
 root.geometry("400x300")
 
 # Slider per il numero di automobili
-Label(root, text="Numero di automobili").pack()
-car_slider = Scale(root, from_=1, to=50, orient=HORIZONTAL)
+Label(root, text="Agents number").pack()
+car_slider = Scale(root, from_=1, to=50, orient=HORIZONTAL, length=300)
 car_slider.set(num_cars)
 car_slider.pack()
 
@@ -114,8 +114,8 @@ def on_car_slider_change(value):
 car_slider.config(command=on_car_slider_change)
 
 # Slider per la dimensione del canvas
-Label(root, text="Dimensione del canvas").pack()
-canvas_slider = Scale(root, from_=200, to=800, orient=HORIZONTAL)
+Label(root, text="Canvas size").pack()
+canvas_slider = Scale(root, from_=200, to=800, orient=HORIZONTAL, length=300)
 canvas_slider.set(N)
 canvas_slider.pack()
 
@@ -127,8 +127,8 @@ def on_canvas_slider_change(value):
 canvas_slider.config(command=on_canvas_slider_change)
 
 # Slider per la dimensione di ogni step
-Label(root, text="Dimensione di ogni step").pack()
-step_slider = Scale(root, from_=1, to=100, orient=HORIZONTAL)
+Label(root, text="Step sizing").pack()
+step_slider = Scale(root, from_=1, to=100, orient=HORIZONTAL, length=300)
 step_slider.set(step_size)
 step_slider.pack()
 
@@ -141,8 +141,8 @@ def on_step_slider_change(value):
 step_slider.config(command=on_step_slider_change)
 
 # Slider per la velocità
-Label(root, text="Velocità (ms)").pack()
-speed_slider = Scale(root, from_=0, to=500, orient=HORIZONTAL)
+Label(root, text="Speed (ms)").pack()
+speed_slider = Scale(root, from_=0, to=500, orient=HORIZONTAL, length=300)
 speed_slider.set(speed)
 speed_slider.pack()
 
