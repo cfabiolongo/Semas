@@ -6,7 +6,7 @@ import time
 N = 500
 
 # Numero di tartarughe
-num_turtles = 10
+num_turtles = 20
 
 # Inizializzare lo schermo
 screen = turtle.Screen()
@@ -49,14 +49,14 @@ def check_wall_collision(t):
 
 # Funzione per controllare le collisioni tra tartarughe
 def check_turtle_collision(t1, t2):
-    return t1.distance(t2) < 15  # Considera una collisione se la distanza è inferiore a 15 pixel
+    return t1.distance(t2) < 20  # Considera una collisione se la distanza è inferiore a 15 pixel
 
 
 # Funzione per far muovere le tartarughe
 def move_turtles():
     while True:
         for t in turtles:
-            t.forward(5)  # Passi piccoli
+            t.forward(1)  # Passi piccoli
 
             # Controllare collisioni con le pareti
             if check_wall_collision(t):
@@ -69,7 +69,7 @@ def move_turtles():
                     break  # Cambiare direzione una sola volta per ciclo
 
         screen.update()  # Aggiornare lo schermo
-        time.sleep(0.05)  # Ritardo minore
+        time.sleep(0.01)  # Ritardo minore
 
 
 # Iniziare il movimento delle tartarughe
