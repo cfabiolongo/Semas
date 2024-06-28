@@ -262,15 +262,18 @@ to publish in the field of *Artificial Intelligence* a minimal usage is: *Public
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
 +ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
 ```
-* Propose co-authorship with a scholar who is co-author of a top-author in the field of "Artificial Intelligence".\\
-This condition, for simplicity, includes also the acceptance of the offer from one of alternative universities, since the triggering conditions were the same: accept offer from the university which has co-authors of top-authors in the field "Artificial Intelligence"
+* Propose co-authorship with a scholar who is co-author of a top-author in the field of "Artificial Intelligence".
+  
+For simplicity, this condition includes also the next rule which has the same triggering conditions in this scenario
+
 ```sh
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
 +ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
 +AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
 ```
-For simplicity 
 
+* Select university (between the ones Stefano has been accepted by) where there are co-authors of top-authors
+ 
 ```sh
 SelectUniversity(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(X,U), SelectUniversity(X)]
 +AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
