@@ -2,6 +2,8 @@
 
 I implemented the scenario we proposed in the extended abstract for Social Simulation Conference 2024 where we map an ontology of academic network to the BDI protocol. PHIDIAS/SEMAS package is for deducing declarative inferences from ontologies through the architecture of the BDI.
 
+The declarative inference should translate into the actual behavior of the agent and there should be multiple agents holding their own desires, intentions and actions.
+
 <p align="center">
 <img src="images/theorySSC2024.png" width=60% height=50%>
 </p>
