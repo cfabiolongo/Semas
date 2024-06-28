@@ -246,23 +246,27 @@ to publish in the field of *Applied Ontology* a minimal usage is: *Publicationsh
 the following defined rule in [front_end.py](front_end.py): <br>
 
 ```sh
-Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
+SelectUniversity(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(X,U), SelectUniversity(X)]
+Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
 
-+ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n")]
++ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
++ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
++AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
+
 ```
 
 the outcome will be as follows:
 
 ```sh
-eShell: main > Publicationship("Applied-Ontology")
+eShell: main > Publicationship("Artificial-Intelligence")
 
-Indirect match found at University-of-Catania.
+Direct match found at University-of-Catania.
+Indirect match found at Alma-Mater-Bologna.
 
-Direct match found at Alma-Mater-Bologna.
+Propose co-authorship with Petra as top-author in the field of Artificial-Intelligence.
+Propose co-authorship with Michael as co-author with Petra, a top-author in the field of Artificial-Intelligence.
 
-Propose co-authorship with Misael to publish in the field of Applied-Ontology.
-
-Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
+Accept offer from University Alma-Mater-Bologna with co-authors of top-authors in field of Artificial-Intelligence.
 ```
 
