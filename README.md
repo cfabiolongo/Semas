@@ -1,4 +1,4 @@
-# Ontology import - modified with 3 procedures
+# SCENARIO
 
 ---------------
 
