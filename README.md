@@ -193,7 +193,7 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
-### Ontology import
+### Ontology import - modified with 3 procedures
 
 ---------------
 
@@ -253,20 +253,23 @@ TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-
 ### SEMAS inference
 
 ---------------
-To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*
+To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*, *SelectUniversity()* for choosing between University Stefano has been accepted by,
 and *BeTopAuthorship()*. Both of them can be used with one or more arguments. For instance, supposing one want
-to publish in the field of *Applied Ontology* a minimal usage is: *Publicationship("Artificial-Intelligence")*, whom will match (or not) with
-the following defined rule in [front_end.py](front_end.py): <br>
+to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which match with two rules defined rule in [front_end.py](front_end.py): <br>
+
+```sh
+Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
++ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
++AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
+```
+```sh
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
++ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
+```
 
 ```sh
 SelectUniversity(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(X,U), SelectUniversity(X)]
-Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
-Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
-
-+ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
-+ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
 +AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
-
 ```
 
 the outcome will be as follows:
