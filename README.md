@@ -2,7 +2,7 @@
 
 I implemented the scenario we proposed in the extended abstract for Social Simulation Conference 2024 where we map an ontology of academic network to BDI protocol as we translate into inferences of PHIDIAS/SEMAS
 
-<img src="images/theorySSC2024.png" width=60% height=50%, position="center">
+<img src="images/theorySSC2024.png" width=60% height=50%, align="center">
 
 I initialized the ontology with a specific context, where authors belong to 3 universities (Catania, Bologna, Turin) and each is a top-author in either Artificial Intelligence, Machine Learning or Applied Ontology. Coauthorships are imposed between members. I also started addding some other features (see variables from the Italian PhD dataset). Stefano, who will make the inference, aims to be top-author in Artificial Intelligence, for which top-authors are located at University of Catania, but he has been selected from Bologna and Turin and now he has to choose what job offer to accept.
 
