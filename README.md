@@ -1,5 +1,9 @@
 # SCENARIO
 
+![Image 3](images/theory_SSC2024.jpg)
+
+
+
 ---------------
 
 First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the following command:
@@ -286,12 +290,12 @@ Ontology saved.
 ```
 After the *init()* procedure execution, the ontology (whose file name is defined in **FILE_NAME**, Section [ONTOLOGY] in config.ini) will be as follows:
 
-![Image 2](images/classes.png)
+![Image 3](images/classes.png)
 
 All OWL beliefs/desires/intentions are defined by properties of individuals which are instances of subclasses of **ENTITY**. In regard of classes **BELIEF**,
 **DESIRE** and **INTENTIONS**, their subclasses express the linkage with the corresponding Beliefs/Procedures/Reactors in the PHIDIAS environment.
 
-![Image 3](images/individuals.png)![Image 4](images/properties.png)
+![Image 4](images/individuals.png)![Image 4](images/properties.png)
 
 
 
