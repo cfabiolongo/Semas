@@ -7,7 +7,7 @@
 </div>
 
 
-
+<img src="images/theorySSC2024.png" width=20% height=20%>
 
 
 ---------------
