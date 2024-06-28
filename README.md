@@ -1,6 +1,6 @@
 # SCENARIO
 
-<div style="width: 50%; height: 40%">
+<div style="width: 20%; height: 20%">
   
   ![Image 3](images/theorySSC2024.png)
   
