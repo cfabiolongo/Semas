@@ -1,3 +1,103 @@
+# Ontology import - modified with 3 procedures
+
+---------------
+
+First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the following command:
+```sh
+> kb
+```
+
+The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
+
+```sh
+eShell: main > load()
+
+Asserting all OWL 2 beliefs triples...
+Asserting triples ended.
+```
+
+Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
+by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
+constrainct the results. The query execution can also be preceded by OWL reasoning (with HERMIT/PELLET).
+After the ontology import, the KB's content will be as follows (added some variables as for Italian PhD dataset):
+
+
+```sh
+eShell: main > kb
+CoAuthorship('Carlo', 'Rocco')          CoAuthorship('Albert', 'Michael')
+Affiliation('Fabio', 'University-of-Catania')Affiliation('Misael', 'University-of-Catania')
+Affiliation('Petra', 'University-of-Catania')Affiliation('Anna', 'University-of-Catania')
+Affiliation('Rocco', 'Alma-Mater-Bologna')Affiliation('Michael', 'Alma-Mater-Bologna')
+Affiliation('Jenny', 'Alma-Mater-Bologna')Affiliation('Esther', 'Alma-Mater-Bologna')
+Affiliation('Albert', 'University-of-Turin')Affiliation('Carlo', 'University-of-Turin')
+Affiliation('Paola', 'University-of-Turin')TopAuthorship('Fabio', 'Artificial-Intelligence')
+TopAuthorship('Misael', 'Artificial-Intelligence')TopAuthorship('Petra', 'Artificial-Intelligence')
+TopAuthorship('Anna', 'Artificial-Intelligence')TopAuthorship('Rocco', 'Applied-Ontology')
+TopAuthorship('Michael', 'Applied-Ontology')TopAuthorship('Jenny', 'Applied-Ontology')
+TopAuthorship('Esther', 'Applied-Ontology')TopAuthorship('Albert', 'Machine-Learning')
+TopAuthorship('Carlo', 'Machine-Learning')TopAuthorship('Paola', 'Machine-Learning')
+Selectionship('Stefano', 'Alma-Mater-Bologna')Selectionship('Stefano', 'University-of-Turin')
+HasGender('Fabio', 'Male')              HasGender('Misael', 'Male')
+HasGender('Rocco', 'Male')              HasGender('Albert', 'Male')
+HasGender('Petra', 'Female')            HasGender('Jenny', 'Female')
+HasGender('Anna', 'Female')
+```
+
+In case of active inference with PELLET/HERMIT before the SPARQL query, the outcome after *load()* 
+will be as follows, by the virtue of the defined SWRL rule which specifies the simmetric mutual Coauthorship.
+
+```sh
+eShell: main > kb
+CoAuthorship('Misael', 'Fabio')         CoAuthorship('Fabio', 'Misael')         
+CoAuthorship('Rocco', 'Misael')         CoAuthorship('Misael', 'Rocco')         
+Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
+TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
+TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
+```
+
+### SEMAS inference
+
+---------------
+To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*, *SelectUniversity()* for choosing between University Stefano has been accepted by,
+and *BeTopAuthorship()*. Both of them can be used with one or more arguments. For instance, supposing one want
+to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which match with two rules defined rule in [front_end.py](front_end.py): <be>
+
+* Propose co-authorship directly to the top-author X in the field of *Artificial-Intelligence"
+```sh
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
++ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
+```
+* Propose co-authorship with a scholar who is co-author of a top-author in the field of "Artificial Intelligence".
+  
+For simplicity, this condition includes the intention associated with the next rule (SelectUniversity(X)) which has the same triggering conditions in this scenario
+
+```sh
+Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
++ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
++AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
+```
+
+* Select university which increases the chance to publish in X field. In this scenario, the one with co-authors of top-authors in the field of "Artificial Universities" (SelectUniversity("Artificial Intelligence")), for Stefano that was not selected from the university that hosts top-authors in the field
+ 
+```sh
+SelectUniversity(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(X,U), SelectUniversity(X)]
++AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
+```
+
+the outcome will be as follows:
+
+```sh
+eShell: main > Publicationship("Artificial-Intelligence")
+
+Direct match found at University-of-Catania.
+Indirect match found at Alma-Mater-Bologna.
+
+Propose co-authorship with Petra as top-author in the field of Artificial-Intelligence.
+Propose co-authorship with Michael as co-author with Petra, a top-author in the field of Artificial-Intelligence.
+
+Accept offer from University Alma-Mater-Bologna with co-authors of top-authors in field of Artificial-Intelligence.
+```
+
 # SEMAS
 
 This is the repository of the Python (3.7+) implementation of SEMAS (**SE**mantic **M**ulti-**A**gent **S**ystem), which integrates 
@@ -193,103 +293,10 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
-### Ontology import - modified with 3 procedures
-
----------------
-
-First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the following command:
-```sh
-> kb
-```
-
-The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
-
-```sh
-eShell: main > load()
-
-Asserting all OWL 2 beliefs triples...
-Asserting triples ended.
-```
-
-Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
-by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
-constrainct the results. The query execution can also be preceded by OWL reasoning (with HERMIT/PELLET).
-After the ontology import, the KB's content will be as follows (added some variables as for Italian PhD dataset):
 
 
-```sh
-eShell: main > kb
-CoAuthorship('Carlo', 'Rocco')          CoAuthorship('Albert', 'Michael')
-Affiliation('Fabio', 'University-of-Catania')Affiliation('Misael', 'University-of-Catania')
-Affiliation('Petra', 'University-of-Catania')Affiliation('Anna', 'University-of-Catania')
-Affiliation('Rocco', 'Alma-Mater-Bologna')Affiliation('Michael', 'Alma-Mater-Bologna')
-Affiliation('Jenny', 'Alma-Mater-Bologna')Affiliation('Esther', 'Alma-Mater-Bologna')
-Affiliation('Albert', 'University-of-Turin')Affiliation('Carlo', 'University-of-Turin')
-Affiliation('Paola', 'University-of-Turin')TopAuthorship('Fabio', 'Artificial-Intelligence')
-TopAuthorship('Misael', 'Artificial-Intelligence')TopAuthorship('Petra', 'Artificial-Intelligence')
-TopAuthorship('Anna', 'Artificial-Intelligence')TopAuthorship('Rocco', 'Applied-Ontology')
-TopAuthorship('Michael', 'Applied-Ontology')TopAuthorship('Jenny', 'Applied-Ontology')
-TopAuthorship('Esther', 'Applied-Ontology')TopAuthorship('Albert', 'Machine-Learning')
-TopAuthorship('Carlo', 'Machine-Learning')TopAuthorship('Paola', 'Machine-Learning')
-Selectionship('Stefano', 'Alma-Mater-Bologna')Selectionship('Stefano', 'University-of-Turin')
-HasGender('Fabio', 'Male')              HasGender('Misael', 'Male')
-HasGender('Rocco', 'Male')              HasGender('Albert', 'Male')
-HasGender('Petra', 'Female')            HasGender('Jenny', 'Female')
-HasGender('Anna', 'Female')
-```
 
-In case of active inference with PELLET/HERMIT before the SPARQL query, the outcome after *load()* 
-will be as follows, by the virtue of the defined SWRL rule which specifies the simmetric mutual Coauthorship.
 
-```sh
-eShell: main > kb
-CoAuthorship('Misael', 'Fabio')         CoAuthorship('Fabio', 'Misael')         
-CoAuthorship('Rocco', 'Misael')         CoAuthorship('Misael', 'Rocco')         
-Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
-TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
-TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
-```
 
-### SEMAS inference
 
----------------
-To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*, *SelectUniversity()* for choosing between University Stefano has been accepted by,
-and *BeTopAuthorship()*. Both of them can be used with one or more arguments. For instance, supposing one want
-to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which match with two rules defined rule in [front_end.py](front_end.py): <be>
-
-* Propose co-authorship directly to the top-author X in the field of *Artificial-Intelligence"
-```sh
-Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
-+ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
-```
-* Propose co-authorship with a scholar who is co-author of a top-author in the field of "Artificial Intelligence".
-  
-For simplicity, this condition includes also the next rule which has the same triggering conditions in this scenario
-
-```sh
-Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
-+ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
-+AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
-```
-
-* Select university (between the ones Stefano has been accepted by) where there are co-authors of top-authors
- 
-```sh
-SelectUniversity(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(X,U), SelectUniversity(X)]
-+AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
-```
-
-the outcome will be as follows:
-
-```sh
-eShell: main > Publicationship("Artificial-Intelligence")
-
-Direct match found at University-of-Catania.
-Indirect match found at Alma-Mater-Bologna.
-
-Propose co-authorship with Petra as top-author in the field of Artificial-Intelligence.
-Propose co-authorship with Michael as co-author with Petra, a top-author in the field of Artificial-Intelligence.
-
-Accept offer from University Alma-Mater-Bologna with co-authors of top-authors in field of Artificial-Intelligence.
-```
 
