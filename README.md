@@ -255,17 +255,21 @@ TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-
 ---------------
 To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*, *SelectUniversity()* for choosing between University Stefano has been accepted by,
 and *BeTopAuthorship()*. Both of them can be used with one or more arguments. For instance, supposing one want
-to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which match with two rules defined rule in [front_end.py](front_end.py): <br>
+to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which match with two rules defined rule in [front_end.py](front_end.py): <be>
 
+* Propose co-authorship directly to the top-author X in the field of *Artificial-Intelligence"
+```sh
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
++ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
+```
+* Propose co-authorship with a scholar who is co-author of a top-author in the field of "Artificial Intelligence".\\
+This condition, for simplicity, includes also the acceptance of the offer from one of alternative universities, since the triggering conditions were the same: accept offer from the university which has co-authors of top-authors in the field "Artificial Intelligence"
 ```sh
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
 +ProposeCoauthorship_2(X,Z, Y) >> [show_line("Propose co-authorship with ",X," as co-author with ",Z,", a top-author in the field of ",Y,".\n")]
 +AcceptOffer(X,U) >> [show_line("Accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
 ```
-```sh
-Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
-+ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
-```
+For simplicity 
 
 ```sh
 SelectUniversity(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(X,U), SelectUniversity(X)]
