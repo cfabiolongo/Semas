@@ -2,7 +2,7 @@ from phidias.Main import *
 from phidias.Types import *
 
 
-def_vars('X', 'Y', 'Z', 'U')
+def_vars('X', 'Y', 'Z', 'U', 'S')
 
 from actions import *
 # from onto_builder import *
