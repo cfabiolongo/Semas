@@ -133,7 +133,7 @@ class main(Agent):
     def main(self):
 
         go() >> [show_line("Starting task detection...\n"), TaskDetect().start()]
-        work() >> [show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(10).start()]
+        work() >> [show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(0.1).start()]
 
         +DUTY1(X)[{'from': "worker"}] >> [show_line("received comm DUTY ",X," from worker"), +DUTY1(X)]
         +DUTY2(X)[{'from': "worker2"}] >> [show_line("received comm DUTY2 ",X," from worker2"), +DUTY2(X)]
@@ -141,7 +141,7 @@ class main(Agent):
         +TASK(X, Y) / DUTY1("YES") >> [-DUTY1("YES"), +TASK(X, Y)[{'to':'worker'}]]
         +TASK(X, Y) / DUTY2("YES") >> [-DUTY2("YES"), +TASK(X, Y)[{'to': 'worker2'}]]
 
-        +TIMEOUT("ON") >> [show_line("\nWorkers are is tired...\n"), -DUTY1("YES"), -DUTY2("YES")]
+        +TIMEOUT("ON") >> [show_line("\nWorkers are tired...\n"), -DUTY1("YES"), -DUTY2("YES")]
 
 
 def turtle_thread_func():
