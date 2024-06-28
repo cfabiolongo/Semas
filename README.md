@@ -1,29 +1,13 @@
 # SCENARIO
 
+I implemented the scenario we proposed in the extended abstract for Social Simulation Conference 2024 where we map an ontology of academic network to BDI protocol as we translate into inferences of PHIDIAS/SEMAS
+
 <img src="images/theorySSC2024.png" width=60% height=50%>
 
+I initialized the ontology with a specific context, where authors belong to 3 universities (Catania, Bologna, Turin) and each is a top-author in either Artificial Intelligence, Machine Learning or Applied Ontology. Coauthorships are imposed between members. I also started addding some other features (see variables from the Italian PhD dataset). Stefano, who will make the inference, aims to be top-author in Artificial Intelligence, for which top-authors are located at University of Catania, but he has been selected from Bologna and Turin and now he has to choose what job offer to accept.
 
----------------
-
-First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the following command:
-```sh
-> kb
-```
-
-The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
-
-```sh
-eShell: main > load()
-
-Asserting all OWL 2 beliefs triples...
-Asserting triples ended.
-```
-
-Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
-by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
-constrainct the results. The query execution can also be preceded by OWL reasoning (with HERMIT/PELLET).
-After the ontology import, the KB's content will be as follows (added some variables as for Italian PhD dataset):
-
+The intentions (reactors in PHIDIAS) to reach the desire to become top-author in Artificial Intelligence are either to publish directly with top-authors in Artificial Intelligence (direct match) or with an author which is co-author with a top-author in Artificial Intelligence (indirect match). The decision Stefano has to make is whether accept the offer from Bologna or Turin, based on where he has chance to find co-authors that can connect to a top author.
+The ontology initialized in this scenario is as follows:
 
 ```sh
 eShell: main > kb
@@ -46,17 +30,7 @@ HasGender('Petra', 'Female')            HasGender('Jenny', 'Female')
 HasGender('Anna', 'Female')
 ```
 
-In case of active inference with PELLET/HERMIT before the SPARQL query, the outcome after *load()* 
-will be as follows, by the virtue of the defined SWRL rule which specifies the simmetric mutual Coauthorship.
 
-```sh
-eShell: main > kb
-CoAuthorship('Misael', 'Fabio')         CoAuthorship('Fabio', 'Misael')         
-CoAuthorship('Rocco', 'Misael')         CoAuthorship('Misael', 'Rocco')         
-Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
-TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
-TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
-```
 
 ### SEMAS inference
 
@@ -297,9 +271,37 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 ![Image 4](images/individuals.png)![Image 4](images/properties.png)
 
 
+---------------
 
+First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the following command:
+```sh
+> kb
+```
 
+The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
 
+```sh
+eShell: main > load()
+
+Asserting all OWL 2 beliefs triples...
+Asserting triples ended.
+```
+
+Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
+by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
+constrainct the results. The query execution can also be preceded by OWL reasoning (with HERMIT/PELLET).
+
+In case of active inference with PELLET/HERMIT before the SPARQL query, the outcome after *load()* 
+will be as follows, by the virtue of the defined SWRL rule which specifies the simmetric mutual Coauthorship.
+
+```sh
+eShell: main > kb
+CoAuthorship('Misael', 'Fabio')         CoAuthorship('Fabio', 'Misael')         
+CoAuthorship('Rocco', 'Misael')         CoAuthorship('Misael', 'Rocco')         
+Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
+TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
+TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
+```
 
 
 
