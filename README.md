@@ -1,15 +1,15 @@
 # SCENARIO
 
-I implemented the scenario we proposed in the extended abstract for Social Simulation Conference 2024 where we map an ontology of academic network to BDI protocol as we translate into inferences of PHIDIAS/SEMAS
+I implemented the scenario we proposed in the extended abstract for Social Simulation Conference 2024 where we map an ontology of academic network to the BDI protocol. PHIDIAS/SEMAS package is for deducing declarative inferences from ontologies through the architecture of the BDI.
 
 <p align="center">
 <img src="images/theorySSC2024.png" width=60% height=50%>
 </p>
 
-I initialized the ontology with a specific context, where authors belong to 3 universities (Catania, Bologna, Turin) and each is a top-author in either Artificial Intelligence, Machine Learning or Applied Ontology. Coauthorships are imposed between members. I also started addding some other features (see variables from the Italian PhD dataset). Stefano, who will make the inference, aims to be top-author in Artificial Intelligence, for which top-authors are located at University of Catania, but he has been selected from Bologna and Turin and now he has to choose what job offer to accept.
+I initialized the ontology with the specific scenario, where scholars belong to 3 universities (Catania, Bologna, Turin) and each scholar is a top-author in either Artificial Intelligence, Machine Learning or Applied Ontology. Coauthorships are imposed between members. I also started addding some other features (see variables from the Italian PhD dataset). Stefano, i.e. the agent who makes the inference, aims to be top-author in Artificial Intelligence, whose top-authors are located at University of Catania, but he has been selected from Bologna and Turin, and now he has to choose what job offer to accept.
 
-The intentions (reactors in PHIDIAS) to reach the desire to become top-author in Artificial Intelligence are either to publish directly with top-authors in Artificial Intelligence (direct match) or with an author which is co-author with a top-author in Artificial Intelligence (indirect match). The decision Stefano has to make is whether accept the offer from Bologna or Turin, based on where he has chance to find co-authors that can connect to a top author.
-The set of triplets that compose the ontology initialized in this scenario is as follows:
+The intentions (reactors in PHIDIAS) to reach the desire to become top-author in Artificial Intelligence are either to publish directly with top-authors in Artificial Intelligence (direct match) or with an author which is co-author with a top-author in Artificial Intelligence (indirect match). Stefano has to decide whether to accept the offer from Bologna or Turin, based on where he has a chance to find co-authors who can connect him to a top author.
+The set of triplets that compose the ontology initialized is as follows:
 
 ```sh
 eShell: main > kb
@@ -43,8 +43,7 @@ Plotted (here manually):
 
 ---------------
 To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are in this case: *Publicationship()*,
-and *BeTopAuthorship()*, and specifically to this contest *SelectUniversity()* for choosing between the universities Stefano has been accepted by. Both of them can be used with one or more arguments. For instance, supposing one want
-to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which matches with two defined rules in [front_end.py](front_end.py): <be>
+and *BeTopAuthorship()*, and specifically to this contest *SelectUniversity()* for choosing between the universities that offered a job to Stefano. Both of them can be used with one or more arguments. For instance, supposing one want to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which matches with two defined rules in [front_end.py](front_end.py): <be>
 
 * Propose co-authorship directly to a top-author X in the field of *Artificial-Intelligence"
 ```sh
@@ -53,7 +52,7 @@ Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Di
 ```
 * Propose co-authorship with a scholar who is co-author of a top-author in the field of "Artificial Intelligence".
   
-For simplicity, this condition includes the intention associated with the next rule (SelectUniversity(X)) which has the same triggering conditions in this scenario
+For simplicity, this condition includes the intention associated with the next rule (SelectUniversity(X)), because it had the same triggering conditions in this scenario
 
 ```sh
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship_2(Z, Y,X),+AcceptOffer(X,U), Publicationship(X)]
