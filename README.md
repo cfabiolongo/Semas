@@ -214,15 +214,28 @@ Asserting triples ended.
 Such procedure triggers a production rule whose PLAN invokes an Action (assert_beliefs_triples) to query
 by means SPARQL the ontology and assert all beliefs triples. Such query might include further conditions to
 constrainct the results. The query execution can also be preceded by OWL reasoning (with HERMIT/PELLET).
-After the ontology import, the KB's content will be as follows:
+After the ontology import, the KB's content will be as follows (added some variables as for Italian PhD dataset):
 
 
 ```sh
 eShell: main > kb
-CoAuthorship('Fabio', 'Misael')         CoAuthorship('Misael', 'Rocco')         
-Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
-TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
-TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
+CoAuthorship('Carlo', 'Rocco')          CoAuthorship('Albert', 'Michael')
+Affiliation('Fabio', 'University-of-Catania')Affiliation('Misael', 'University-of-Catania')
+Affiliation('Petra', 'University-of-Catania')Affiliation('Anna', 'University-of-Catania')
+Affiliation('Rocco', 'Alma-Mater-Bologna')Affiliation('Michael', 'Alma-Mater-Bologna')
+Affiliation('Jenny', 'Alma-Mater-Bologna')Affiliation('Esther', 'Alma-Mater-Bologna')
+Affiliation('Albert', 'University-of-Turin')Affiliation('Carlo', 'University-of-Turin')
+Affiliation('Paola', 'University-of-Turin')TopAuthorship('Fabio', 'Artificial-Intelligence')
+TopAuthorship('Misael', 'Artificial-Intelligence')TopAuthorship('Petra', 'Artificial-Intelligence')
+TopAuthorship('Anna', 'Artificial-Intelligence')TopAuthorship('Rocco', 'Applied-Ontology')
+TopAuthorship('Michael', 'Applied-Ontology')TopAuthorship('Jenny', 'Applied-Ontology')
+TopAuthorship('Esther', 'Applied-Ontology')TopAuthorship('Albert', 'Machine-Learning')
+TopAuthorship('Carlo', 'Machine-Learning')TopAuthorship('Paola', 'Machine-Learning')
+Selectionship('Stefano', 'Alma-Mater-Bologna')Selectionship('Stefano', 'University-of-Turin')
+HasGender('Fabio', 'Male')              HasGender('Misael', 'Male')
+HasGender('Rocco', 'Male')              HasGender('Albert', 'Male')
+HasGender('Petra', 'Female')            HasGender('Jenny', 'Female')
+HasGender('Anna', 'Female')
 ```
 
 In case of active inference with PELLET/HERMIT before the SPARQL query, the outcome after *load()* 
@@ -242,7 +255,7 @@ TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-
 ---------------
 To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*
 and *BeTopAuthorship()*. Both of them can be used with one or more arguments. For instance, supposing one want
-to publish in the field of *Applied Ontology* a minimal usage is: *Publicationship("Applied-Ontology")*, whom will match (or not) with
+to publish in the field of *Applied Ontology* a minimal usage is: *Publicationship("Artificial-Intelligence")*, whom will match (or not) with
 the following defined rule in [front_end.py](front_end.py): <br>
 
 ```sh
