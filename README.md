@@ -1,6 +1,6 @@
 # SCENARIO
 
-![Image 3](images/theory_SSC2024.jpg)
+![Image 3](images/theory_SSC2024)
 
 
 
