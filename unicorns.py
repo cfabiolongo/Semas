@@ -1,6 +1,7 @@
 import turtle
 import random
 import time
+import uuid
 
 # Definire le dimensioni del canvas
 N = 500
@@ -23,16 +24,23 @@ turtles = []
 screen.register_shape("turtles/icons8-unicorn_color.gif")
 
 
+class TurtleWithID(turtle.Turtle):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.id = uuid.uuid4()
+
+
 # Funzione per inizializzare le tartarughe
 def create_turtles(num):
     for _ in range(num):
-        t = turtle.Turtle()
+        t = TurtleWithID()
         t.shape("turtles/icons8-unicorn_color.gif")
         t.penup()
         t.speed(0)
         t.setpos(random.randint(-N // 2, N // 2), random.randint(-N // 2, N // 2))
         t.setheading(random.randint(0, 360))
         turtles.append(t)
+        print("id: ",t.id)
 
 
 # Creare le tartarughe
