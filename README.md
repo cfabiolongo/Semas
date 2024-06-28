@@ -7,7 +7,7 @@ I implemented the scenario we proposed in the extended abstract for Social Simul
 I initialized the ontology with a specific context, where authors belong to 3 universities (Catania, Bologna, Turin) and each is a top-author in either Artificial Intelligence, Machine Learning or Applied Ontology. Coauthorships are imposed between members. I also started addding some other features (see variables from the Italian PhD dataset). Stefano, who will make the inference, aims to be top-author in Artificial Intelligence, for which top-authors are located at University of Catania, but he has been selected from Bologna and Turin and now he has to choose what job offer to accept.
 
 The intentions (reactors in PHIDIAS) to reach the desire to become top-author in Artificial Intelligence are either to publish directly with top-authors in Artificial Intelligence (direct match) or with an author which is co-author with a top-author in Artificial Intelligence (indirect match). The decision Stefano has to make is whether accept the offer from Bologna or Turin, based on where he has chance to find co-authors that can connect to a top author.
-The ontology initialized in this scenario is as follows:
+The set of triplets that compose the ontology initialized in this scenario is as follows:
 
 ```sh
 eShell: main > kb
@@ -30,6 +30,9 @@ HasGender('Petra', 'Female')            HasGender('Jenny', 'Female')
 HasGender('Anna', 'Female')
 ```
 
+Plotted (here manually):
+
+<img src="images/appliedSSC2024.png" width=50% height=60%>
 
 
 ### SEMAS inference
