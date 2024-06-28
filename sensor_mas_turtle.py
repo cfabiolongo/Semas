@@ -64,15 +64,15 @@ class Timer(Sensor):
 
     def sense(self):
         while True:
-            self.event.wait(self.timeout)
+            time.sleep(self.timeout)
             self.event.clear()
             if self.do_restart:
                 self.do_restart = False
                 continue
-            if self.stopped:
+            elif self.stopped:
+                self.assert_belief(TIMEOUT("ON"))
                 return
             else:
-                self.assert_belief(TIMEOUT("ON"))
                 return
 
 
@@ -88,6 +88,7 @@ class move_turtle1(Action):
       pos_y = str(arg2).split("'")[2]
       pos_x = int(pos_x[1:-1])
       pos_y = int(pos_y[1:-1])
+      print(f"POS({pos_x}, {pos_y})")
       t1.goto(pos_x, pos_y)
 
       # time to get the job done
@@ -101,10 +102,27 @@ class move_turtle2(Action):
       pos_y = str(arg2).split("'")[2]
       pos_x = int(pos_x[1:-1])
       pos_y = int(pos_y[1:-1])
+      print(f"POS({pos_x}, {pos_y})")
       t2.goto(pos_x, pos_y)
 
       # time to get the job done
       time.sleep(1)
+
+
+class rest(Action):
+    """resting for few seconds"""
+    def execute(self, arg):
+      arg = str(arg).split("'")[1]
+      rest_time = int(arg)
+      print(f"\nresting for {rest_time} seconds...")
+
+      t1.color("red")
+      t2.color("red")
+
+      time.sleep(rest_time)
+
+      t1.color("black")
+      t2.color("black")
 
 
 
@@ -133,15 +151,15 @@ class main(Agent):
     def main(self):
 
         go() >> [show_line("Starting task detection...\n"), TaskDetect().start()]
-        work() >> [show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(0.1).start()]
+        work() >> [show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(10).start()]
 
-        +DUTY1(X)[{'from': "worker"}] >> [show_line("received comm DUTY ",X," from worker"), +DUTY1(X)]
-        +DUTY2(X)[{'from': "worker2"}] >> [show_line("received comm DUTY2 ",X," from worker2"), +DUTY2(X)]
+        +DUTY1("YES")[{'from': "worker"}] >> [show_line("received comm DUTY from worker"), +DUTY1("YES")]
+        +DUTY2("YES")[{'from': "worker2"}] >> [show_line("received comm DUTY2 from worker2"), +DUTY2("YES")]
 
         +TASK(X, Y) / DUTY1("YES") >> [-DUTY1("YES"), +TASK(X, Y)[{'to':'worker'}]]
         +TASK(X, Y) / DUTY2("YES") >> [-DUTY2("YES"), +TASK(X, Y)[{'to': 'worker2'}]]
 
-        +TIMEOUT("ON") >> [show_line("\nWorkers are tired...\n"), -DUTY1("YES"), -DUTY2("YES")]
+        +TIMEOUT("ON") >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY1("YES"), -DUTY2("YES"), rest("5"), go(), work()]
 
 
 def turtle_thread_func():
