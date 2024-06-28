@@ -34,17 +34,19 @@ HasGender('Anna', 'Female')
 
 Plotted (here manually):
 
+<p align="center">
 <img src="images/appliedSSC2024.png" width=50% height=60%>
+</p>
 
 
 ### SEMAS inference
 
 ---------------
-To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are: *Publicationship()*, *SelectUniversity()* for choosing between University Stefano has been accepted by,
-and *BeTopAuthorship()*. Both of them can be used with one or more arguments. For instance, supposing one want
-to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which match with two rules defined rule in [front_end.py](front_end.py): <be>
+To achieve inference, one of the defined DESIRES must be employed as PHIDIA Procedure, which are in this case: *Publicationship()*,
+and *BeTopAuthorship()*, and specifically to this contest *SelectUniversity()* for choosing between the universities Stefano has been accepted by. Both of them can be used with one or more arguments. For instance, supposing one want
+to publish in the field of *Artificial Intelligence* a minimal usage is: *Publicationship("Artificial-Intelligence")*, which matches with two defined rules in [front_end.py](front_end.py): <be>
 
-* Propose co-authorship directly to the top-author X in the field of *Artificial-Intelligence"
+* Propose co-authorship directly to a top-author X in the field of *Artificial-Intelligence"
 ```sh
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
 +ProposeCoauthorship(X,Y) >> [show_line("Propose co-authorship with ",X," as top-author in the field of ",Y,".\n")]
