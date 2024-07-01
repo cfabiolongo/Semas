@@ -48,7 +48,7 @@ HasGender('Jenny', 'Female')
 Plotted (here manually):
 
 <p align="center">
-<img src="images/appliedSSC2024legend.png" width=60% height=70%>
+<img src="images/appliedSSC2024legend.png" width=70% height=80%>
 </p>
 
 
