@@ -22,6 +22,8 @@ class DUTY1(Belief): pass
 class DUTY2(Belief): pass
 class LEDGER(Belief): pass
 
+class DUTY(Belief): pass
+
 class WORKTIME(Belief): pass
 class DUTY_TIME(Belief): pass
 
@@ -140,7 +142,9 @@ class UpdateLedger(Action):
     """Update completed jobs"""
     def execute(self, arg1, arg2):
 
-      agent = str(arg1)[1:-1]
+      print("Update ledger: ",arg1, arg2)
+
+      agent = str(arg1).split("'")[3]
       jobs = int(str(arg2).split("'")[3])
       jobs = jobs + 1
       self.assert_belief(LEDGER(agent, str(jobs)))
@@ -170,11 +174,11 @@ def_vars("X","Y", "D", "H", "Z")
 # ---------------------------------------------------------------------
 class worker1(Agent):
     def main(self):
-        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1", X, Y), +DUTY1("YES")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1", X, Y), +DUTY("worker1")[{'to':'main'}]]
 
 class worker2(Agent):
     def main(self):
-        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2", X, Y), +DUTY2("YES")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2", X, Y), +DUTY("worker2")[{'to':'main'}]]
 
 
 # ---------------------------------------------------------------------
@@ -184,17 +188,17 @@ class main(Agent):
     def main(self):
 
         setup() >> [show_line("Setup jobs ledger...\n"), +LEDGER("worker1", "0"), +LEDGER("worker2", "0"), +WORKTIME(0), +DUTY_TIME(MAX_WORK_TIME)]
-        work() >> [show_line("Starting task detection...\n"), TaskDetect().start(), show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(MAX_WORK_TIME).start()]
+        work() >> [show_line("Starting task detection...\n"), TaskDetect().start(), show_line("Workers on duty..."), +DUTY("worker1"), +DUTY("worker2"), Timer(MAX_WORK_TIME).start()]
 
-        +DUTY1("YES")[{'from': "worker1"}] / LEDGER("worker1", X) >> [show_line("received job done comm from worker1"), -LEDGER("worker1", X), UpdateLedger("worker1", X)]
-        +DUTY2("YES")[{'from': "worker2"}] / LEDGER("worker2", X) >> [show_line("received job done comm from worker2"), -LEDGER("worker2", X), UpdateLedger("worker2", X)]
+        +DUTY(X)[{'from': X}] / LEDGER(X, Y) >> [show_line("received job done comm from ", X), -LEDGER(X, Y), UpdateLedger(X, Y)]
+        #+DUTY2("YES")[{'from': "worker2"}] / LEDGER("worker2", X) >> [show_line("received job done comm from worker2"), -LEDGER("worker2", X), UpdateLedger("worker2", X)]
 
-        +TASK(X, Y) / DUTY1("YES") >> [show_line("assigning job to worker1..."), -DUTY1("YES"), +TASK(X, Y)[{'to':'worker1'}]]
-        +TASK(X, Y) / DUTY2("YES") >> [show_line("assigning job to worker2..."), -DUTY2("YES"), +TASK(X, Y)[{'to':'worker2'}]]
+        +TASK(X, Y) / DUTY(Z) >> [show_line("assigning job to ", Z), -DUTY(Z), +TASK(X, Y)[{'to':Z}]]
+        #+TASK(X, Y) / DUTY2("YES") >> [show_line("assigning job to worker2..."), -DUTY2("YES"), +TASK(X, Y)[{'to':'worker2'}]]
 
         +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
-        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY1("YES"), -DUTY2("YES"), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
-        +STOPWORK("YES") >> [show_line("\nWorking day completed.\n"), TaskDetect().stop(), -DUTY1("YES"), -DUTY2("YES")]
+        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY("worker1"), -DUTY("worker2"), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
+        +STOPWORK("YES") >> [show_line("\nWorking day completed.\n"), TaskDetect().stop(), -DUTY("worker1"), -DUTY("worker2")]
 
 
 def turtle_thread_func():
