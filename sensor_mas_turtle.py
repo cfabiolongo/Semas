@@ -17,13 +17,12 @@ class TASK(Reactor): pass
 class DUTY1(Belief): pass
 class DUTY2(Belief): pass
 
-# Canvas size
-N = 500
+
+dict_turtle = {}
 
 # ---------------------------------------------------------------------
 # Sensors section
 # ---------------------------------------------------------------------
-
 
 class TaskDetect(Sensor):
 
@@ -38,6 +37,9 @@ class TaskDetect(Sensor):
     def sense(self):
         while self.running:
            time.sleep(1)
+
+           # Coordinates spamming range
+           N = 500
 
            pos_x = random.randint(-N // 2, N // 2)
            pos_y = random.randint(-N // 2, N // 2)
@@ -81,32 +83,22 @@ class Timer(Sensor):
 # ---------------------------------------------------------------------
 
 
-class move_turtle1(Action):
+class move_turtle(Action):
     """render unicorn to coordinates (x,y) and heading h"""
-    def execute(self, arg1, arg2):
+    def execute(self, arg0, arg1, arg2):
+      id_turtle = str(arg0)[1:-1]
+      print("id_turtle: ", arg0, id_turtle)
       pos_x = str(arg1).split("'")[2]
       pos_y = str(arg2).split("'")[2]
       pos_x = int(pos_x[1:-1])
       pos_y = int(pos_y[1:-1])
       print(f"POS({pos_x}, {pos_y})")
-      t1.goto(pos_x, pos_y)
+
+      dict_turtle["t"+id_turtle].goto(pos_x, pos_y)
 
       # time to get the job done
       time.sleep(1)
 
-
-class move_turtle2(Action):
-    """render unicorn to coordinates (x,y) and heading h"""
-    def execute(self, arg1, arg2):
-      pos_x = str(arg1).split("'")[2]
-      pos_y = str(arg2).split("'")[2]
-      pos_x = int(pos_x[1:-1])
-      pos_y = int(pos_y[1:-1])
-      print(f"POS({pos_x}, {pos_y})")
-      t2.goto(pos_x, pos_y)
-
-      # time to get the job done
-      time.sleep(1)
 
 
 class rest(Action):
@@ -135,13 +127,13 @@ def_vars("X","Y", "D", "H", "Z")
 # ---------------------------------------------------------------------
 # Agents 'worker', 'worker2'
 # ---------------------------------------------------------------------
-class worker(Agent):
+class worker1(Agent):
     def main(self):
-        +TASK(X, Y)[{'from': Z}] >> [show_line("Worker moving to (", X,",", Y, "), received task from ", Z), move_turtle1(X,Y), +DUTY1("YES")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': Z}] >> [show_line("Worker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1",X,Y), +DUTY1("YES")[{'to':'main'}]]
 
 class worker2(Agent):
     def main(self):
-        +TASK(X, Y)[{'from': Z}] >> [show_line("Worker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle2(X, Y), +DUTY2("YES")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': Z}] >> [show_line("Worker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2",X, Y), +DUTY2("YES")[{'to':'main'}]]
 
 
 # ---------------------------------------------------------------------
@@ -153,10 +145,10 @@ class main(Agent):
         go() >> [show_line("Starting task detection...\n"), TaskDetect().start()]
         work() >> [show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(10).start()]
 
-        +DUTY1("YES")[{'from': "worker"}] >> [show_line("received comm DUTY from worker"), +DUTY1("YES")]
+        +DUTY1("YES")[{'from': "worker1"}] >> [show_line("received comm DUTY from worker1"), +DUTY1("YES")]
         +DUTY2("YES")[{'from': "worker2"}] >> [show_line("received comm DUTY2 from worker2"), +DUTY2("YES")]
 
-        +TASK(X, Y) / DUTY1("YES") >> [-DUTY1("YES"), +TASK(X, Y)[{'to':'worker'}]]
+        +TASK(X, Y) / DUTY1("YES") >> [-DUTY1("YES"), +TASK(X, Y)[{'to':'worker1'}]]
         +TASK(X, Y) / DUTY2("YES") >> [-DUTY2("YES"), +TASK(X, Y)[{'to': 'worker2'}]]
 
         +TIMEOUT("ON") >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY1("YES"), -DUTY2("YES"), rest("5"), go(), work()]
@@ -164,11 +156,14 @@ class main(Agent):
 
 def turtle_thread_func():
     wn = turtle.Screen()
-    wn.title("Movimento della tartaruga")
+    wn.title("Workers jobs assignment")
 
     global t1, t2
     t1 = turtle.Turtle()
     t2 = turtle.Turtle()
+
+    dict_turtle["t1"] = t1
+    dict_turtle["t2"] = t2
 
     # Questo mantiene la finestra aperta finché non viene chiusa dall'utente
     wn.mainloop()
@@ -181,7 +176,7 @@ turtle_thread.start()
 
 
 # start the actors
-worker().start()
+worker1().start()
 worker2().start()
 
 main().start()
