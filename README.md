@@ -92,7 +92,7 @@ Indirect match found at University-of-Messina.
 Propose co-authorship with Petra as top-author in the field of Artificial-Intelligence.
 Propose co-authorship with Michael as co-author with Petra, a top-author in the field of Artificial-Intelligence.
 
-**Stefano** should accept offer from University Alma-Mater-Bologna with co-authors of top-authors in field of Artificial-Intelligence.
+Stefano should accept offer from University Alma-Mater-Bologna with co-authors of top-authors in field of Artificial-Intelligence.
 Mandy should accept offer from University University-of-Messina with co-authors of top-authors in field of Artificial-Intelligence.
 ```
 
