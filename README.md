@@ -77,7 +77,7 @@ Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, 
  
 ```sh
 SelectUniversity(X) / (Selectionship(S,U) & CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +AcceptOffer(S,X,U), SelectUniversity(X)]
-
++AcceptOffer(S,X,U) >> [show_line(S," should accept offer from University ",U," with co-authors of top-authors in field of ",X,".\n")]
 ```
 
 the outcome will be as follows:
