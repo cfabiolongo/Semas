@@ -16,6 +16,7 @@ class setup(Procedure): pass
 class work(Procedure): pass
 class TIMEOUT(Reactor): pass
 class STOPWORK(Reactor): pass
+class COMM(Reactor): pass
 class TASK(Reactor): pass
 class DUTY1(Belief): pass
 class DUTY2(Belief): pass
@@ -102,12 +103,14 @@ class Timer(Sensor):
 class move_turtle(Action):
     """render unicorn to coordinates (x,y) and heading h"""
     def execute(self, arg0, arg1, arg2):
+      print(arg0, arg1, arg2)
       id_turtle = str(arg0)[1:-1]
       pos_x = str(arg1).split("'")[2]
       pos_y = str(arg2).split("'")[2]
+      print(f"------------> POS({pos_x}, {pos_y})")
       pos_x = int(pos_x[1:-1])
       pos_y = int(pos_y[1:-1])
-      print(f"POS({pos_x}, {pos_y})")
+      print(f"CLEANED------------> POS({pos_x}, {pos_y})")
 
       dict_turtle["t"+id_turtle].goto(pos_x, pos_y)
 
@@ -154,20 +157,6 @@ class UpdateWorkTime(Action):
         self.assert_belief(WORKTIME(arg_num_tot))
 
 
-class check_worktime(ActiveBelief):
-    """check if R is a Well Formed Rule"""
-    def evaluate(self, arg1, arg2):
-
-        print("arg1: ", arg1)
-        print("arg2: ", arg2)
-
-        if 0 == 0:
-            return True
-        else:
-            return False
-
-
-
 
 # ---------------------------------------------------------------------
 # Variable declaration
@@ -180,11 +169,11 @@ def_vars("X","Y", "D", "H", "Z")
 # ---------------------------------------------------------------------
 class worker1(Agent):
     def main(self):
-        +TASK(X, Y)[{'from': Z}] >> [show_line("Worker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1",X,Y), +DUTY1("YES")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1",X, Y), +COMM("worker1")[{'to':'main'}]]
 
 class worker2(Agent):
     def main(self):
-        +TASK(X, Y)[{'from': Z}] >> [show_line("Worker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2",X, Y), +DUTY2("YES")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2",X, Y), +COMM("worker2")[{'to':'main'}]]
 
 
 # ---------------------------------------------------------------------
@@ -196,13 +185,13 @@ class main(Agent):
         setup() >> [show_line("Setup jobs ledger...\n"), +LEDGER("worker1", "0"), +LEDGER("worker2", "0"), +WORKTIME(0), +DUTY_TIME(MAX_WORK_TIME)]
         work() >> [show_line("Starting task detection...\n"), TaskDetect().start(), show_line("Workers on duty..."), +DUTY1("YES"), +DUTY2("YES"), Timer(MAX_WORK_TIME).start()]
 
-        +DUTY1("YES")[{'from': "worker1"}] / LEDGER("worker1", X) >> [show_line("received comm DUTY from worker1"), -LEDGER("worker1", X), UpdateLedger("worker1", X)]
-        +DUTY2("YES")[{'from': "worker2"}] / LEDGER("worker2", X) >> [show_line("received comm DUTY2 from worker2"), -LEDGER("worker2", X), UpdateLedger("worker2", X)]
+        +COMM("worker1")[{'from': "worker1"}] / LEDGER("worker1", X) >> [show_line("received comm from worker1"), -LEDGER("worker1", X), UpdateLedger("worker1", X), +DUTY1("YES")]
+        +COMM("worker2")[{'from': "worker2"}] / LEDGER("worker2", X) >> [show_line("received comm from worker2"), -LEDGER("worker2", X), UpdateLedger("worker2", X), +DUTY2("YES")]
 
         +TASK(X, Y) / DUTY1("YES") >> [-DUTY1("YES"), +TASK(X, Y)[{'to':'worker1'}]]
         +TASK(X, Y) / DUTY2("YES") >> [-DUTY2("YES"), +TASK(X, Y)[{'to':'worker2'}]]
 
-        +TIMEOUT("ON") / WORKTIME(100) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
+        +TIMEOUT("ON") / WORKTIME(10) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY1("YES"), -DUTY2("YES"), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
         +STOPWORK("YES") >> [show_line("\nWorking day completed.\n"), TaskDetect().stop(), -DUTY1("YES"), -DUTY2("YES")]
 
