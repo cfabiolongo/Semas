@@ -103,7 +103,7 @@ class Timer(Sensor):
 class move_turtle(Action):
     """moving turtle to coordinates (x,y)"""
     def execute(self, arg0, arg1, arg2):
-      print(arg0, arg1, arg2)
+      # print(arg0, arg1, arg2)
       id_turtle = str(arg0)[1:-1]
       pos_x = str(arg1).split("'")[2]
       pos_y = str(arg2).split("'")[2]
@@ -138,11 +138,10 @@ class UpdateLedger(Action):
     """Update completed jobs"""
     def execute(self, arg1, arg2):
 
-      # print("Update ledger: ",arg1, arg2)
-
       agent = str(arg1).split("'")[3]
       jobs = int(str(arg2).split("'")[3])
       jobs = jobs + 1
+      print(f"Updating {agent} ledger: {jobs}")
       self.assert_belief(LEDGER(agent, str(jobs)))
 
 
@@ -160,7 +159,7 @@ class UpdateWorkTime(Action):
 # ---------------------------------------------------------------------
 # Variable declaration
 # ---------------------------------------------------------------------
-def_vars("X","Y", "D", "H", "Z", "L")
+def_vars("X","Y", "D", "H", "Z", "L", "M")
 
 
 # ---------------------------------------------------------------------
@@ -169,12 +168,12 @@ def_vars("X","Y", "D", "H", "Z", "L")
 class worker1(Agent):
     def main(self):
         #+TASK(X, Y)[{'from': Z}] / LEDGER("worker1", H) >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1", X, Y), -LEDGER("worker1", H), UpdateLedger("worker1", H), +COMM("worker1")[{'to':'main'}]]
-        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1", X, Y), +COMM("worker1")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': M}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", M), move_turtle("1", X, Y), +COMM("DONE")[{'to':'main'}]]
 
 class worker2(Agent):
     def main(self):
         #+TASK(X, Y)[{'from': Z}] / LEDGER("worker2", H) >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2", X, Y), -LEDGER("worker2", H), UpdateLedger("worker2", H), +COMM("worker2")[{'to':'main'}]]
-        +TASK(X, Y)[{'from': Z}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2", X, Y), +COMM("worker2")[{'to':'main'}]]
+        +TASK(X, Y)[{'from': M}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", M), move_turtle("2", X, Y), +COMM("DONE")[{'to':'main'}]]
 
 
 # ---------------------------------------------------------------------
@@ -188,9 +187,9 @@ class main(Agent):
 
         +TASK(X, Y) / DUTY(Z) >> [show_line("assigning job to ", Z), -DUTY(Z), +TASK(X, Y)[{'to': Z}]]
 
-        +COMM(Z)[{'from': Z}] >> [show_line("received job done comm from ", Z), +DUTY(Z)]
+        +COMM(X)[{'from': Z}] / LEDGER(Z, H) >> [show_line("received job done comm from ", Z), -LEDGER(Z, H), UpdateLedger(Z, H), +DUTY(Z)]
 
-        +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), -DUTY("worker1"), -DUTY("worker2"), +STOPWORK("YES")]
+        +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY("worker1"), -DUTY("worker2"), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
         +STOPWORK("YES") >> [show_line("\nWorking day completed.\n"), -DUTY("worker1"), -DUTY("worker2"), TaskDetect().stop()]
 
