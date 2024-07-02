@@ -36,7 +36,11 @@ REST_TIME = 5
 N = 500
 
 # Agent number
-AGENT_NUMBER = 2
+AGENT_NUMBER = 3
+
+# time-range to get the job done
+LOWER_BOUND = 0
+UPPER_BOUND = 3
 
 # ---------------------------------------------------------------------
 # Sensors section
@@ -106,7 +110,7 @@ class Timer(Sensor):
 class move_turtle(Action):
     """moving turtle to coordinates (x,y)"""
     def execute(self, arg0, arg1, arg2):
-      print(arg0, arg1, arg2)
+      # print(arg0, arg1, arg2)
       id_turtle = str(arg0).split("'")[2]
       pos_x = str(arg1).split("'")[2]
       pos_y = str(arg2).split("'")[2]
@@ -115,12 +119,10 @@ class move_turtle(Action):
       pos_x = int(pos_x[1:-1])
       pos_y = int(pos_y[1:-1])
 
-      print(id_turtle, pos_x, pos_y)
-
       dict_turtle["t"+id_turtle].goto(pos_x, pos_y)
 
       # time to get the job done
-      rnd = random.uniform(0, 1)
+      rnd = random.uniform(LOWER_BOUND, UPPER_BOUND)
       time.sleep(rnd)
 
 
@@ -145,7 +147,7 @@ class UpdateLedger(Action):
     """Update completed jobs"""
     def execute(self, arg1, arg2):
 
-      agent = str(arg1).split("'")[3]
+      agent = str(arg1)[1:-1]
       jobs = int(str(arg2).split("'")[3])
       jobs = jobs + 1
       print(f"Updating {agent} ledger: {jobs}")
@@ -204,19 +206,20 @@ for i in range(AGENT_NUMBER):
 class main(Agent):
     def main(self):
 
-        setup() >> [show_line("Setup jobs ledger...\n"), +LEDGER("worker1", "0"), +LEDGER("worker2", "0"), +WORKTIME(0), +DUTY_TIME(MAX_WORK_TIME)]
-        work() >> [show_line("Starting task detection...\n"), +DUTY(1), +DUTY(2), Timer(MAX_WORK_TIME).start(), TaskDetect().start(), show_line("Workers on duty...")]
+        setup() >> [show_line("Setup jobs ledger...\n"), +LEDGER("worker1", "0"), +LEDGER("worker2", "0"), +LEDGER("worker3", "0"), +WORKTIME(0), +DUTY_TIME(MAX_WORK_TIME)]
+        work() >> [show_line("Starting task detection...\n"), +DUTY(1), +DUTY(2), +DUTY(3), Timer(MAX_WORK_TIME).start(), TaskDetect().start(), show_line("Workers on duty...")]
 
         +TASK(X, Y) / DUTY(1) >> [show_line("assigning job to worker1"), -DUTY(1), +TASK(X, Y, 1)[{'to': "worker1"}]]
         +TASK(X, Y) / DUTY(2) >> [show_line("assigning job to worker2"), -DUTY(2), +TASK(X, Y, 2)[{'to': "worker2"}]]
+        +TASK(X, Y) / DUTY(3) >> [show_line("assigning job to worker3"), -DUTY(3), +TASK(X, Y, 3)[{'to': "worker3"}]]
 
-        +COMM(X)[{'from': "worker1"}] / LEDGER(Z, H) >> [show_line("received job done comm from worker1"), -LEDGER(Z, H), UpdateLedger(Z, H), +DUTY(1)]
-        +COMM(X)[{'from': "worker1"}] / LEDGER(Z, H) >> [show_line("received job done comm from worker2"), -LEDGER(Z, H), UpdateLedger(Z, H), +DUTY(2)]
-
+        +COMM(X)[{'from': "worker1"}] / LEDGER("worker1", H) >> [show_line("received job done comm from worker1"), -LEDGER("worker1", H), UpdateLedger("worker1", H), +DUTY(1)]
+        +COMM(X)[{'from': "worker2"}] / LEDGER("worker2", H) >> [show_line("received job done comm from worker2"), -LEDGER("worker2", H), UpdateLedger("worker2", H), +DUTY(2)]
+        +COMM(X)[{'from': "worker3"}] / LEDGER("worker3", H) >> [show_line("received job done comm from worker3"), -LEDGER("worker3", H), UpdateLedger("worker3", H), +DUTY(3)]
 
         +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
-        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
-        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), TaskDetect().stop(), pay()]
+        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -DUTY(3), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
+        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), -DUTY(3), TaskDetect().stop(), pay()]
 
         pay() / LEDGER(Z, H) >> [show_line("\nSending payment to ",Z, " for ",H," tasks..."), -LEDGER(Z, H), pay()]
         pay() >> [show_line("\nPayments completed.")]
@@ -243,11 +246,6 @@ for i in range(AGENT_NUMBER):
     class_name = f"worker{i+1}"
     instance = globals()[class_name]()
     instance.start()
-
-
-# # start the actors
-# worker1().start()
-# worker2().start()
 
 main().start()
 
