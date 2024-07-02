@@ -28,9 +28,9 @@ class DUTY_TIME(Belief): pass
 dict_turtle = {}
 
 # Max work time for a worker
-MAX_WORK_TIME = 10
+MAX_WORK_TIME = 5
 # Rest time for a worker
-REST_TIME = 5
+REST_TIME = 3
 
 # Coordinates spamming range
 N = 500
@@ -39,7 +39,7 @@ N = 500
 AGENT_NUMBER = 3
 
 # time-range to get the job done
-LOWER_BOUND = 0
+LOWER_BOUND = 2
 UPPER_BOUND = 5
 
 # ---------------------------------------------------------------------
@@ -172,15 +172,8 @@ def_vars("X","Y", "D", "H", "Z", "L", "M")
 
 
 # ---------------------------------------------------------------------
-# Agents 'worker', 'worker2'
+# Agents section
 # ---------------------------------------------------------------------
-# class worker1(Agent):
-#     def main(self):
-#         +TASK(X, Y)[{'from': M}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", M), move_turtle("1", X, Y), +COMM("DONE")[{'to':'main'}]]
-#
-# class worker2(Agent):
-#     def main(self):
-#         +TASK(X, Y)[{'from': M}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", M), move_turtle("2", X, Y), +COMM("DONE")[{'to':'main'}]]
 
 
 def create_class_with_main(class_name):
@@ -203,6 +196,7 @@ for i in range(AGENT_NUMBER):
 # ---------------------------------------------------------------------
 # Agent 'main'
 # ---------------------------------------------------------------------
+
 class main(Agent):
     def main(self):
 
@@ -217,6 +211,7 @@ class main(Agent):
         +COMM(X)[{'from': "worker2"}] / LEDGER("worker2", H) >> [show_line("received job done comm from worker2"), -LEDGER("worker2", H), UpdateLedger("worker2", H), +DUTY(2)]
         +COMM(X)[{'from': "worker3"}] / LEDGER("worker3", H) >> [show_line("received job done comm from worker3"), -LEDGER("worker3", H), UpdateLedger("worker3", H), +DUTY(3)]
 
+        # WORKTIME value is (DUTY_TIME * 6)
         +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -DUTY(3), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
         +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), -DUTY(3), TaskDetect().stop(), -WORKTIME(30), pay()]
