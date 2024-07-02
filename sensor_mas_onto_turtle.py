@@ -25,7 +25,11 @@ class DUTY(Belief): pass
 class WORKTIME(Belief): pass
 class DUTY_TIME(Belief): pass
 
+# Worker-Turtle dictionary
 dict_turtle = {}
+
+# ID prefix
+ID_PREFIX = "worker"
 
 # Max work time for a worker
 MAX_WORK_TIME = 5
@@ -185,12 +189,12 @@ def create_class_with_main(class_name):
     return type(class_name, (Agent,), {"main": main})
 
 for i in range(AGENT_NUMBER):
-    class_name = f"worker{i+1}"
+    class_name = f"{ID_PREFIX}{i+1}"
     globals()[class_name] = create_class_with_main(class_name)
 
 # Ora puoi creare istanze delle nuove classi e chiamare il loro metodo main
 for i in range(AGENT_NUMBER):
-    class_name = f"worker{i+1}"
+    class_name = f"{ID_PREFIX}{i+1}"
     instance = globals()[class_name]()
     instance.main()
 
@@ -245,7 +249,7 @@ turtle_thread.start()
 
 
 for i in range(AGENT_NUMBER):
-    class_name = f"worker{i+1}"
+    class_name = f"{ID_PREFIX}{i+1}"
     instance = globals()[class_name]()
     instance.start()
 
