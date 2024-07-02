@@ -11,7 +11,7 @@ from phidias.Agent import *
 from phidias.Types import *
 
 
-
+class pay(Procedure): pass
 class setup(Procedure): pass
 class work(Procedure): pass
 class TIMEOUT(Reactor): pass
@@ -34,6 +34,9 @@ REST_TIME = 5
 
 # Coordinates spamming range
 N = 500
+
+# Agent number
+AGENT_NUMBER = 2
 
 # ---------------------------------------------------------------------
 # Sensors section
@@ -121,17 +124,17 @@ class move_turtle(Action):
 class rest(Action):
     """resting for few seconds"""
     def execute(self, arg):
-      print("rest: ", arg)
       rest_time = int(str(arg))
       print(f"\nresting for {rest_time} seconds...")
 
-      t1.color("red")
-      t2.color("red")
+      for t in dict_turtle:
+          dict_turtle[t].color("red")
 
       time.sleep(rest_time)
 
-      t1.color("black")
-      t2.color("black")
+      for t in dict_turtle:
+          dict_turtle[t].color("black")
+
 
 
 class UpdateLedger(Action):
@@ -167,12 +170,10 @@ def_vars("X","Y", "D", "H", "Z", "L", "M")
 # ---------------------------------------------------------------------
 class worker1(Agent):
     def main(self):
-        #+TASK(X, Y)[{'from': Z}] / LEDGER("worker1", H) >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", Z), move_turtle("1", X, Y), -LEDGER("worker1", H), UpdateLedger("worker1", H), +COMM("worker1")[{'to':'main'}]]
         +TASK(X, Y)[{'from': M}] >> [show_line("\nWorker1 moving to (", X,",", Y, "), received task from ", M), move_turtle("1", X, Y), +COMM("DONE")[{'to':'main'}]]
 
 class worker2(Agent):
     def main(self):
-        #+TASK(X, Y)[{'from': Z}] / LEDGER("worker2", H) >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", Z), move_turtle("2", X, Y), -LEDGER("worker2", H), UpdateLedger("worker2", H), +COMM("worker2")[{'to':'main'}]]
         +TASK(X, Y)[{'from': M}] >> [show_line("\nWorker2 moving to (", X,",", Y, "), received task from ", M), move_turtle("2", X, Y), +COMM("DONE")[{'to':'main'}]]
 
 
@@ -191,23 +192,20 @@ class main(Agent):
 
         +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY("worker1"), -DUTY("worker2"), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
-        +STOPWORK("YES") >> [show_line("\nWorking day completed.\n"), -DUTY("worker1"), -DUTY("worker2"), TaskDetect().stop()]
+        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY("worker1"), -DUTY("worker2"), TaskDetect().stop(), pay()]
+
+        pay() / LEDGER(Z, H) >> [show_line("\nSending payment to ",Z, " for ",H," task..."), -LEDGER(Z, H), pay()]
+        pay() >> [show_line("\nPayments completed.")]
+
 
 
 def turtle_thread_func():
     wn = turtle.Screen()
     wn.title("Workers jobs assignment")
 
-    global t1, t2
-    t1 = turtle.Turtle()
-    t2 = turtle.Turtle()
-    #t1.write("Turtle1", align="center", font=("Arial", 10, "normal"))
-    #t2.write("Turtle2", align="center", font=("Arial", 10, "normal"))
+    for i in range(AGENT_NUMBER):
+        dict_turtle["t"+str(i+1)] = turtle.Turtle()
 
-    dict_turtle["t1"] = t1
-    dict_turtle["t2"] = t2
-
-    # Questo mantiene la finestra aperta finché non viene chiusa dall'utente
     wn.mainloop()
 
 
