@@ -40,7 +40,7 @@ AGENT_NUMBER = 3
 
 # time-range to get the job done
 LOWER_BOUND = 0
-UPPER_BOUND = 3
+UPPER_BOUND = 5
 
 # ---------------------------------------------------------------------
 # Sensors section
@@ -219,7 +219,7 @@ class main(Agent):
 
         +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -DUTY(3), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
-        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), -DUTY(3), TaskDetect().stop(), pay()]
+        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), -DUTY(3), TaskDetect().stop(), -WORKTIME(30), pay()]
 
         pay() / LEDGER(Z, H) >> [show_line("\nSending payment to ",Z, " for ",H," tasks..."), -LEDGER(Z, H), pay()]
         pay() >> [show_line("\nPayments completed.")]
