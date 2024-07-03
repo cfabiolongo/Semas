@@ -10,6 +10,13 @@ from phidias.Lib import *
 from phidias.Agent import *
 from phidias.Types import *
 
+import configparser
+from owlready2 import *
+
+config = configparser.ConfigParser()
+config.read('config_mas.ini')
+
+
 
 class pay(Procedure): pass
 class setup(Procedure): pass
@@ -25,26 +32,33 @@ class DUTY(Belief): pass
 class WORKTIME(Belief): pass
 class DUTY_TIME(Belief): pass
 
-# Worker-Turtle dictionary
-dict_turtle = {}
+# ---------------------------------------------------------------------
+# Ontology section
+# ---------------------------------------------------------------------
 
 # ID prefix
 ID_PREFIX = "worker"
-
-# Max work time for a worker
+# Agent number
+AGENT_NUMBER = 3
+# Max work time for a worker (seconds)
+MAX_WORKDAY_TIME = 30
+# Max work time for a worker (seconds)
 MAX_WORK_TIME = 5
-# Rest time for a worker
+# Rest time for a worker (seconds)
 REST_TIME = 3
+
+# ---------------------------------------------------------------------
+# Non-ontological variables
+# ---------------------------------------------------------------------
 
 # Coordinates spamming range
 N = 500
-
-# Agent number
-AGENT_NUMBER = 3
-
 # time-range to get the job done
-LOWER_BOUND = 2
-UPPER_BOUND = 5
+LOWER_BOUND = 0
+UPPER_BOUND = 4
+
+# Worker-Turtle dictionary
+dict_turtle = {}
 
 # ---------------------------------------------------------------------
 # Sensors section
@@ -108,7 +122,6 @@ class Timer(Sensor):
 # ---------------------------------------------------------------------
 # Turtle section
 # ---------------------------------------------------------------------
-
 
 
 class move_turtle(Action):
@@ -220,11 +233,11 @@ class main(Agent):
         +COMM(X)[{'from': "worker3"}] / LEDGER("worker3", H) >> [show_line("received job done comm from worker3"), -LEDGER("worker3", H), UpdateLedger("worker3", H), +DUTY(3)]
 
         # Pause work intentions - WORKTIME value is (DUTY_TIME * 6)
-        +TIMEOUT("ON") / WORKTIME(30) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
+        +TIMEOUT("ON") / WORKTIME(MAX_WORKDAY_TIME) >> [show_line("\nWorkers are very tired Finishing working day.\n"), +STOPWORK("YES")]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -DUTY(3), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
 
         # Stop work intention
-        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), -DUTY(3), TaskDetect().stop(), -WORKTIME(30), pay()]
+        +STOPWORK("YES") >> [show_line("\nWorking day completed."), -DUTY(1), -DUTY(2), -DUTY(3), TaskDetect().stop(), -WORKTIME(MAX_WORKDAY_TIME), pay()]
 
         # pay desires
         pay() / LEDGER(Z, H) >> [show_line("\nSending payment to ",Z, " for ",H," tasks..."), -LEDGER(Z, H), pay()]
