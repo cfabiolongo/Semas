@@ -38,6 +38,8 @@ INTENTIONS = config.get('CLASSES', 'PHI-Intentions').split(",")
 GROUNDS = config.get('CLASSES', 'PHI-Grounds').split(",")
 
 PROPERTIES = config.get('CLASSES', 'Properties').split(",")
+DATAS = config.get('CLASSES', 'Data').split(",")
+
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -78,14 +80,16 @@ with my_onto:
     class INTENTION(Thing):
         pass
 
+    # Declaring Owlready DataProperties
+    for i in range(len(DATAS)):
+        # hasIdPrefix = type(DataProperty)
+        globals()[DATAS[i].strip()] = type(DataProperty)
 
-    # Declaring Owlready properties
+    # Declaring Owlready ObjectProperties
     for i in range(len(PROPERTIES)):
         globals()[PROPERTIES[i].strip()] = type(PROPERTIES[i].strip(), (ObjectProperty,), {})
         istanza = globals()[PROPERTIES[i].strip()]()
-
         dict_prop[PROPERTIES[i].strip()] = istanza
-
 
 
 # Declaring Phidias belief from OWL
@@ -118,6 +122,7 @@ for i in range(len(INTENTIONS)):
     istanza = globals()[INTENTIONS[i].strip()]()
 
 
+
 # ---------------------------------------------------------------------
 # System procedures section
 # ---------------------------------------------------------------------
@@ -135,6 +140,7 @@ class pre_process(Procedure): pass
 # Ontology section
 # ---------------------------------------------------------------------
 
+# Ground control values (default)
 
 # ID prefix
 ID_PREFIX = "worker"

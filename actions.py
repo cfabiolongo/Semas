@@ -25,8 +25,6 @@ DESIRES = config.get('CLASSES', 'PHI-Desires').split(",")
 INTENTIONS = config.get('CLASSES', 'PHI-Intentions').split(",")
 
 PROPERTIES = config.get('CLASSES', 'Properties').split(",")
-DATAS = config.get('CLASSES', 'Data').split(",")
-
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -70,14 +68,9 @@ with my_onto:
     for i in range(len(PROPERTIES)):
         globals()[PROPERTIES[i].strip()] = type(PROPERTIES[i].strip(), (ObjectProperty,), {})
         istanza = globals()[PROPERTIES[i].strip()]()
-
         dict_prop[PROPERTIES[i].strip()] = istanza
 
-    for i in range(len(DATAS)):
-        globals()[DATAS[i].strip()] = type(DATAS[i].strip(), (DataProperty,), {})
-        istanza = globals()[DATAS[i].strip()]()
 
-        dict_prop[DATAS[i].strip()] = istanza
 
 
 
