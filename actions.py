@@ -131,18 +131,6 @@ class initWorld(Action):
 
 
 
-# class WFR(ActiveBelief):
-#     """check if R is a Well Formed Rule"""
-#     def evaluate(self, arg):
-#
-#         rule = str(arg).split("'")[3]
-#
-#         if rule[0] != "-" and rule[-1] != ">":
-#             return True
-#         else:
-#             return False
-
-
 class declareRules(Action):
     """assert an SWRL rule"""
     def execute(self):
@@ -170,15 +158,6 @@ class saveOnto(Action):
 # ----------------------------------
 # --------- SPARQL Section ---------
 # ----------------------------------
-
-
-class process_belief(Action):
-    """create sparql query from MST"""
-    def execute(self, arg1):
-        print("\n--------- Processing belief Info---------\n ")
-
-        info = str(arg1).split("'")[3]
-        print(f"Operations on belief {info}...")
 
 
 

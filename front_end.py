@@ -13,7 +13,6 @@ class pre_process(Procedure): pass
 
 
 # World initialization
-# declareRules()
 init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 
 # Importing related triples
