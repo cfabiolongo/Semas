@@ -207,6 +207,41 @@ class saveOnto(Action):
             my_onto.save(file=FILE_NAME, format="rdfxml")
             print("Ontology saved.")
 
+
+
+class assert_beliefs_triples(Action):
+    """create sparql query from MST"""
+    def execute(self):
+
+        q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
+        q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
+
+        my_world = owlready2.World()
+        my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
+
+        if REASONING_ACTIVE:
+            # sync_reasoner_pellet(my_world, infer_property_values = True, infer_data_property_values = True)
+            sync_reasoner_hermit(my_world, infer_property_values=True)
+            # sync_reasoner_hermit(my_world)
+
+        graph = my_world.as_rdflib_graph()
+        result = list(graph.query(q))
+
+        for res in result:
+
+            subj = str(res).split(",")[0]
+            subj = subj.split("#")[1][:-2]
+
+            prop = str(res).split(",")[1]
+            prop = prop.split("#")[1][:-2]
+
+            obj = str(res).split(",")[2]
+            obj = obj.split("#")[1][:-3]
+
+            self.assert_belief(TRIPLE(subj, prop, obj))
+
+
+
 # ---------------------------------------------------------------------
 # Non-ontological variables
 # ---------------------------------------------------------------------
@@ -373,37 +408,6 @@ for i in range(AGENT_NUMBER):
     instance.main()
 
 
-
-class assert_beliefs_triples(Action):
-    """create sparql query from MST"""
-    def execute(self):
-
-        q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
-        q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
-
-        my_world = owlready2.World()
-        my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
-
-        if REASONING_ACTIVE:
-            # sync_reasoner_pellet(my_world, infer_property_values = True, infer_data_property_values = True)
-            sync_reasoner_hermit(my_world, infer_property_values=True)
-            # sync_reasoner_hermit(my_world)
-
-        graph = my_world.as_rdflib_graph()
-        result = list(graph.query(q))
-
-        for res in result:
-
-            subj = str(res).split(",")[0]
-            subj = subj.split("#")[1][:-2]
-
-            prop = str(res).split(",")[1]
-            prop = prop.split("#")[1][:-2]
-
-            obj = str(res).split(",")[2]
-            obj = obj.split("#")[1][:-3]
-
-            self.assert_belief(TRIPLE(subj, prop, obj))
 
 # ---------------------------------------------------------------------
 # Agent 'main'
