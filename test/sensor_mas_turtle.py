@@ -31,6 +31,8 @@ dict_turtle = {}
 MAX_WORK_TIME = 10
 # Rest time for a worker
 REST_TIME = 5
+# Timer tick
+TICK = 0.1
 
 # Coordinates spamming range
 N = 500
@@ -58,7 +60,7 @@ class TaskDetect(Sensor):
 
     def sense(self):
         while self.running:
-           time.sleep(1)
+           time.sleep(TICK)
 
            pos_x = random.randint(-N // 2, N // 2)
            pos_y = random.randint(-N // 2, N // 2)

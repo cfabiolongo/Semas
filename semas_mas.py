@@ -55,6 +55,9 @@ MAX_WORKDAY_TIME = 30
 MAX_WORK_TIME = 5
 # Rest time for a worker (seconds)
 REST_TIME = 3
+# Timer tick
+TICK = 0.1
+
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -279,7 +282,7 @@ class TaskDetect(Sensor):
 
     def sense(self):
         while self.running:
-           time.sleep(1)
+           time.sleep(TICK)
 
            pos_x = random.randint(-N // 2, N // 2)
            pos_y = random.randint(-N // 2, N // 2)
