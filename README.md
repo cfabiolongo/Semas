@@ -335,7 +335,7 @@ assigning job to worker1
 ---------------
 
 As seen in the case of mono-agent code, triples from ontologies (Semantic Web) can be imported and turned into beliefs interacting with
-SEMAS production rules system. The [code](test/sensor_mas_turtle.py) implements the above *Warehouse* case-study including the already
+SEMAS production rules system. The code [semas_mas.py](semas_mas.py) implements the above *Warehouse* case-study including the already
 seen procedure *init()* and *load()* to either initialize the ontology described in [config_mas.ini](config_mas.ini) and import
 its triples into the SEMAS KB. The interaction of the *belief-from-triples* and the production rules system is left to the developer.
 
