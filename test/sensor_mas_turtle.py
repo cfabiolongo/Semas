@@ -32,7 +32,7 @@ MAX_WORK_TIME = 10
 # Rest time for a worker
 REST_TIME = 5
 # Timer tick
-TICK = 0.1
+TICK = 0.5
 
 # Coordinates spamming range
 N = 500
