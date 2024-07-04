@@ -271,8 +271,8 @@ Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 ---------------
 The key of the SEMAS Multi-Agent Systems (MAS), which is mostly inhrerited from PHIDIAS, is that together with the "Main"
 agent (referred by the prior section), more agents can be instanced. As reported [here](https://ceur-ws.org/Vol-2502/paper5.pdf)
-agents can communicate with each other by meand of inner messaging, i.e., by asserting beliefs (or reactors) into other knowledge bases
-and interact with other production rule, as depicted in the following figure: 
+agents can communicate with each other by the means of inner messaging, i.e., by asserting beliefs (or reactors) into other agents' KB
+and interact with other production rules, as depicted in the following figure: 
 
 ![Image 1](images/schema_mas.jpg)
 
