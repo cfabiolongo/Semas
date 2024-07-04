@@ -306,7 +306,7 @@ to delegate work to two workers (worker1 and worker2), whose workflow is depicte
 
 The procedure *setup* and *work* are implemented to let chief set jobs ledger and begin assign tasks to available workers. Each task
  consists of taking the goods, going to specific location if the warehouse and placing them on the shelves. Location are 
-randomly generated within the range of the canvas. Time to put good in the shelves is also randomly generated. During a task a worker is not available, thus
+randomly generated within the range of the canvas. Time to put goods in the shelves is also randomly generated. During a task a worker is not available, thus
 the chief must wait for assign a new task to a worker.
 
 ```sh
@@ -329,3 +329,11 @@ assigning job to worker1
 ..........................
 ..........................
 ```
+
+#### Semantic Web interaction
+
+As seen in the case of mono-agent code, triples from ontologies (Semantic Web) can be imported and turned into beliefs interacting with
+SEMAS production rules system. The [code](test/sensor_mas_turtle.py) implements the above *Warehouse* case-study including the already
+seen procedure *init()* and *load()* to either initialize the ontology described in [config_mas.ini](config_mas.ini) and import
+its triples into the SEMAS KB. The interaction of the *belief-from-triples* and the production rules system is left to the developer.
+
