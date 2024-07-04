@@ -298,4 +298,34 @@ eShell: main >
 ---------------
 
 As case study we consider the toy [instance](test/sensor_mas_turtle.py) related to a Warehouse, where a chief has the task
-to delegate work to two workers (worker1 and worker2), whose workflow is depicted at runtime in a Canvas.
+to delegate work to two workers (worker1 and worker2), whose workflow is depicted at runtime in a Canvas. The involved variable are:
+
+* TICK: tick time
+* REST_TIME: the maximum amount of duty time (im seconds) before a pause
+* MAX_WORK_TIME: the amount of duty time (in seconds) before finishing the working day
+
+The procedure *setup* and *work* are implemented to let chief set jobs ledger and begin assign tasks to available workers. Each task
+ consists of taking the goods, going to specific location if the warehouse and placing them on the shelves. Location are 
+randomly generated within the range of the canvas. Time to put good in the shelves is also randomly generated. During a task a worker is not available, thus
+the chief must wait for assign a new task to a worker.
+
+```sh
+eShell: main > setup()
+Setup jobs ledger...
+eShell: main > work()
+Starting task detection...
+
+Workers on duty...
+eShell: main > assigning job to worker1
+
+Worker1 moving to (-240,-49), received task from main
+assigning job to worker2
+
+Worker2 moving to (-15,-210), received task from main
+received job done comm from worker1
+Updating worker1 ledger: 1
+assigning job to worker1
+..........................
+..........................
+..........................
+```
