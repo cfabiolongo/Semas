@@ -280,15 +280,15 @@ To inspect other agents' KB than respect to main, the above seen command "kb" mu
 to change the agent's scope. For instance, by supposing one wants to inspect the "worker" KB (which in this case is empty):
 
 ```sh
-eShell: main > agent worker1
-eShell: worker1 > kb
-eShell: worker1 >
+eShell: main > agent worker
+eShell: worker > kb
+eShell: worker >
 ```
 
 In the same way, the scope can be changed back to main (default) as follows:
 
 ```sh
-eShell: worker1 > agent main
+eShell: worker > agent main
 eShell: main >
 ```
 
