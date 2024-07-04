@@ -271,13 +271,13 @@ Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 ---------------
 The key of the SEMAS Multi-Agent Systems (MAS), which is mostly inhrerited from PHIDIAS, is that together with the "Main"
 agent (referred by the prior section), more agents can be instanced. As reported [here](https://ceur-ws.org/Vol-2502/paper5.pdf),
-agents can communicate with each other by the means of inner messaging, i.e., by asserting beliefs (or reactors) into other agents' KB
-thus interact with other production rules, as depicted in the following figure: 
+agents can communicate with each other by the means of inner messaging, i.e., by asserting beliefs (or reactors) into other agents' KB,
+thus interacting with other agent's production rules (as depicted in the figure below). 
 
 ![Image 1](images/schema_mas.jpg)
 
-To inspect other agents' KB than main, the above seen command "kb" must be preceeded another command "agent"
-to change the scope. For instance, by supposing one want to inspect the "worker" KB (which in thi case is empty):
+To inspect other agents' KB than respect to main, the above seen command "kb" must be preceded by the command "agent"
+to change the agent's scope. For instance, by supposing one wants to inspect the "worker" KB (which in this case is empty):
 
 ```sh
 eShell: main > agent worker1
@@ -285,7 +285,7 @@ eShell: worker1 > kb
 eShell: worker1 >
 ```
 
-In the same way, the scope can be changed to main (default) as follows:
+In the same way, the scope can be changed back to main (default) as follows:
 
 ```sh
 eShell: worker1 > agent main
@@ -297,17 +297,17 @@ eShell: main >
 
 ---------------
 
-As case study we consider the toy [instance](test/sensor_mas_turtle.py) related to a Warehouse, where a chief has the task
-to delegate work to two workers (worker1 and worker2), whose workflow is depicted at runtime in a Canvas. The involved variable are:
+As case-study, let us consider the toy [instance](test/sensor_mas_turtle.py) related to a *Warehouse*, whose chief has the task
+to assign work to two employers (worker1 and worker2), whose workflow is depicted at runtime in a Canvas. The involved variables are:
 
 * TICK: tick time
 * REST_TIME: the maximum amount of duty time (im seconds) before a pause
 * MAX_WORK_TIME: the amount of duty time (in seconds) before finishing the working day
 
-The procedure *setup* and *work* are implemented to let chief set jobs ledger and begin assign tasks to available workers. Each task
- consists of taking the goods, going to specific location if the warehouse and placing them on the shelves. Location are 
-randomly generated within the range of the canvas. Time to put goods in the shelves is also randomly generated. During a task a worker is not available, thus
-the chief must wait for assign a new task to a worker.
+The procedure *setup* and *work* are implemented to let the chief set the jobs ledger and begin to assign tasks to available workers. Each task
+ consists of taking the goods, going to specific location within the warehouse and placing the goods on the shelves. Locations are 
+randomly generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available, thus
+the chief must wait to assign a new task to a free worker.
 
 ```sh
 eShell: main > setup()
@@ -335,7 +335,7 @@ assigning job to worker1
 ---------------
 
 As seen in the case of mono-agent code, triples from ontologies (Semantic Web) can be imported and turned into beliefs interacting with
-SEMAS production rules system. The code [semas_mas.py](semas_mas.py) implements the above *Warehouse* case-study including the already
+the SEMAS production rules system. The code [semas_mas.py](semas_mas.py) implements the above *Warehouse* case-study including the already
 seen procedure *init()* and *load()* to either initialize the ontology described in [config_mas.ini](config_mas.ini) and import
-its triples into the SEMAS KB. The interaction of the *belief-from-triples* and the production rules system is left to the developer.
+its triples into the SEMAS KB. The interaction between *belief-from-triples* and production rules is left to the developer.
 
