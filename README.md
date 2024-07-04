@@ -163,14 +163,14 @@ Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), who
 The variable **REASONER** indicates which of the integrated reasoners (HERMIT/PELLET) must be employed before every SPARQL query in some Action's PLAN.
 
 
-## Case-study: Co-Authorship and Academic Mobility
+### Case-study: Co-Authorship and Academic Mobility
 
 ---------------
 This case-study provides a formalization about interactions between Scholars in the field of Academic Mobility, in order to choose, on the basis of Co-Authorship
 interaction in specific fields, the best University affiliation.
 
 
-### Ontology initialization
+#### Ontology initialization
 
 ---------------
 The details of the above formalization are all defined in config.ini. Both OWL 2 ontology and PHIDIAS classes can be initialised with the command *init()* as follows:
@@ -193,7 +193,7 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
-### Ontology import
+#### Ontology import
 
 ---------------
 
@@ -237,7 +237,7 @@ TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artifi
 TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
 ```
 
-### SEMAS inference
+#### SEMAS inference
 
 ---------------
 To achieve inference, one of the defined DESIRES must be employed as PHIDIAS Procedure, which are: *Publicationship()*
@@ -266,7 +266,7 @@ Propose co-authorship with Misael to publish in the field of Applied-Ontology.
 Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 ```
 
-### Multi-Agent Systems
+## Multi-Agent Systems
 
 ---------------
 The key of the SEMAS Multi-Agent Systems (MAS), which is mostly inhrerited from PHIDIAS, is that together with the "Main"
@@ -293,7 +293,7 @@ eShell: main >
 ```
 
 
-#### Case-study 
+### Case-study: Warehouse management
 
 ---------------
 
@@ -336,7 +336,7 @@ assigning job to worker1
 
 ![Image 6](images/workers.jpg)
 
-#### Semantic Web interaction
+### Semantic Web MAS interaction
 
 ---------------
 
