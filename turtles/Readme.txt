@@ -1,1 +1,0 @@
-All gifs was download from: https://icons8.com/icons

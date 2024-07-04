@@ -275,3 +275,19 @@ agents can communicate with each other by meand of inner messaging, i.e., by ass
 and interact with other production rule, as depicted in the following figure: 
 
 ![Image 1](images/schema_mas.jpg)
+
+To inspect other agents' KB than main, the above seen command "kb" must be preceeded another command "agent"
+to change the scope. For instance, by supposing one want to inspect the "worker" KB (which in thi case is empty):
+
+```sh
+eShell: main > agent worker1
+eShell: worker1 > kb
+eShell: worker1 >
+```
+
+In the same way, the scope can be changed to main (default) as follows:
+
+```sh
+eShell: worker1 > agent main
+eShell: main >
+```
