@@ -307,10 +307,10 @@ to assign work to two employers (worker1 and worker2), whose workflow is depicte
 
 The procedure *setup* and *work* are implemented to let the chief set the jobs ledger and begin to assign tasks to available workers. Each task
  consists of taking the goods, going to specific location within the warehouse and placing the goods on the shelves. Locations are randomly
-generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available (their color in the canvas changes to red)
-, thus the chief must wait to assign a new task to a free worker. After each job done, the warehouse ledger is udpated by the chief. When the time exceed MAX_WORK_TIME, 
-all agents are put to rest for REST_TIME by retracting the belief DUTY(id) for each agent. When the overall time exceed MAX_WORKDAY_TIME, the working day ends
-and each agent get paid considering the jobs done reported in the ledger.
+generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available (their
+color in the canvas changes to red), thus the chief must wait to assign a new task to a free worker. After each job done, the warehouse ledger is udpated
+by the chief. When the time exceeds MAX_WORK_TIME, all agents are put to rest for REST_TIME by retracting the belief DUTY(id) for each agent.
+When the overall time exceeds MAX_WORKDAY_TIME, the working day ends and each agent is get paid considering the jobs done reported in the ledger.
 
 ```sh
 eShell: main > setup()
