@@ -291,3 +291,11 @@ In the same way, the scope can be changed to main (default) as follows:
 eShell: worker1 > agent main
 eShell: main >
 ```
+
+
+#### Case-study 
+
+---------------
+
+As case study we consider the toy [instance](test/sensor_mas_turtle.jpg) related to a Warehouse, where a chief has the task
+to delegate work to two workers (worker1 and worker2), whose workflow is depicted at runtime in a Canvas.
