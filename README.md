@@ -297,5 +297,5 @@ eShell: main >
 
 ---------------
 
-As case study we consider the toy [instance](test/sensor_mas_turtle.jpg) related to a Warehouse, where a chief has the task
+As case study we consider the toy [instance](test/sensor_mas_turtle.py) related to a Warehouse, where a chief has the task
 to delegate work to two workers (worker1 and worker2), whose workflow is depicted at runtime in a Canvas.
