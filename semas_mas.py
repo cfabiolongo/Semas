@@ -20,6 +20,11 @@ config.read('config_mas.ini')
 FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
 
+# ID prefix
+ID_PREFIX = config.get('AGENT', 'PREFIX_LABEL')
+# Agent number
+AGENT_NUMBER = int(config.get('AGENT', 'AGENTS_NUMBER'))
+
 # REASONING Section
 REASONING_ACTIVE = config.getboolean('REASONING', 'ACTIVE')
 REASONER = config.get('REASONING', 'REASONER').split(",")
@@ -40,6 +45,16 @@ GROUNDS = config.get('CLASSES', 'PHI-Grounds').split(",")
 PROPERTIES = config.get('CLASSES', 'Properties').split(",")
 DATAS = config.get('CLASSES', 'Data').split(",")
 
+# ---------------------------------------------------------------------
+# Ontology section
+# ---------------------------------------------------------------------
+
+# Max work time for a worker (seconds)
+MAX_WORKDAY_TIME = 30
+# Max work time for a worker (seconds)
+MAX_WORK_TIME = 5
+# Rest time for a worker (seconds)
+REST_TIME = 3
 
 try:
     my_onto = get_ontology(FILE_NAME).load()
@@ -82,8 +97,8 @@ with my_onto:
 
     # Declaring Owlready DataProperties
     for i in range(len(DATAS)):
-        # hasIdPrefix = type(DataProperty)
         globals()[DATAS[i].strip()] = type(DataProperty)
+        dict_prop[DATAS[i].strip()] = DATAS[i].strip()
 
     # Declaring Owlready ObjectProperties
     for i in range(len(PROPERTIES)):
@@ -127,6 +142,7 @@ for i in range(len(INTENTIONS)):
 # System procedures section
 # ---------------------------------------------------------------------
 
+
 # Ontology intialization
 class init(Procedure): pass
 
@@ -135,23 +151,6 @@ class load(Procedure): pass
 
 # Import OWL triples
 class pre_process(Procedure): pass
-
-# ---------------------------------------------------------------------
-# Ontology section
-# ---------------------------------------------------------------------
-
-# Ground control values (default)
-
-# ID prefix
-ID_PREFIX = "worker"
-# Agent number
-AGENT_NUMBER = 3
-# Max work time for a worker (seconds)
-MAX_WORKDAY_TIME = 30
-# Max work time for a worker (seconds)
-MAX_WORK_TIME = 5
-# Rest time for a worker (seconds)
-REST_TIME = 3
 
 
 class initWorld(Action):
@@ -247,9 +246,8 @@ class assert_beliefs_triples(Action):
             self.assert_belief(TRIPLE(subj, prop, obj))
 
 
-
 # ---------------------------------------------------------------------
-# Non-ontological variables
+# Non-ontological rendering variables
 # ---------------------------------------------------------------------
 
 # Coordinates spamming range
