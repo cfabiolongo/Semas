@@ -310,7 +310,7 @@ The procedure *setup* and *work* are implemented to let the chief set the jobs l
 generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available,
 thus the chief must wait to assign a new task to a free worker. After each job done, the warehouse ledger is udpated by the chief. When the time
 exceeds *MAX_WORK_TIME*, all agents are put to rest for *REST_TIME* by retracting the belief *DUTY(id)* (*id*=1 or 2) for each agent (their color
-in the canvas changes to red). When the overall time exceeds *MAX_WORKDAY_TIME*, the working day ends and each agent is get paid considering the
+in the canvas changes to red). When the overall time exceeds *MAX_WORKDAY_TIME*, the working day ends and each agent get paid considering the
 jobs done reported in the ledger.
 
 ```sh
