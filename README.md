@@ -266,7 +266,7 @@ Propose co-authorship with Misael to publish in the field of Applied-Ontology.
 Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 ```
 
-### Multi-Agent 
+### Multi-Agent Systems
 
 ---------------
 The key of the SEMAS Multi-Agent Systems (MAS), which is mostly inhrerited from PHIDIAS, is that together with the "Main"
@@ -331,6 +331,8 @@ assigning job to worker1
 ```
 
 #### Semantic Web interaction
+
+---------------
 
 As seen in the case of mono-agent code, triples from ontologies (Semantic Web) can be imported and turned into beliefs interacting with
 SEMAS production rules system. The [code](test/sensor_mas_turtle.py) implements the above *Warehouse* case-study including the already
