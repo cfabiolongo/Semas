@@ -307,9 +307,10 @@ to assign work to two employers (worker1 and worker2), whose workflow is depicte
 
 The procedure *setup* and *work* are implemented to let the chief set the jobs ledger and begin to assign tasks to available workers. Each task
  consists of taking the goods, going to specific location within the warehouse and placing the goods on the shelves. Locations are randomly
-generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available, thus the chief must wait to assign a new task to a free worker. After each job done, the warehouse ledger is udpated
-by the chief. When the time exceeds MAX_WORK_TIME, all agents are put to rest for REST_TIME by retracting the belief DUTY(id) for each agent (their
-color in the canvas changes to red). When the overall time exceeds MAX_WORKDAY_TIME, the working day ends and each agent is get paid considering the
+generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available,
+thus the chief must wait to assign a new task to a free worker. After each job done, the warehouse ledger is udpated by the chief. When the time
+exceeds *MAX_WORK_TIME*, all agents are put to rest for *REST_TIME* by retracting the belief *DUTY(id)* (*id*=1 or 2) for each agent (their color
+in the canvas changes to red). When the overall time exceeds *MAX_WORKDAY_TIME*, the working day ends and each agent is get paid considering the
 jobs done reported in the ledger.
 
 ```sh
@@ -343,4 +344,3 @@ As seen in the case of mono-agent code, triples from ontologies (Semantic Web) c
 the SEMAS production rules system. The code [semas_mas.py](semas_mas.py) implements the above *Warehouse* case-study including the already
 seen procedure *init()* and *load()* to initialize the ontology described in [config_mas.ini](config_mas.ini) and import
 its triples into the SEMAS KB. The interaction between *belief-from-triples* and production rules is left to the developer.
-
