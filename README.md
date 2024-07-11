@@ -300,7 +300,7 @@ As case-study, let us consider the toy [instance](test/sensor_mas_turtle.py) rel
 to assign work to two employees (worker1 and worker2). The workflow is depicted at runtime in a Canvas. The involved variables are:
 
 * TICK: tick time
-* MAX_WORK_TIME: the maximum amount of duty time (im seconds) before a pause
+* MAX_WORK_TIME: the maximum amount of duty time (in seconds) before a pause
 * REST_TIME: the amount of time of resting during each pause
 * MAX_WORKDAY_TIME: the amount of duty time (in seconds) before finishing the working day
 
