@@ -160,7 +160,8 @@ which does not pass through the KB but it can (as like as beliefs) interact with
 ---------------
 
 Semas integrates the explicit declaration of SWRL rules (in Section [SWRL]), whom will interact with the ontology when the variable **ACTIVE** (in Section [REASONING]) is set to *true*.
-The variable **REASONER** indicates which of the integrated reasoners (HERMIT/PELLET) must be employed before every SPARQL query in some Action's PLAN.
+The variable **REASONER** indicates which of the integrated reasoners (HERMIT/PELLET) must be employed before every SPARQL query in some Action's PLAN. However, due to restriction given by
+*Horn-like* clauses shape of SWRL rules, each rule's head can have at most one predicate. Such restriction in most cases can be overridden with the employment of PHIDIAS production rules and plans.
 
 
 ### Case-study: Co-Authorship and Academic Mobility
