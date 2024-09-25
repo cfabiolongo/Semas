@@ -89,11 +89,11 @@ The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively t
 states of the agent. SEMAS aims to integrate distinct models' mental attitudes, in order to leverage all their features, by considering the following schema for Agents:
 
 
-| BDI-Model  | Semantic Web                  | PHIDIAS   |
-|------------|-------------------------------|-----------|
-| Belief     | (Agent, hasBelief, Belief)    | Belief    |
-| Desire     | (Agent, hasDesire, Desire)    | Procedure |
-| Intention  | (Agent, hasDesire, Intention) | Reactor   |
+| BDI-Model  | Semantic Web                     | PHIDIAS   |
+|------------|----------------------------------|-----------|
+| Belief     | (Agent, hasBelief, Belief)       | Belief    |
+| Desire     | (Agent, hasDesire, Desire)       | Procedure |
+| Intention  | (Agent, hasIntention, Intention) | Reactor   |
 
 PHIDIAS mental attitudes are built starting from [this](https://cdn.aaai.org/ICMAS/1995/ICMAS95-042.pdf) paper, by considering the following assumptions:
 
