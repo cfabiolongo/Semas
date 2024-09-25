@@ -86,10 +86,10 @@ Unless you delete the owl file or choose to create another ontology, the agent w
 
 ---------------
 The *mental attitudes* (Beliefs, Desire and Intentions) represent respectively the **information**, **motivational** and **deliberative**
-states of the agent. SEMAS aims to integrate distinct models' mental attitudes, in order to leverage all their features, by considering the following schema:
+states of the agent. SEMAS aims to integrate distinct models' mental attitudes, in order to leverage all their features, by considering the following schema for Agents:
 
 
-| BDI-Model  | OWL 2                         | PHIDIAS   |
+| BDI-Model  | Semantic Web                  | PHIDIAS   |
 |------------|-------------------------------|-----------|
 | Belief     | (Agent, hasBelief, Belief)    | Belief    |
 | Desire     | (Agent, hasDesire, Desire)    | Procedure |
