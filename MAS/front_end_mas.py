@@ -1,66 +1,5 @@
 import time
-import threading
 from actions_mas import *
-
-
-# ---------------------------------------------------------------------
-# Sensors section
-# ---------------------------------------------------------------------
-
-class TaskDetect(Sensor):
-
-    def on_start(self):
-        # Starting task detection
-       self.running = True
-
-    def on_restart(self):
-        # Re-Starting task detection
-        self.do_restart = True
-
-    def on_stop(self):
-        #Stopping task detection
-        self.running = False
-
-    def sense(self):
-        while self.running:
-           time.sleep(TICK)
-
-           pos_x = random.randint(-N // 2, N // 2)
-           pos_y = random.randint(-N // 2, N // 2)
-           self.assert_belief(TASK(pos_x, pos_y))
-
-
-
-class Timer(Sensor):
-
-    def on_start(self, uTimeout):
-        evt = threading.Event()
-        self.event = evt
-        self.timeout = uTimeout()
-        self.do_restart = False
-
-
-    def on_restart(self, uTimeout):
-        self.do_restart = True
-        self.event.set()
-
-    def on_stop(self):
-        self.do_restart = False
-        self.event.set()
-
-    def sense(self):
-        while True:
-            time.sleep(self.timeout)
-            self.event.clear()
-            if self.do_restart:
-                self.do_restart = False
-                continue
-            elif self.stopped:
-                self.assert_belief(TIMEOUT("ON"))
-                return
-            else:
-                return
-
 
 # ---------------------------------------------------------------------
 # Variable declaration
@@ -68,11 +7,9 @@ class Timer(Sensor):
 
 def_vars("X","Y", "D", "H", "Z", "L", "M")
 
-
 # ---------------------------------------------------------------------
 # Agents section
 # ---------------------------------------------------------------------
-
 
 def create_class_with_main(class_name):
     def main(self):
@@ -115,7 +52,7 @@ class main(Agent):
         +TASK(X, Y) / DUTY(1) >> [show_line("assigning job to worker1"), -DUTY(1), +TASK(X, Y, 1)[{'to': "worker1"}]]
         +TASK(X, Y) / DUTY(2) >> [show_line("assigning job to worker2"), -DUTY(2), +TASK(X, Y, 2)[{'to': "worker2"}]]
         +TASK(X, Y) / DUTY(3) >> [show_line("assigning job to worker3"), -DUTY(3), +TASK(X, Y, 3)[{'to': "worker3"}]]
-        +TASK(X, Y) / DUTY(4) >> [show_line("assigning job to worker4"), -DUTY(3), +TASK(X, Y, 3)[{'to': "worker4"}]]
+        +TASK(X, Y) / DUTY(4) >> [show_line("assigning job to worker4"), -DUTY(4), +TASK(X, Y, 4)[{'to': "worker4"}]]
 
         # ReceiveCommunication intentions
         +COMM(X)[{'from': "worker1"}] / LEDGER("worker1", H) >> [show_line("received job done comm from worker1"), -LEDGER("worker1", H), UpdateLedger("worker1", H), +DUTY(1)]

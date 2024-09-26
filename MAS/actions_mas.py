@@ -1,6 +1,7 @@
 import sys
 import random
 import turtle
+import threading
 
 sys.path.insert(0, "../lib")
 
@@ -52,7 +53,13 @@ N = 500
 
 # time-range to get the job done
 LOWER_BOUND = 0
-UPPER_BOUND = 2
+UPPER_BOUND = 3
+
+# Breakdown of steps
+STEP_BREAKDOWN = 50
+
+# Pause between steps
+STEP_DURATIN = 0.005
 
 # Worker-Turtle dictionary
 dict_turtle = {}
@@ -65,11 +72,11 @@ dict_turtle = {}
 # Max work time for a worker (seconds)
 MAX_WORKDAY_TIME = 30
 # Max work time for a worker (seconds)
-MAX_WORK_TIME = 5
+MAX_WORK_TIME = 3
 # Rest time for a worker (seconds)
 REST_TIME = 2
 # Timer tick
-TICK = 0.001
+TICK = 0.1
 
 
 
@@ -263,6 +270,66 @@ class assert_beliefs_triples(Action):
             self.assert_belief(TRIPLE(subj, prop, obj))
 
 
+
+# ---------------------------------------------------------------------
+# Sensors section
+# ---------------------------------------------------------------------
+
+class TaskDetect(Sensor):
+
+    def on_start(self):
+        # Starting task detection
+       self.running = True
+
+    def on_restart(self):
+        # Re-Starting task detection
+        self.do_restart = True
+
+    def on_stop(self):
+        #Stopping task detection
+        self.running = False
+
+    def sense(self):
+        while self.running:
+           time.sleep(TICK)
+
+           pos_x = random.randint(-N // 2, N // 2)
+           pos_y = random.randint(-N // 2, N // 2)
+           self.assert_belief(TASK(pos_x, pos_y))
+
+
+
+class Timer(Sensor):
+
+    def on_start(self, uTimeout):
+        evt = threading.Event()
+        self.event = evt
+        self.timeout = uTimeout()
+        self.do_restart = False
+
+
+    def on_restart(self, uTimeout):
+        self.do_restart = True
+        self.event.set()
+
+    def on_stop(self):
+        self.do_restart = False
+        self.event.set()
+
+    def sense(self):
+        while True:
+            time.sleep(self.timeout)
+            self.event.clear()
+            if self.do_restart:
+                self.do_restart = False
+                continue
+            elif self.stopped:
+                self.assert_belief(TIMEOUT("ON"))
+                return
+            else:
+                return
+
+
 # ---------------------------------------------------------------------
 # Turtle section
 # ---------------------------------------------------------------------
@@ -271,19 +338,33 @@ class assert_beliefs_triples(Action):
 class move_turtle(Action):
     """moving turtle to coordinates (x,y)"""
     def execute(self, arg0, arg1, arg2):
-      id_turtle = str(arg0).split("'")[2]
-      pos_x = str(arg1).split("'")[2]
-      pos_y = str(arg2).split("'")[2]
+        id_turtle = str(arg0).split("'")[2]
+        pos_x = str(arg1).split("'")[2]
+        pos_y = str(arg2).split("'")[2]
 
-      id_turtle = id_turtle[1:-1]
-      pos_x = int(pos_x[1:-1])
-      pos_y = int(pos_y[1:-1])
+        id_turtle = id_turtle[1:-1]
+        pos_x = int(pos_x[1:-1])
+        pos_y = int(pos_y[1:-1])
 
-      dict_turtle["t"+id_turtle].goto(pos_x, pos_y)
+        # Recupera la posizione attuale
+        current_x, current_y = dict_turtle["t"+id_turtle].position()
 
-      # time to get the job done
-      rnd = random.uniform(LOWER_BOUND, UPPER_BOUND)
-      time.sleep(rnd)
+        # Calcola la distanza da percorrere su ciascun asse
+        delta_x = (pos_x - current_x) / STEP_BREAKDOWN
+        delta_y = (pos_y - current_y) / STEP_BREAKDOWN
+
+        for step in range(STEP_BREAKDOWN):
+            # Sposta la tartaruga di una piccola quantità
+            current_x += delta_x
+            current_y += delta_y
+            dict_turtle["t"+id_turtle].goto(current_x, current_y)
+
+            # Rallenta il movimento
+            time.sleep(STEP_DURATIN)  # Regola il tempo di pausa per modificare la velocità
+
+        # Pausa finale casuale (se necessaria)
+        rnd = random.uniform(LOWER_BOUND, UPPER_BOUND)
+        time.sleep(rnd)
 
 
 
