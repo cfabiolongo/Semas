@@ -70,11 +70,11 @@ dict_turtle = {}
 # ---------------------------------------------------------------------
 
 # Max work time for a worker (seconds)
-MAX_WORKDAY_TIME = 30
-# Max work time for a worker (seconds)
-MAX_WORK_TIME = 3
+MAX_WORKDAY_TIME = 20
+# Max work time for a worker (seconds) - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME
+MAX_WORK_TIME = 5
 # Rest time for a worker (seconds)
-REST_TIME = 2
+REST_TIME = 3
 # Timer tick
 TICK = 0.1
 
@@ -402,6 +402,22 @@ class UpdateWorkTime(Action):
         arg1_num = str(arg1).split("'")[2][1:-1]
         arg2_num = str(arg2).split("'")[2][1:-1]
         arg_num_tot = int(arg1_num)+int(arg2_num)
+        print("WORKTIME: ",arg_num_tot)
         self.assert_belief(WORKTIME(arg_num_tot))
 
 
+
+def turtle_thread_func():
+    wn = turtle.Screen()
+    wn.title("Workers jobs assignment")
+
+    for i in range(AGENT_NUMBER):
+        dict_turtle["t"+str(i+1)] = turtle.Turtle()
+
+    wn.mainloop()
+
+
+# Avviare il thread della tartaruga
+turtle_thread = threading.Thread(target=turtle_thread_func)
+turtle_thread.daemon = True
+turtle_thread.start()
