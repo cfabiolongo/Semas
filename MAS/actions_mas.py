@@ -175,7 +175,7 @@ class load(Procedure): pass
 
 # Import OWL triples
 class pre_process(Procedure): pass
-
+class turn(Procedure): pass
 
 class initWorld(Action):
     """World entities initialization"""
@@ -331,6 +331,61 @@ class Timer(Sensor):
 
 
 # ---------------------------------------------------------------------
+# Agent section
+# ---------------------------------------------------------------------
+
+
+
+class rest(Action):
+    """resting for few seconds"""
+    def execute(self, arg):
+      rest_time = int(str(arg))
+      print(f"\nresting for {rest_time} seconds...")
+
+      for t in dict_turtle:
+          dict_turtle[t].color("red")
+
+      time.sleep(rest_time)
+
+      for t in dict_turtle:
+          dict_turtle[t].color("black")
+
+
+
+class UpdateLedger(Action):
+    """Update completed jobs"""
+    def execute(self, arg1, arg2):
+
+      agent = str(arg1).split("'")[3]
+      jobs = int(str(arg2).split("'")[3])
+      jobs = jobs + 1
+      print(f"Updating {agent} ledger: {jobs}")
+      self.assert_belief(LEDGER(agent, str(jobs)))
+      self.assert_belief(DUTY(int(agent[-1:])))
+
+
+class UpdateWorkTime(Action):
+    """Update completed jobs"""
+    def execute(self, arg1, arg2):
+
+        arg1_num = str(arg1).split("'")[2][1:-1]
+        arg2_num = str(arg2).split("'")[2][1:-1]
+        arg_num_tot = int(arg1_num)+int(arg2_num)
+        print("WORKTIME: ",arg_num_tot)
+        self.assert_belief(WORKTIME(arg_num_tot))
+
+
+class AssignId(Action):
+    """Intialize duty flag with ID"""
+    def execute(self, arg):
+        entity = str(arg).split("'")[3]
+
+        self.assert_belief(DUTY(int(entity[-1:])))
+        self.assert_belief(AGT(entity, int(entity[-1:])))
+
+
+
+# ---------------------------------------------------------------------
 # Turtle section
 # ---------------------------------------------------------------------
 
@@ -365,46 +420,6 @@ class move_turtle(Action):
         # Pausa finale casuale (se necessaria)
         rnd = random.uniform(LOWER_BOUND, UPPER_BOUND)
         time.sleep(rnd)
-
-
-
-class rest(Action):
-    """resting for few seconds"""
-    def execute(self, arg):
-      rest_time = int(str(arg))
-      print(f"\nresting for {rest_time} seconds...")
-
-      for t in dict_turtle:
-          dict_turtle[t].color("red")
-
-      time.sleep(rest_time)
-
-      for t in dict_turtle:
-          dict_turtle[t].color("black")
-
-
-
-class UpdateLedger(Action):
-    """Update completed jobs"""
-    def execute(self, arg1, arg2):
-
-      agent = str(arg1)[1:-1]
-      jobs = int(str(arg2).split("'")[3])
-      jobs = jobs + 1
-      print(f"Updating {agent} ledger: {jobs}")
-      self.assert_belief(LEDGER(agent, str(jobs)))
-
-
-class UpdateWorkTime(Action):
-    """Update completed jobs"""
-    def execute(self, arg1, arg2):
-
-        arg1_num = str(arg1).split("'")[2][1:-1]
-        arg2_num = str(arg2).split("'")[2][1:-1]
-        arg_num_tot = int(arg1_num)+int(arg2_num)
-        print("WORKTIME: ",arg_num_tot)
-        self.assert_belief(WORKTIME(arg_num_tot))
-
 
 
 def turtle_thread_func():

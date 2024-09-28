@@ -192,3 +192,7 @@ class assert_beliefs_triples(Action):
             obj = obj.split("#")[1][:-3]
 
             self.assert_belief(TRIPLE(subj, prop, obj))
+
+
+
+
