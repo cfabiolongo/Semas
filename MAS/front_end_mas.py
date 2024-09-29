@@ -57,7 +57,10 @@ class main(Agent):
 
         # Pause work intentions - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME  (----> inserire ActiveBeliefs)
         +TIMEOUT("ON") / WORKTIME(MAX_WORKDAY_TIME) >> [show_line("\nWorkers are very tired. Finishing working day.\n"), TaskDetect().stop(), -WORKTIME(MAX_WORKDAY_TIME), stopwork()]
-        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -DUTY(3), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
+
+        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -WORKTIME(X), UpdateWorkTime(X, Y), noduty()]
+        noduty() / (AGT(A, D) & DUTY(D)) >> [show_line("Putting agent", A, "to rest..."), -DUTY(D), noduty()]
+        noduty() >> [rest(REST_TIME), work()]
 
         # Stop work intention
         stopwork() / ((AGT(A, D) & DUTY(D))) >> [show_line("\n-------------------------> Stopping ", A), -DUTY(D), stopwork()]
