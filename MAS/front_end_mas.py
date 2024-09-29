@@ -11,7 +11,7 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 # Agents section
 # ---------------------------------------------------------------------
 
-def create_class_with_main(class_name):
+def create_agents(class_name):
     def main(self):
         # MoveAndCompleteJob intention
         +TASK(X, Y, Z)[{'from': M}] >> [show_line("\nWorker moving to (", X, ",", Y, "), received task from ", M), move_turtle(Z, X, Y), +COMM("DONE")[{'to': 'main'}]]
@@ -21,7 +21,7 @@ def create_class_with_main(class_name):
 
 for i in range(AGENT_NUMBER):
     class_name = f"{ID_PREFIX}{i+1}"
-    globals()[class_name] = create_class_with_main(class_name)
+    globals()[class_name] = create_agents(class_name)
 
 # Ora puoi creare istanze delle nuove classi e chiamare il loro metodo main
 for i in range(AGENT_NUMBER):
@@ -55,7 +55,7 @@ class main(Agent):
         # ReceiveCommunication intentions
         +COMM(X)[{'from': W}] / LEDGER(W, H) >> [show_line("received job done comm from ", W), -LEDGER(W, H), UpdateLedger(W, H)]
 
-        # Pause work intentions - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME
+        # Pause work intentions - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME  (----> inserire ActiveBeliefs)
         +TIMEOUT("ON") / WORKTIME(MAX_WORKDAY_TIME) >> [show_line("\nWorkers are very tired. Finishing working day.\n"), TaskDetect().stop(), -WORKTIME(MAX_WORKDAY_TIME), stopwork()]
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -DUTY(1), -DUTY(2), -DUTY(3), -WORKTIME(X), UpdateWorkTime(X, Y), rest(REST_TIME), work()]
 
