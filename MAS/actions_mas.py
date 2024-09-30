@@ -333,6 +333,28 @@ class Timer(Sensor):
 
 
 
+def get_agents_names():
+
+    agents = []
+    q = PREFIX + f" SELECT ?subj" + " WHERE { "
+    q = q + f"?subj rdf:type {ONTO_NAME}:Agent." + "}"
+
+    my_world = owlready2.World()
+    my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
+
+    graph = my_world.as_rdflib_graph()
+    result = list(graph.query(q))
+
+    for res in result:
+        subj = str(res).split(",")[0]
+        subj = subj.split("#")[1][:-2]
+        agents.append(subj)
+
+    return agents
+
+
+
+
 class rest(Action):
     """resting for few seconds"""
     def execute(self, arg):
@@ -418,6 +440,7 @@ class move_turtle(Action):
         # Pausa finale casuale (se necessaria)
         rnd = random.uniform(LOWER_BOUND, UPPER_BOUND)
         time.sleep(rnd)
+
 
 
 def turtle_thread_func():
