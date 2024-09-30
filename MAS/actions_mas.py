@@ -71,7 +71,7 @@ dict_turtle = {}
 # Max work time for a worker (seconds)
 Max_WorkDay_Time = 27
 # Max work time for a worker (seconds) - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME
-Max_Work_Time = 7
+Max_Work_Time = 9
 # Rest time for a worker (seconds)
 Rest_Time = 3
 # Timer tick
@@ -370,6 +370,7 @@ class UpdateWorkTime(Action):
         arg_num_tot = int(arg1_num)+int(arg2_num)
         print("WORKTIME: ",arg_num_tot)
         self.assert_belief(WORKTIME(arg_num_tot))
+        self.assert_belief(DUTY_TIME(arg_num_tot))
 
 
 class AssignId(Action):
