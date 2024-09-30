@@ -19,11 +19,6 @@ config.read('config_mas.ini')
 FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
 
-# ID prefix
-ID_PREFIX = config.get('AGENT', 'PREFIX_LABEL')
-# Agent number
-AGENT_NUMBER = int(config.get('AGENT', 'AGENTS_NUMBER'))
-
 # REASONING Section
 REASONING_ACTIVE = config.getboolean('REASONING', 'ACTIVE')
 REASONER = config.get('REASONING', 'REASONER').split(",")
