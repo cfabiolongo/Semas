@@ -293,6 +293,7 @@ eShell: main >
 ```
 
 
+
 ### Case-study: Warehouse management
 
 ---------------
@@ -313,7 +314,24 @@ exceeds *MAX_WORK_TIME*, all agents are put to rest for *REST_TIME* by retractin
 in the canvas changes to red). When the overall time exceeds *MAX_WORKDAY_TIME*, the working day ends and each agent get paid considering the
 jobs done reported in the ledger.
 
+* Choose the owl file name, by setting the variable FILE_NAME (ONTOLOGY Section) in the config.ini (test.owl for instance)
+* Execute semas.py
+
 ```sh
+Creating new warehouse.owl file...
+
+Please Re-Run Semas.
+
+Process finished with exit code 0
+```
+
+#### Ontology initialization
+
+---------------
+As with mono-agent mode, the details of the above formalization are all defined in config_mas.ini. Both OWL 2 ontology and PHIDIAS classes can be initialised with the command *init()* as follows:
+
+```sh
+eShell: main > init()
 eShell: main > setup()
 Setup jobs ledger...
 eShell: main > work()
