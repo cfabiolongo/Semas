@@ -12,7 +12,14 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 # ---------------------------------------------------------------------
 
 agents = get_agents_names()[1:]
-print(agents)
+
+if len(agents)==0:
+   print("\nWARNING: Agents list is empty. Please initialize the ontology with init() from the eShell then restart.")
+else:
+   print("Agents list: ", agents)
+
+
+
 
 def create_agents(class_name):
     def main(self):

@@ -85,6 +85,7 @@ try:
 except IOError:
     my_onto = get_ontology("http://test.org/"+FILE_NAME)
     print("\nCreating new "+FILE_NAME+" file...")
+
     print("\nPlease Re-Run Semas.")
     my_onto.save(file=FILE_NAME, format="rdfxml")
     exit()
@@ -168,11 +169,12 @@ for i in range(len(INTENTIONS)):
 
 # Ontology intialization
 class init(Procedure): pass
-
 # Import OWL triples
 class load(Procedure): pass
 # Turning triples to beliefs
 class turn(Procedure): pass
+
+
 
 class initWorld(Action):
     """World entities initialization"""
