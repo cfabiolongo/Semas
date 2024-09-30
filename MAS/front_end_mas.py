@@ -11,7 +11,7 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 # Agents section
 # ---------------------------------------------------------------------
 
-agents = get_agents_names()
+agents = get_agents_names()[1:]
 
 def create_agents(class_name):
     def main(self):
@@ -21,12 +21,12 @@ def create_agents(class_name):
     # Creiamo una nuova classe con il metodo 'main' definito sopra
     return type(class_name, (Agent,), {"main": main})
 
-for i in range(1, len(agents)):
+for i in range(len(agents)):
     # class_name = f"{ID_PREFIX}{i+1}"
     globals()[agents[i]] = create_agents(agents[i])
 
 # Ora puoi creare istanze delle nuove classi e chiamare il loro metodo main
-for i in range(1, len(agents)):
+for i in range(len(agents)):
     # class_name = f"{ID_PREFIX}{i+1}"
     instance = globals()[agents[i]]()
     instance.main()
@@ -75,7 +75,7 @@ class main(Agent):
 
 
 
-for i in range(1, len(agents)):
+for i in range(len(agents)):
     instance = globals()[agents[i]]()
     instance.start()
 
