@@ -392,7 +392,6 @@ class UpdateWorkTime(Action):
         arg_num_tot = int(arg1_num)+int(arg2_num)
         print("WORKTIME: ",arg_num_tot)
         self.assert_belief(WORKTIME(arg_num_tot))
-        self.assert_belief(DUTY_TIME(arg_num_tot))
 
 
 class AssignId(Action):
@@ -413,16 +412,16 @@ class AssignId(Action):
 class move_turtle(Action):
     """moving turtle to coordinates (x,y)"""
     def execute(self, arg0, arg1, arg2):
-        id_turtle = str(arg0).split("'")[2]
+        id_turtle = str(arg0).split("'")[3]
+
         pos_x = str(arg1).split("'")[2]
         pos_y = str(arg2).split("'")[2]
 
-        id_turtle = id_turtle[1:-1]
         pos_x = int(pos_x[1:-1])
         pos_y = int(pos_y[1:-1])
 
         # Recupera la posizione attuale
-        current_x, current_y = dict_turtle["t"+id_turtle].position()
+        current_x, current_y = dict_turtle[id_turtle].position()
 
         # Calcola la distanza da percorrere su ciascun asse
         delta_x = (pos_x - current_x) / STEP_BREAKDOWN
@@ -432,7 +431,7 @@ class move_turtle(Action):
             # Sposta la tartaruga di una piccola quantità
             current_x += delta_x
             current_y += delta_y
-            dict_turtle["t"+id_turtle].goto(current_x, current_y)
+            dict_turtle[id_turtle].goto(current_x, current_y)
 
             # Rallenta il movimento
             time.sleep(STEP_DURATIN)  # Regola il tempo di pausa per modificare la velocità
@@ -447,8 +446,10 @@ def turtle_thread_func():
     wn = turtle.Screen()
     wn.title("Workers jobs assignment")
 
-    for i in range(AGENT_NUMBER):
-        dict_turtle["t"+str(i+1)] = turtle.Turtle()
+    agents = get_agents_names()[1:]
+
+    for i in range(len(agents)):
+        dict_turtle[agents[i]] = turtle.Turtle()
 
     wn.mainloop()
 

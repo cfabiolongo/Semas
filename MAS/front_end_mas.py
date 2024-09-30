@@ -12,11 +12,12 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 # ---------------------------------------------------------------------
 
 agents = get_agents_names()[1:]
+print(agents)
 
 def create_agents(class_name):
     def main(self):
         # MoveAndCompleteJob intention
-        +TASK(X, Y, Z)[{'from': M}] >> [show_line("\nWorker moving to (", X, ",", Y, "), received task from ", M), move_turtle(Z, X, Y), +COMM("DONE")[{'to': 'main'}]]
+        +TASK(X, Y, A)[{'from': M}] >> [show_line("\n",A," is moving to (", X, ",", Y, "), received task from ", M), move_turtle(A, X, Y), +COMM("DONE")[{'to': 'main'}]]
 
     # Creiamo una nuova classe con il metodo 'main' definito sopra
     return type(class_name, (Agent,), {"main": main})
@@ -52,7 +53,7 @@ class main(Agent):
         work() >> [show_line("Starting task detection...\n"), Timer(Max_Work_Time).start(), TaskDetect().start(), show_line("Workers on duty...")]
 
         # AssignJob intentions
-        +TASK(X, Y) / (AGT(A, D) & DUTY(D)) >> [show_line("assigning job to ",A), -DUTY(D), +TASK(X, Y, D)[{'to': A}]]
+        +TASK(X, Y) / (AGT(A, D) & DUTY(D)) >> [show_line("assigning job to ",A), -DUTY(D), +TASK(X, Y, A)[{'to': A}]]
 
         # ReceiveCommunication intentions
         +COMM(X)[{'from': W}] / LEDGER(W, H) >> [show_line("received job done comm from ", W), -LEDGER(W, H), UpdateLedger(W, H)]
