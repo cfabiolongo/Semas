@@ -11,6 +11,13 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 # Agents section
 # ---------------------------------------------------------------------
 
+
+
+
+
+
+agents = ["Worker1", "Worker2", "Worker3"]
+
 def create_agents(class_name):
     def main(self):
         # MoveAndCompleteJob intention
@@ -19,14 +26,14 @@ def create_agents(class_name):
     # Creiamo una nuova classe con il metodo 'main' definito sopra
     return type(class_name, (Agent,), {"main": main})
 
-for i in range(AGENT_NUMBER):
-    class_name = f"{ID_PREFIX}{i+1}"
-    globals()[class_name] = create_agents(class_name)
+for i in range(len(agents)):
+    # class_name = f"{ID_PREFIX}{i+1}"
+    globals()[agents[i]] = create_agents(agents[i])
 
 # Ora puoi creare istanze delle nuove classi e chiamare il loro metodo main
-for i in range(AGENT_NUMBER):
-    class_name = f"{ID_PREFIX}{i+1}"
-    instance = globals()[class_name]()
+for i in range(len(agents)):
+    # class_name = f"{ID_PREFIX}{i+1}"
+    instance = globals()[agents[i]]()
     instance.main()
 
 
@@ -42,11 +49,11 @@ class main(Agent):
         init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 
         # Importing related triples
-        load() >> [show_line("\nAsserting all OWL 2 triples beliefs...\n"), assert_beliefs_triples(), pre_process()]
+        load() >> [show_line("\nAsserting all OWL 2 triples beliefs...\n"), assert_beliefs_triples(), turn()]
         turn() / TRIPLE(X, "hasLedger",Z) >> [show_line("\nTurning triples beliefs into Semas beliefs...\n"), -TRIPLE(X,"hasLedger",Z), +LEDGER(X,"0"), AssignId(X), turn()]
 
         # desires
-        setup() >> [show_line("Setup worktime...\n"), +WORKTIME(0), +DUTY_TIME(Max_Work_Time), +MAX_WORKDAY_TIME(Max_WorkDay_Time), +REST_TIME(Rest_Time)]
+        setup() >> [show_line("Setup worktime...\n"), +WORKTIME(0), +DUTY_TIME(Max_Work_Time), +MAX_WORK_TIME(Max_Work_Time), +MAX_WORKDAY_TIME(Max_WorkDay_Time), +REST_TIME(Rest_Time)]
         work() >> [show_line("Starting task detection...\n"), Timer(Max_Work_Time).start(), TaskDetect().start(), show_line("Workers on duty...")]
 
         # AssignJob intentions
@@ -56,9 +63,9 @@ class main(Agent):
         +COMM(X)[{'from': W}] / LEDGER(W, H) >> [show_line("received job done comm from ", W), -LEDGER(W, H), UpdateLedger(W, H)]
 
         # Pause work intentions - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME  (----> inserire ActiveBeliefs)
-        +TIMEOUT("ON") / (WORKTIME(X) & MAX_WORKDAY_TIME(Y) & geq(X,Y)) >> [show_line("\nWorkers are very tired. Finishing working day.\n"), TaskDetect().stop(), -WORKTIME(MAX_WORKDAY_TIME), stopwork()]
+        +TIMEOUT("ON") / (WORKTIME(X) & MAX_WORKDAY_TIME(Y) & geq(X,Y)) >> [show_line("\nWorkers are very tired. Finishing working day.\n"), TaskDetect().stop(), stopwork()]
 
-        +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -WORKTIME(X), UpdateWorkTime(X, Y), noduty()]
+        +TIMEOUT("ON") / (WORKTIME(W) & MAX_WORK_TIME(X) & DUTY_TIME(Y) & geq(X,Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -WORKTIME(W), UpdateWorkTime(W, Y), noduty()]
         noduty() / (AGT(A, D) & DUTY(D)) >> [show_line("Putting agent" , A, " to rest..."), -DUTY(D), noduty()]
         noduty() / REST_TIME(X) >> [rest(X), work()]
 
@@ -72,9 +79,8 @@ class main(Agent):
 
 
 
-for i in range(AGENT_NUMBER):
-    class_name = f"{ID_PREFIX}{i+1}"
-    instance = globals()[class_name]()
+for i in range(len(agents)):
+    instance = globals()[agents[i]]()
     instance.start()
 
 main().start()

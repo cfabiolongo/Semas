@@ -169,11 +169,9 @@ for i in range(len(INTENTIONS)):
 # Ontology intialization
 class init(Procedure): pass
 
-# Processing beliefs
-class load(Procedure): pass
-
 # Import OWL triples
-class pre_process(Procedure): pass
+class load(Procedure): pass
+# Turning triples to beliefs
 class turn(Procedure): pass
 
 class initWorld(Action):
