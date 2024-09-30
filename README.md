@@ -314,8 +314,8 @@ exceeds *MAX_WORK_TIME*, all agents are put to rest for *REST_TIME* by retractin
 in the canvas changes to red). When the overall time exceeds *MAX_WORKDAY_TIME*, the working day ends and each agent get paid considering the
 jobs done reported in the ledger.
 
-* Choose the owl file name, by setting the variable FILE_NAME (ONTOLOGY Section) in the config.ini (test.owl for instance)
-* Execute semas.py
+* Choose the owl file name, by setting the variable FILE_NAME (ONTOLOGY Section) in the config.ini (*warehouse.owl* for instance)
+* Execute semas_mas.py
 
 ```sh
 Creating new warehouse.owl file...
