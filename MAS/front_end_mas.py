@@ -46,8 +46,8 @@ class main(Agent):
         turn() / TRIPLE(X, "hasLedger",Z) >> [show_line("\nTurning triples beliefs into Semas beliefs...\n"), -TRIPLE(X,"hasLedger",Z), +LEDGER(X,"0"), AssignId(X), turn()]
 
         # desires
-        setup() >> [show_line("Setup worktime...\n"), +WORKTIME(0), +DUTY_TIME(MAX_WORK_TIME)]
-        work() >> [show_line("Starting task detection...\n"), Timer(MAX_WORK_TIME).start(), TaskDetect().start(), show_line("Workers on duty...")]
+        setup() >> [show_line("Setup worktime...\n"), +WORKTIME(0), +DUTY_TIME(Max_Work_Time), +MAX_WORKDAY_TIME(Max_WorkDay_Time), +REST_TIME(Rest_Time)]
+        work() >> [show_line("Starting task detection...\n"), Timer(Max_Work_Time).start(), TaskDetect().start(), show_line("Workers on duty...")]
 
         # AssignJob intentions
         +TASK(X, Y) / (AGT(A, D) & DUTY(D)) >> [show_line("assigning job to ",A), -DUTY(D), +TASK(X, Y, D)[{'to': A}]]
@@ -56,11 +56,11 @@ class main(Agent):
         +COMM(X)[{'from': W}] / LEDGER(W, H) >> [show_line("received job done comm from ", W), -LEDGER(W, H), UpdateLedger(W, H)]
 
         # Pause work intentions - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME  (----> inserire ActiveBeliefs)
-        +TIMEOUT("ON") / WORKTIME(MAX_WORKDAY_TIME) >> [show_line("\nWorkers are very tired. Finishing working day.\n"), TaskDetect().stop(), -WORKTIME(MAX_WORKDAY_TIME), stopwork()]
+        +TIMEOUT("ON") / (WORKTIME(X) & MAX_WORKDAY_TIME(Y) & geq(X,Y)) >> [show_line("\nWorkers are very tired. Finishing working day.\n"), TaskDetect().stop(), -WORKTIME(MAX_WORKDAY_TIME), stopwork()]
 
         +TIMEOUT("ON") / (WORKTIME(X) & DUTY_TIME(Y)) >> [show_line("\nWorkers are tired, they need some rest.\n"), TaskDetect().stop(), -WORKTIME(X), UpdateWorkTime(X, Y), noduty()]
-        noduty() / (AGT(A, D) & DUTY(D)) >> [show_line("Putting agent", A, "to rest..."), -DUTY(D), noduty()]
-        noduty() >> [rest(REST_TIME), work()]
+        noduty() / (AGT(A, D) & DUTY(D)) >> [show_line("Putting agent" , A, " to rest..."), -DUTY(D), noduty()]
+        noduty() / REST_TIME(X) >> [rest(X), work()]
 
         # Stop work intention
         stopwork() / ((AGT(A, D) & DUTY(D))) >> [show_line("\n-------------------------> Stopping ", A), -DUTY(D), stopwork()]

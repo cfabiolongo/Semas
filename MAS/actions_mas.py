@@ -39,7 +39,6 @@ BELIEFS = config.get('CLASSES', 'PHI-Beliefs').split(",")
 REACTORS = config.get('CLASSES', 'PHI-Reactors').split(",")
 DESIRES = config.get('CLASSES', 'PHI-Desires').split(",")
 INTENTIONS = config.get('CLASSES', 'PHI-Intentions').split(",")
-GROUNDS = config.get('CLASSES', 'PHI-Grounds').split(",")
 
 PROPERTIES = config.get('CLASSES', 'Properties').split(",")
 DATAS = config.get('CLASSES', 'Data').split(",")
@@ -70,11 +69,11 @@ dict_turtle = {}
 # ---------------------------------------------------------------------
 
 # Max work time for a worker (seconds)
-MAX_WORKDAY_TIME = 20
+Max_WorkDay_Time = 27
 # Max work time for a worker (seconds) - MAX_WORKDAY_TIME must be multiple of MAX_WORK_TIME
-MAX_WORK_TIME = 5
+Max_Work_Time = 7
 # Rest time for a worker (seconds)
-REST_TIME = 3
+Rest_Time = 3
 # Timer tick
 TICK = 0.1
 
@@ -339,7 +338,7 @@ class Timer(Sensor):
 class rest(Action):
     """resting for few seconds"""
     def execute(self, arg):
-      rest_time = int(str(arg))
+      rest_time = int(str(arg).split("'")[2][1:-1])
       print(f"\nresting for {rest_time} seconds...")
 
       for t in dict_turtle:
