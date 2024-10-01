@@ -19,8 +19,6 @@ else:
    print("Agents list: ", agents)
 
 
-
-
 def create_agents(class_name):
     def main(self):
         # MoveAndCompleteJob intention
@@ -52,10 +50,11 @@ class main(Agent):
         init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 
         # Importing related triples
-        load() >> [show_line("\nAsserting all OWL 2 triples beliefs...\n"), assert_beliefs_triples(), turn()]
-        turn() / TRIPLE(X, "hasLedger",Z) >> [show_line("\nTurning triples beliefs into Semas beliefs...\n"), -TRIPLE(X,"hasLedger",Z), +LEDGER(X,"0"), AssignId(X), turn()]
+        load() >> [show_line("\nAsserting all OWL 2 triples beliefs...\n"), assert_beliefs_triples(), show_line("\nTurning triples beliefs into Semas beliefs...\n"), turn()]
+        turn() / TRIPLE(X, "hasLedger",Z) >> [-TRIPLE(X,"hasLedger",Z), +LEDGER(X,"0"), AssignId(X), turn()]
 
         # desires
+        setup() / WORKTIME(W) >> [show_line("Setup worktime again...\n"), load(), -WORKTIME(W), +WORKTIME(0)]
         setup() >> [show_line("Setup worktime...\n"), +WORKTIME(0), +MAX_WORK_TIME(Max_Work_Time), +MAX_WORKDAY_TIME(Max_WorkDay_Time), +REST_TIME(Rest_Time)]
         work() >> [show_line("Starting task detection...\n"), Timer(Max_Work_Time).start(), TaskDetect().start(), show_line("Workers on duty...")]
 

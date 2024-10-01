@@ -289,6 +289,7 @@ class TaskDetect(Sensor):
 
            pos_x = random.randint(-N // 2, N // 2)
            pos_y = random.randint(-N // 2, N // 2)
+           print(f"Generating task on position ({pos_x}, {pos_y})...")
            self.assert_belief(TASK(pos_x, pos_y))
 
 
