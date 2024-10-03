@@ -2,6 +2,13 @@ import sys
 import random
 import turtle
 import threading
+import queue
+
+# Coda per inviare richieste di query
+query_queue = queue.Queue()
+
+# Coda per restituire i risultati delle query
+result_queue = queue.Queue()
 
 sys.path.insert(0, "../lib")
 
@@ -329,19 +336,40 @@ class Timer(Sensor):
 # Agent section
 # ---------------------------------------------------------------------
 
+# Thread che esegue le query SPARQL
+def query_thread():
+    my_world = owlready2.World()
+    my_world.get_ontology(FILE_NAME).load()  # path to the owl file
+
+    while True:
+        q, result_event = query_queue.get()  # Ottieni la query e l'evento di sincronizzazione
+
+        if q is None:  # Esci dal ciclo quando ricevi None
+            break
+
+        graph = my_world.as_rdflib_graph()
+        result = list(graph.query(q))  # Esegui la query
+        result_queue.put(result)  # Inserisci il risultato nella coda dei risultati
+        result_event.set()  # Notifica che il risultato è pronto
 
 
+# Avvia il thread delle query
+query_thread_instance = threading.Thread(target=query_thread)
+query_thread_instance.start()
+
+
+# Funzione per ottenere i nomi degli agenti (inviando la query al thread dedicato)
 def get_agents_names():
-
     agents = []
     q = PREFIX + f" SELECT ?subj" + " WHERE { "
     q = q + f"?subj rdf:type {ONTO_NAME}:Agent." + "}"
 
-    my_world = owlready2.World()
-    my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
+    result_event = threading.Event()  # Evento per sincronizzare il risultato
+    query_queue.put((q, result_event))  # Invia la query al thread dedicato
 
-    graph = my_world.as_rdflib_graph()
-    result = list(graph.query(q))
+    result_event.wait()  # Aspetta che il risultato sia pronto
+
+    result = result_queue.get()  # Ottieni il risultato dalla coda
 
     for res in result:
         subj = str(res).split(",")[0]
@@ -349,6 +377,37 @@ def get_agents_names():
         agents.append(subj)
 
     return agents
+
+
+# Funzione per terminare il thread in sicurezza
+def stop_query_thread():
+    query_queue.put((None, None))  # Invia un segnale di terminazione
+    query_thread_instance.join()  # Aspetta che il thread termini
+
+# def get_agents_names():
+#
+#     agents = []
+#     q = PREFIX + f" SELECT ?subj" + " WHERE { "
+#     q = q + f"?subj rdf:type {ONTO_NAME}:Agent." + "}"
+#
+#     my_world = owlready2.World()
+#     my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
+#
+#     # graph = my_world.as_rdflib_graph()
+#     # result = list(graph.query(q))
+#
+#     query_lock = threading.Lock()
+#
+#     with query_lock:  # Lock the query execution
+#         graph = my_world.as_rdflib_graph()
+#         result = list(graph.query(q))
+#
+#     for res in result:
+#         subj = str(res).split(",")[0]
+#         subj = subj.split("#")[1][:-2]
+#         agents.append(subj)
+#
+#     return agents
 
 
 
