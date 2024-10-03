@@ -384,32 +384,6 @@ def stop_query_thread():
     query_queue.put((None, None))  # Invia un segnale di terminazione
     query_thread_instance.join()  # Aspetta che il thread termini
 
-# def get_agents_names():
-#
-#     agents = []
-#     q = PREFIX + f" SELECT ?subj" + " WHERE { "
-#     q = q + f"?subj rdf:type {ONTO_NAME}:Agent." + "}"
-#
-#     my_world = owlready2.World()
-#     my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
-#
-#     # graph = my_world.as_rdflib_graph()
-#     # result = list(graph.query(q))
-#
-#     query_lock = threading.Lock()
-#
-#     with query_lock:  # Lock the query execution
-#         graph = my_world.as_rdflib_graph()
-#         result = list(graph.query(q))
-#
-#     for res in result:
-#         subj = str(res).split(",")[0]
-#         subj = subj.split("#")[1][:-2]
-#         agents.append(subj)
-#
-#     return agents
-
-
 
 
 class rest(Action):
