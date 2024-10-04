@@ -14,7 +14,7 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 agents = get_agents_names()[1:]
 
 if len(agents)==0:
-   print("\nWARNING: Agents list is empty. Please initialize the ontology with init() from the eShell then restart.")
+   print("\nWARNING: Agents list is empty. Please initialize the ontology with init() from the eShell, then restart Semas.")
 else:
    print("Agents list: ", agents)
 
@@ -24,16 +24,12 @@ def create_agents(class_name):
         # MoveAndCompleteJob intention
         +TASK(X, Y, A)[{'from': M}] >> [show_line("\n",A," is moving to (", X, ",", Y, "), received task from ", M), move_turtle(A, X, Y), +COMM("DONE")[{'to': 'main'}]]
 
-    # Creiamo una nuova classe con il metodo 'main' definito sopra
     return type(class_name, (Agent,), {"main": main})
 
 for i in range(len(agents)):
-    # class_name = f"{ID_PREFIX}{i+1}"
     globals()[agents[i]] = create_agents(agents[i])
 
-# Ora puoi creare istanze delle nuove classi e chiamare il loro metodo main
 for i in range(len(agents)):
-    # class_name = f"{ID_PREFIX}{i+1}"
     instance = globals()[agents[i]]()
     instance.main()
 
