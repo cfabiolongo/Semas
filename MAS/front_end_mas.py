@@ -69,7 +69,7 @@ class main(Agent):
         noduty() / REST_TIME(X) >> [rest(X), work()]
 
         # Stop work intention
-        stopwork() / ((AGT(A, D) & DUTY(D))) >> [show_line("\n-------------------------> Stopping ", A), -DUTY(D), stopwork()]
+        stopwork() / (AGT(A, D) & DUTY(D)) >> [show_line("\n-------------------------> Stopping ", A), -DUTY(D), stopwork()]
         stopwork() >> [show_line("\nAll workers were stopped. Starting payment process."), pay()]
 
         # pay desires
