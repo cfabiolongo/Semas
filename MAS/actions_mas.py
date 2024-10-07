@@ -477,6 +477,12 @@ def turtle_thread_func():
     wn = turtle.Screen()
     wn.title("Workers jobs assignment")
 
+    # Mantenere la finestra sempre in primo piano
+    cv = wn.cv
+    rootwindow = cv._rootwindow
+    rootwindow.attributes("-topmost", 1)  # Imposta la finestra sempre in primo piano
+    rootwindow.update()  # Aggiorna la finestra
+
     agents = get_agents_names()[1:]
 
     for i in range(len(agents)):
