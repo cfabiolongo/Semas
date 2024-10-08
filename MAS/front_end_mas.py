@@ -83,3 +83,7 @@ for i in range(len(agents)):
     instance.start()
 
 main().start()
+
+# PHIDIAS.achieve(load(), "main")
+# PHIDIAS.achieve(setup(), "main")
+# PHIDIAS.achieve(work(), "main")
