@@ -245,7 +245,9 @@ class build_json_response(Action):
 
 
 
+
 # curl -X POST http://localhost:5000/build_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+
 @app.route('/build_publicationship', methods=['POST'])
 def build_publicationship():
     # Verifica che il corpo della richiesta sia presente
@@ -268,7 +270,9 @@ def build_publicationship():
     return jsonify(json_response), 200
 
 
+
 # curl -X POST http://localhost:5000/build_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+
 @app.route('/get_publicationship', methods=['POST'])
 def get_publicationship():
     # Verifica che il corpo della richiesta sia presente
