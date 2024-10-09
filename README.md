@@ -267,6 +267,51 @@ Propose co-authorship with Misael to publish in the field of Applied-Ontology.
 Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 ```
 
+### RESTful services
+
+BDI desires can also be declared remotely via a REST interface in a two-stage process. In the first stage, reasoning is performed on the beliefs obtained from the triples
+in the triple-store, following the declared production rules. In the second stage, based on the new beliefs generated during the first step, the result of the desire is returned.
+To activate the RESTful service and start the flask server, the procedure _start_rest()_ must be used in the PHIDIAS shell as follows:
+
+```sh
+eShell: main > start_rest()
+
+Starting RESTful service...
+
+eShell: main >  * Serving Flask app 'actions'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+```
+Before whatever operation, Semas kb must be fed with triples turned in beliefs (the related SPARQL query is in the class _assert_beliefs_triples_), with the above
+seen procedure _load()_. The first stage of querying the RESTful service, for instance, regarding the desire-procedure Publicationship("Artificial-Inbelligence"), is achieved
+with command-line _curl_ in the linux/windows prompt and the flask function _build_publicationship_ as follow:
+
+```sh
+fabio@midian:~$ curl -X POST http://localhost:5000/build_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+curl: /home/fabio/anaconda3/lib/libcurl.so.4: no version information available (required by curl)
+[]
+```
+
+The result is [] because the output of _build_publicationship_ is put before Publicationship("Artificial-Inbelligence") in the PHIDIAS queue. In order
+to achieve the final result, the function _get_publicationship_ must be used in the linux/windows prompt as follows
+
+```sh
+fabio@midian:~$ curl -X POST http://localhost:5000/get_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+curl: /home/fabio/anaconda3/lib/libcurl.so.4: no version information available (required by curl)
+[{"Artificial-Intelligence":"Rocco"},{"Artificial-Intelligence":"Misael"}]
+```
+
+which is similar to what can be achieved from the PHIDIAS shell, i.e.:
+
+```sh
+Propose co-authorship with Rocco to publish in the field of Artificial-Intelligence.
+
+Propose co-authorship with Misael to publish in the field of Artificial-Intelligence.
+```
+
+
 ## Multi-Agent Systems
 
 The key of the SEMAS Multi-Agent Systems (MAS), which is mostly inhrerited from PHIDIAS, is that together with the "Main"
