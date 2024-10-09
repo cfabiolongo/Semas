@@ -11,3 +11,5 @@ from front_end import *
 PHIDIAS.run()
 # run the engine shell
 PHIDIAS.shell(globals())
+
+PHIDIAS.achieve(load(), "main")

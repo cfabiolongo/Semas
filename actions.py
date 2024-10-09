@@ -1,6 +1,15 @@
-from phidias.Types import *
 import configparser
 from owlready2 import *
+import os
+import threading
+from phidias.Types import *
+
+
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+os.environ['FLASK_ENV'] = 'production'
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -161,7 +170,6 @@ class saveOnto(Action):
 # ----------------------------------
 
 
-
 class assert_beliefs_triples(Action):
     """create sparql query from MST"""
     def execute(self):
@@ -193,6 +201,93 @@ class assert_beliefs_triples(Action):
 
             self.assert_belief(TRIPLE(subj, prop, obj))
 
+# Funzione per avviare il server Flask in background
 
 
+# ----------------------------------
+# --------- RESTful Section ---------
+# ----------------------------------
+
+from phidias.Main import *
+
+class load(Procedure): pass
+class start_rest(Procedure): pass
+
+def avvia_flask():
+    app.run(port=5000)
+
+flask_thread = threading.Thread(target=avvia_flask)
+
+json_response = {"Response": []}
+
+
+class start_rest_service(Action):
+    """create sparql query from MST"""
+    def execute(self):
+        flask_thread.daemon = True  # Rende il thread daemon, così si chiude quando il programma principale termina
+        flask_thread.start()
+
+
+
+class build_json_response(Action):
+    """build json response"""
+    def execute(self, arg1, arg2):
+       arg1 = str(arg1).split("'")[3]
+       arg2 = str(arg2).split("'")[3]
+
+       global json_response
+       print("Setting json_response...")
+
+       new_item = {
+           arg1: arg2,
+       }
+       json_response['Response'].append(new_item)
+
+
+
+# curl -X POST http://localhost:5000/build_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+@app.route('/build_publicationship', methods=['POST'])
+def build_publicationship():
+    # Verifica che il corpo della richiesta sia presente
+    if not request.data:
+        return jsonify({'errore': 'Richiesta vuota'}), 400
+
+    # Tenta di elaborare la richiesta come JSON
+    try:
+        if request.is_json:
+            testo = request.json['testo']
+        else:
+            # Se non è JSON, interpreta il corpo come stringa
+            testo = request.data.decode('utf-8')
+    except Exception as e:
+        return jsonify({'errore': 'Formato non valido'}), 400
+
+    PHIDIAS.achieve(Publicationship(testo), "main")
+
+    # Crea e ritorna una risposta JSON con il testo elaborato
+    return jsonify(json_response), 200
+
+
+# curl -X POST http://localhost:5000/build_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+@app.route('/get_publicationship', methods=['POST'])
+def get_publicationship():
+    # Verifica che il corpo della richiesta sia presente
+    if not request.data:
+        return jsonify({'errore': 'Richiesta vuota'}), 400
+
+    # Tenta di elaborare la richiesta come JSON
+    try:
+        if request.is_json:
+            testo = request.json['testo']
+        else:
+            # Se non è JSON, interpreta il corpo come stringa
+            testo = request.data.decode('utf-8')
+    except Exception as e:
+        return jsonify({'errore': 'Formato non valido'}), 400
+
+    # Crea e ritorna una risposta JSON con il testo elaborato
+    return jsonify(json_response), 200
+
+
+# curl -X POST http://localhost:5000/get_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
 
