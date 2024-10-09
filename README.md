@@ -269,7 +269,7 @@ Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
 
 ### RESTful services
 
-BDI desires can also be declared remotely via a REST interface in a two-stage process. In the first stage, reasoning is performed on the beliefs obtained from the triples
+Since Semas is endowed of REST interface, BDI desires can be also be invoked remotely in a two-stage process. In the first stage, reasoning is performed on the beliefs obtained from the triples
 in the triple-store, following the declared production rules. In the second stage, based on the new beliefs generated during the first step, the result of the desire is returned.
 To activate the RESTful service and start the flask server, the procedure _start_rest()_ must be used in the PHIDIAS shell as follows:
 
