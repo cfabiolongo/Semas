@@ -296,6 +296,3 @@ def get_publicationship():
     # Crea e ritorna una risposta JSON con il testo elaborato
     return jsonify(json_subset), 200
 
-
-
-
