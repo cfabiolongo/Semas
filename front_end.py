@@ -57,5 +57,5 @@ BeTopAuthorship(X) >> [show_line("\nPlan to become top Authorship in the field "
 
 # Put here desires to automatically execute on start-up
 
-PHIDIAS.achieve(start_rest(), "main")
-PHIDIAS.achieve(load(), "main")
+# PHIDIAS.achieve(start_rest(), "main")
+# PHIDIAS.achieve(load(), "main")
