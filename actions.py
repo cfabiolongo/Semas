@@ -266,8 +266,10 @@ def build_publicationship():
 
     PHIDIAS.achieve(Publicationship(testo), "main")
 
+    json_subset = [item for item in json_response["Response"] if testo in item]
+
     # Crea e ritorna una risposta JSON con il testo elaborato
-    return jsonify(json_response), 200
+    return jsonify(json_subset), 200
 
 
 
@@ -289,8 +291,10 @@ def get_publicationship():
     except Exception as e:
         return jsonify({'errore': 'Formato non valido'}), 400
 
+    json_subset = [item for item in json_response["Response"] if testo in item]
+
     # Crea e ritorna una risposta JSON con il testo elaborato
-    return jsonify(json_response), 200
+    return jsonify(json_subset), 200
 
 
 

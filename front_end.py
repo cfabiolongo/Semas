@@ -54,5 +54,8 @@ Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Di
 BeTopAuthorship(X) >> [show_line("\nPlan to become top Authorship in the field ",X,"....\n")]
 
 
-# PHIDIAS.achieve(load(), "main")
-# PHIDIAS.achieve(Publicationship("Applied-Ontology"), "main")
+
+# Put here desires to automatically execute on start-up
+
+PHIDIAS.achieve(start_rest(), "main")
+PHIDIAS.achieve(load(), "main")
