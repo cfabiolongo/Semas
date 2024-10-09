@@ -271,7 +271,7 @@ def build_publicationship():
 
 
 
-# curl -X POST http://localhost:5000/build_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+# curl -X POST http://localhost:5000/get_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
 
 @app.route('/get_publicationship', methods=['POST'])
 def get_publicationship():
@@ -293,5 +293,5 @@ def get_publicationship():
     return jsonify(json_response), 200
 
 
-# curl -X POST http://localhost:5000/get_publicationship -H "Content-Type: application/json" -d '{"testo": "Artificial-Intelligence"}'
+
 
