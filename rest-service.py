@@ -31,7 +31,12 @@ if __name__ == '__main__':
 # a http://localhost:5000/elabora-testo. Ad esempio, puoi inviare una richiesta POST utilizzando
 # curl o uno strumento come Postman:
 
+# Windows:
 # curl -X POST -H "Content-Type: application/json" -d "{\"testo\": "Hello, World!\"}" http://localhost:5000/elabora-testo
+
+# Linux:
+#curl -X POST -H "Content-Type: application/json" -d '{"testo": "Hello, World!"}' http://localhost:5000/elabora-testo
+
 
 # questo dovrebbe restituire una risposta simile a:
 
