@@ -3,6 +3,8 @@ from owlready2 import *
 import os
 import threading
 from phidias.Types import *
+import xml.etree.ElementTree as ET
+from phidias.Main import *
 
 
 from flask import Flask, request, jsonify
@@ -208,8 +210,6 @@ class assert_beliefs_triples(Action):
 # --------- RESTful Section ---------
 # ----------------------------------
 
-from phidias.Main import *
-
 class load(Procedure): pass
 class start_rest(Procedure): pass
 
@@ -219,6 +219,10 @@ def avvia_flask():
 flask_thread = threading.Thread(target=avvia_flask)
 
 json_response = {"Response": []}
+
+
+# For FIPA RESTful beliefs exchange service (must be included into the ontology)
+class author(Belief): pass
 
 
 class start_rest_service(Action):
@@ -296,3 +300,61 @@ def get_publicationship():
     # Crea e ritorna una risposta JSON con il testo elaborato
     return jsonify(json_subset), 200
 
+
+
+@app.route('/send_fipa_belief', methods=['POST'])
+def send_fipa_belief():
+    # Ricevi il payload XML dalla richiesta POST
+    rdf_data = request.data.decode('utf-8')
+
+    # Parse del contenuto XML
+    root = ET.fromstring(rdf_data)
+
+    # Namespaces da gestire
+    namespaces = {
+        'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+        'fipa': 'http://www.fipa.org/schemas/fipa-rdf0#'
+    }
+
+    # Estrai le informazioni
+    subj = root.find('.//rdf:subject', namespaces).text
+    predicate = root.find('.//rdf:predicate', namespaces).attrib['{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource'].split('#')[-1]
+    obj = root.find('.//rdf:object', namespaces).text
+    belief = root.find('.//fipa:belief', namespaces).text
+
+    # Restituisci i dati in formato JSON
+
+    semas_belief = f"{predicate}('{subj}', '{obj}')"
+
+    response = {
+        'subject': subj,
+        'predicate': predicate,
+        'object': obj,
+        'belief': belief,
+        'semas': semas_belief
+    }
+
+    if belief == "true":
+        PHIDIAS.assert_belief(author(subj, obj), "main")
+    else:
+        PHIDIAS.retract_belief(author(subj, obj), "main")
+
+    return jsonify(response)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+# curl -X POST http://localhost:5000/send_fipa_belief \
+# -H "Content-Type: application/xml" \
+# -d '<?xml version="1.0"?>
+# <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+# xmlns:fipa="http://www.fipa.org/schemas/fipa-rdf0#">
+# <fipa:Proposition>
+# <rdf:subject>TCP/IP Illustrated</rdf:subject>
+# <rdf:predicate rdf:resource="http://description.org/schema#author"/>
+# <rdf:object>W. Richard Stevens</rdf:object>
+# <fipa:belief>true</fipa:belief>
+# </fipa:Proposition>
+# </rdf:RDF>'
