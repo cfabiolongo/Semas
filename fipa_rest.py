@@ -39,3 +39,18 @@ def parse_rdf():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+# curl -X POST http://localhost:5000/parse_rdf \
+# -H "Content-Type: application/xml" \
+# -d '<?xml version="1.0"?>
+# <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+# xmlns:fipa="http://www.fipa.org/schemas/fipa-rdf0#">
+# <fipa:Proposition>
+# <rdf:subject>TCP/IP Illustrated</rdf:subject>
+# <rdf:predicate rdf:resource="http://description.org/schema#author"/>
+# <rdf:object>W. Richard Stevens</rdf:object>
+# <fipa:belief>true</fipa:belief>
+# </fipa:Proposition>
+# </rdf:RDF>'
