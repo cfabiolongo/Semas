@@ -77,7 +77,7 @@ Max_WorkDay_Time = 27
 Max_Work_Time = 9
 # Rest time for a worker (seconds)
 Rest_Time = 3
-# Timer tick
+# Timer tick (time between each job generation)
 TICK = 0.1
 
 

@@ -343,17 +343,17 @@ eShell: main >
 
 ---------------
 
-As case-study, let us consider the toy [instance](test/sensor_mas_turtle.py) related to a *Warehouse*, whose chief has the task
+As case-study, let us consider the toy [instance](MAS/semas_mas.py) related to a *Warehouse*, whose chief has the task
 to assign work to two employees (worker1 and worker2). The workflow is depicted at runtime in a Canvas. The involved variables are:
 
-* TICK: tick time
+* TICK: time between each job generation
 * MAX_WORK_TIME: the maximum amount of duty time (in seconds) before a pause
 * REST_TIME: the amount of time of resting during each pause
 * MAX_WORKDAY_TIME: the amount of duty time (in seconds) before finishing the working day
 
 The procedure *setup* and *work* are implemented to let the chief set the jobs ledger and begin to assign tasks to available workers. Each task
  consists of taking the goods, going to specific location within the warehouse and placing the goods on the shelves. Locations are randomly
-generated in the range of the canvas. The time to put goods in the shelves is also randomly generated. During a task a worker is not available,
+generated in the range of the canvas. The time to put goods in the shelves is also randomly generated (in the range [LOWER_BOUND, UPPER_BOUND]). During a task a worker is not available,
 thus the chief must wait to assign a new task to a free worker. After each job done, the warehouse ledger is udpated by the chief. When the time
 exceeds *MAX_WORK_TIME*, all agents are put to rest for *REST_TIME* by retracting the belief *DUTY(id)* (with *id*=1 or 2) for each agent (their color
 in the canvas changes to red). When the overall time exceeds *MAX_WORKDAY_TIME*, the working day ends and each agent get paid considering the
