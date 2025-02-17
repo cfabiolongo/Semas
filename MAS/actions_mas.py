@@ -1,6 +1,7 @@
 import sys
 import random
 import turtle
+import tkinter as tk
 import threading
 import queue
 
@@ -53,14 +54,14 @@ DATAS = config.get('CLASSES', 'Data').split(",")
 N = 500
 
 # time-range to get the job done
-LOWER_BOUND = 0
+LOWER_BOUND = 2
 UPPER_BOUND = 3
 
 # Breakdown of steps
 STEP_BREAKDOWN = 50
 
 # Pause between steps
-STEP_DURATIN = 0.005
+STEP_DURATION = 0.005
 
 # Worker-Turtle dictionary
 dict_turtle = {}
@@ -463,14 +464,22 @@ class move_turtle(Action):
             current_x += delta_x
             current_y += delta_y
             dict_turtle[id_turtle].goto(current_x, current_y)
-
-            # Rallenta il movimento
-            time.sleep(STEP_DURATIN)  # Regola il tempo di pausa per modificare la velocità
+            time.sleep(STEP_DURATION)
 
         # Pausa finale casuale (se necessaria)
         rnd = random.uniform(LOWER_BOUND, UPPER_BOUND)
         time.sleep(rnd)
 
+
+# Funzioni per i pulsanti
+def load_command():
+    PHIDIAS.achieve(load(), "main")
+
+def setup_command():
+    PHIDIAS.achieve(setup(), "main")
+
+def work_command():
+    PHIDIAS.achieve(work(), "main")
 
 
 def turtle_thread_func():
@@ -482,6 +491,20 @@ def turtle_thread_func():
     rootwindow = cv._rootwindow
     rootwindow.attributes("-topmost", 1)  # Imposta la finestra sempre in primo piano
     rootwindow.update()  # Aggiorna la finestra
+
+
+    # Creazione dei pulsanti usando Tkinter
+    button_frame = tk.Frame(rootwindow)
+    button_frame.pack(side=tk.TOP, pady=10)
+
+    load_button = tk.Button(button_frame, text="Load", command=load_command)
+    load_button.pack(side=tk.LEFT, padx=5)
+
+    setup_button = tk.Button(button_frame, text="Setup", command=setup_command)
+    setup_button.pack(side=tk.LEFT, padx=5)
+
+    work_button = tk.Button(button_frame, text="Work", command=work_command)
+    work_button.pack(side=tk.LEFT, padx=5)
 
     agents = get_agents_names()[1:]
 
