@@ -343,7 +343,7 @@ eShell: main >
 
 ---------------
 
-As case-study, let us consider the toy [instance](test/sensor_mas_turtle.py) related to a *Warehouse*, whose chief has the task
+As case-study, let us consider the toy [instance](test/semas_mas.py) related to a *Warehouse*, whose chief has the task
 to assign work to two employees (worker1 and worker2). The workflow is depicted at runtime in a Canvas. The involved variables are:
 
 * TICK: tick time
