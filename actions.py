@@ -20,6 +20,9 @@ config.read('config.ini')
 FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
 
+# RESTful service
+REST_ACTIVE = config.getboolean('REST', 'REST_ACTIVE')
+
 # REASONING Section
 REASONING_ACTIVE = config.getboolean('REASONING', 'ACTIVE')
 REASONER = config.get('REASONING', 'REASONER').split(",")
@@ -46,6 +49,11 @@ except IOError:
     print("\nPlease Re-Run Semas.")
     my_onto.save(file=FILE_NAME, format="rdfxml")
     exit()
+
+class start_rest(Procedure): pass
+
+if REST_ACTIVE:
+    PHIDIAS.achieve(start_rest(), "main")
 
 
 # instances name/instances dictionary
@@ -177,7 +185,12 @@ class assert_beliefs_triples(Action):
     def execute(self):
 
         q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
-        q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
+        # q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
+
+        q = q + (f"?subj rdf:type ?subclass .  ?subclass rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> ."
+                 f"  ?subj ?prop ?obj ."
+                 f" ?obj rdf:type ?subclass2 .  ?subclass2 rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .") + "}"
+        print(f"\nQUERY: {q}")
 
         my_world = owlready2.World()
         my_world.get_ontology(FILE_NAME).load()  # path to the owl file is given here
@@ -190,16 +203,18 @@ class assert_beliefs_triples(Action):
         graph = my_world.as_rdflib_graph()
         result = list(graph.query(q))
 
+        print(f"\n\nRESULT: {result}")
+
         for res in result:
 
             subj = str(res).split(",")[0]
-            subj = subj.split("#")[1][:-2]
+            subj = subj.split("'")[1]
 
             prop = str(res).split(",")[1]
             prop = prop.split("#")[1][:-2]
 
             obj = str(res).split(",")[2]
-            obj = obj.split("#")[1][:-3]
+            obj = obj.split("'")[1]
 
             self.assert_belief(TRIPLE(subj, prop, obj))
 
