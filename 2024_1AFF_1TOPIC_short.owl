@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:aut="http://fossr.eu/kg/data/authors/"
+     xmlns:org="http://fossr.eu/kg/data/organizations/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:top="http://fossr.eu/kg/data/topics/"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:acad="http://test.org/academia.owl#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#">
+    <Ontology/>
+    
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    <!-- http://test.org/academia.owl#coAuthorWith -->
+
+    <owl:ObjectProperty rdf:about="http://test.org/academia.owl#coAuthorWith"/>
+    
+
+
+    <!-- http://test.org/academia.owl#hasAffiliationWith -->
+
+    <owl:ObjectProperty rdf:about="http://test.org/academia.owl#hasAffiliationWith"/>
+    
+
+
+    <!-- http://test.org/academia.owl#isTopAuthorIn -->
+
+    <owl:ObjectProperty rdf:about="http://test.org/academia.owl#isTopAuthorIn"/>
+    
+
+
+    <!-- http://xmlns.com/foaf/0.1/name -->
+
+    <owl:ObjectProperty rdf:about="http://xmlns.com/foaf/0.1/name"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://test.org/academia.owl#Field -->
+
+    <owl:Class rdf:about="http://test.org/academia.owl#Field">
+        <rdfs:subClassOf rdf:resource="http://www.co-ode.org/ontologies/ont.owl#ENTITY"/>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/academia.owl#Scholar -->
+
+    <owl:Class rdf:about="http://test.org/academia.owl#Scholar">
+        <rdfs:subClassOf rdf:resource="http://www.co-ode.org/ontologies/ont.owl#ENTITY"/>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/academia.owl#University -->
+
+    <owl:Class rdf:about="http://test.org/academia.owl#University">
+        <rdfs:subClassOf rdf:resource="http://www.co-ode.org/ontologies/ont.owl#ENTITY"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#ENTITY -->
+
+    <owl:Class rdf:about="http://www.co-ode.org/ontologies/ont.owl#ENTITY">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://fossr.eu/kg/data/authors/16243025800 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/authors/16243025800">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Scholar"/>
+        <acad:hasAffiliationWith rdf:resource="http://fossr.eu/kg/data/organizations/109665050"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2000"/>
+        <foaf:name>Zucchella, Antonella</foaf:name>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/authors/26435831100 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/authors/26435831100">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Scholar"/>
+        <acad:coAuthorWith rdf:resource="http://fossr.eu/kg/data/authors/16243025800"/>
+        <acad:coAuthorWith rdf:resource="http://fossr.eu/kg/data/authors/37123791300"/>
+        <acad:coAuthorWith rdf:resource="http://fossr.eu/kg/data/authors/58926786400"/>
+        <acad:hasAffiliationWith rdf:resource="http://fossr.eu/kg/data/organizations/109665050"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2000"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2700"/>
+        <foaf:name>Kabbara, Diala</foaf:name>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/authors/37123791300 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/authors/37123791300">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Scholar"/>
+        <acad:hasAffiliationWith rdf:resource="http://fossr.eu/kg/data/organizations/60015197"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2720"/>
+        <foaf:name>Hagen, Birgit</foaf:name>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/authors/55161722600 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/authors/55161722600">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Scholar"/>
+        <acad:coAuthorWith rdf:resource="http://fossr.eu/kg/data/authors/57226458714"/>
+        <acad:hasAffiliationWith rdf:resource="http://fossr.eu/kg/data/organizations/113953495"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2700"/>
+        <foaf:name>Ingaramo, Matteo Oreste</foaf:name>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/authors/57226458714 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/authors/57226458714">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Scholar"/>
+        <acad:coAuthorWith rdf:resource="http://fossr.eu/kg/data/authors/55161722600"/>
+        <acad:hasAffiliationWith rdf:resource="http://fossr.eu/kg/data/organizations/113953495"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2308"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2700"/>
+        <foaf:name>Lin, Xiaozhu</foaf:name>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/authors/58926786400 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/authors/58926786400">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Scholar"/>
+        <acad:hasAffiliationWith rdf:resource="http://fossr.eu/kg/data/organizations/109665050"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2000"/>
+        <acad:isTopAuthorIn rdf:resource="http://fossr.eu/kg/data/topics/2720"/>
+        <foaf:name>Qin, Enliang</foaf:name>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/organizations/109665050 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/organizations/109665050">
+        <rdf:type rdf:resource="http://test.org/academia.owl#University"/>
+        <rdfs:label>Università degli Studi di Pavia, Department of Economics and Management</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/organizations/113953495 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/organizations/113953495">
+        <rdf:type rdf:resource="http://test.org/academia.owl#University"/>
+        <rdfs:label>Politecnico di Milano, Department of Design</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/organizations/60015197 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/organizations/60015197">
+        <rdf:type rdf:resource="http://test.org/academia.owl#University"/>
+        <rdfs:label>Università degli Studi di Pavia</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/topics/2000 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/topics/2000">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Field"/>
+        <rdfs:label>Economics, Econometrics and Finance (all)</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/topics/2308 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/topics/2308">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Field"/>
+        <rdfs:label>Management, Monitoring, Policy and Law</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/topics/2700 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/topics/2700">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Field"/>
+        <rdfs:label>Medicine (all)</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://fossr.eu/kg/data/topics/2720 -->
+
+    <owl:NamedIndividual rdf:about="http://fossr.eu/kg/data/topics/2720">
+        <rdf:type rdf:resource="http://test.org/academia.owl#Field"/>
+        <rdfs:label>Hematology</rdfs:label>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
