@@ -203,7 +203,7 @@ class assert_beliefs_triples(Action):
         graph = my_world.as_rdflib_graph()
         result = list(graph.query(q))
 
-        print(f"\n\nRESULT: {result}")
+        print(f"\n\n#Triples: {len(result)}")
 
         for res in result:
 
