@@ -481,6 +481,9 @@ def setup_command():
 def work_command():
     PHIDIAS.achieve(work(), "main")
 
+def kb_command():
+    PHIDIAS.kb("main").show()
+
 
 def turtle_thread_func():
     wn = turtle.Screen()
@@ -505,6 +508,9 @@ def turtle_thread_func():
 
     work_button = tk.Button(button_frame, text="Work", command=work_command)
     work_button.pack(side=tk.LEFT, padx=5)
+
+    kb_button = tk.Button(button_frame, text="Show kb", command=kb_command)
+    kb_button.pack(side=tk.LEFT, padx=5)
 
     agents = get_agents_names()[1:]
 
