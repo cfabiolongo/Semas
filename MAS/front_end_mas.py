@@ -26,13 +26,24 @@ def create_agents(class_name):
 
     return type(class_name, (Agent,), {"main": main})
 
+
+def create_custom_agent(class_name):
+    def main(self):
+        # MoveAndCompleteJob intention
+        +TASK(X, Y, A)[{'from': M}] >> [show_line("\n",A," is moving to (", X, ",", Y, "), received task from ", M), move_turtle(A, X, Y), +COMM("DONE")[{'to': 'main'}]]
+
+    return type(class_name, (Agent,), {"main": main})
+
+# General agents from OWL
 for i in range(len(agents)):
     globals()[agents[i]] = create_agents(agents[i])
 
 for i in range(len(agents)):
     instance = globals()[agents[i]]()
-    instance.main()
 
+# custom agent rocco
+globals()["rocco"] = create_custom_agent("rocco")
+instance = globals()["rocco"]()
 
 
 # ---------------------------------------------------------------------
@@ -77,10 +88,14 @@ class main(Agent):
         pay() >> [show_line("\nPayments completed.")]
 
 
-
+# General agents
 for i in range(len(agents)):
     instance = globals()[agents[i]]()
     instance.start()
+
+# Custom agent
+instance = globals()["rocco"]()
+instance.start()
 
 main().start()
 
