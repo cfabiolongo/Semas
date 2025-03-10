@@ -115,7 +115,7 @@ which is a way for manually trigger a corresponding rule.
 * **[CONDITIONS]** (optional): one or more **Belief**, or **Active Belief** (a special belief which returns *True*/*False* on the basis of Python code execution)
 * **[PLAN]**: a plan can be made of beliefs assertion/retraction or execution of high level language code invoked by instances of the PHIDIAS class **Action**. 
 
-For more information about PHIDIAS the reader is referred [here](https://www.dmi.unict.it/santoro/teaching/sr/slides/PHIDIAS.pdf).
+For more information about PHIDIAS the reader is referred [here](https://www.dmi.unict.it/santoro/teaching/sr-2024/slides/PHIDIAS.pdf).
 
 
 ### OWL Beliefs, Desires, Intentions
