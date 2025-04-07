@@ -13,7 +13,7 @@ def_vars("X", "Y", "D", "H", "Z", "L", "M", "A", "D", "W")
 
 agents = get_agents_names()[1:]
 
-if len(agents)==0:
+if len(agents) == 0:
    print("\nWARNING: Agents list is empty. Please initialize the ontology with init() from the eShell, then restart Semas.")
 else:
    print("Agents list: ", agents)
@@ -31,6 +31,8 @@ def create_custom_agent(class_name):
     def main(self):
         # MoveAndCompleteJob intention
         +TASK(X, Y, A)[{'from': M}] >> [show_line("\n",A," is moving to (", X, ",", Y, "), received task from ", M), move_turtle(A, X, Y), +COMM("DONE")[{'to': 'main'}]]
+
+        load() >> [show_line("\nAsserting all OWL 2 triples beliefs...\n"), assert_beliefs_triples(), show_line("\nTurning triples beliefs into Semas beliefs...\n")]
 
     return type(class_name, (Agent,), {"main": main})
 

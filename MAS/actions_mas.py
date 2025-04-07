@@ -177,6 +177,9 @@ class load(Procedure): pass
 # Turning triples to beliefs
 class turn(Procedure): pass
 
+class send(Procedure): pass
+
+
 
 
 class initWorld(Action):
@@ -474,6 +477,7 @@ class move_turtle(Action):
 # Funzioni per i pulsanti
 def load_command():
     PHIDIAS.achieve(load(), "main")
+
 
 def setup_command():
     PHIDIAS.achieve(setup(), "main")
