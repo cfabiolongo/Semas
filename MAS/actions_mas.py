@@ -488,6 +488,7 @@ def work_command():
 
 def init_command():
     PHIDIAS.achieve(init(), "main")
+    messagebox.showinfo("Informazione", "Chiudere e Riavviare")
 
 
 def kb_command():

@@ -9,7 +9,7 @@ CONTEXT = """Rispondi sempre True oppure False circa la veridicità della seguen
 """
 
 # Funzione per inviare richieste in streaming
-def ask_ollama_stream(prompt, model="llama3:8b-instruct-q8_0"):
+def ask_ollama_stream(prompt, model="deepseek-r1:14b-qwen-distill-q8_0"):
     # Combina contesto + prompt utente
     full_prompt = CONTEXT + "\n" + prompt
 

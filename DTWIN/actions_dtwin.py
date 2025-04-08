@@ -2,6 +2,7 @@ import sys
 import random
 import turtle
 import tkinter as tk
+from tkinter import messagebox
 import threading
 import queue
 
@@ -488,6 +489,10 @@ def work_command():
 def kb_command():
     PHIDIAS.kb("main").show()
 
+def init_command():
+    PHIDIAS.achieve(init(), "main")
+    messagebox.showinfo("Informazione", "Chiudere e Riavviare")
+
 
 def turtle_thread_func():
     wn = turtle.Screen()
@@ -503,6 +508,14 @@ def turtle_thread_func():
     # Creazione dei pulsanti usando Tkinter
     button_frame = tk.Frame(rootwindow)
     button_frame.pack(side=tk.TOP, pady=10)
+
+    agents = get_agents_names()[1:]
+    print("agents ", agents)
+
+    # Pulsante Init, disabilitato se agents è vuota
+    init_state = tk.DISABLED if agents else tk.NORMAL
+    init_button = tk.Button(button_frame, text="Init", command=init_command, state=init_state)
+    init_button.pack(side=tk.LEFT, padx=5)
 
     load_button = tk.Button(button_frame, text="Load", command=load_command)
     load_button.pack(side=tk.LEFT, padx=5)
