@@ -29,12 +29,8 @@ def create_agents(class_name):
 
 def create_custom_agent(class_name):
     def main(self):
-        # MoveAndCompleteJob intention
-        +TASK(X, Y, A)[{'from': M}] >> [show_line("\n",A," is moving to (", X, ",", Y, "), received task from ", M), move_turtle(A, X, Y), +COMM("DONE")[{'to': 'main'}]]
-
-        +TASK(X)[{'from': A}] >> [show_line("\nReceived belief TASK(",X,") from ", A), +TRIPLE(X,X,X)]
-
-        load() >> [show_line("\nAsserting all OWL 2 triples beliefs...\n"), assert_beliefs_triples(), show_line("\nTurning triples beliefs into Semas beliefs...\n")]
+        # Custom intention
+        +TASK(X)[{'from': A}] >> [show_line("\nReceived belief TASK(",X,") from ", A), +TRIPLE(X,X,X), +TASK(X)[{'to': 'main'}]]
 
     return type(class_name, (Agent,), {"main": main})
 
@@ -94,6 +90,8 @@ class main(Agent):
         # Sending belief to agent
         send(A, X) >> [show_line("Sending belief TASK(",X,") to agent ", A), +AGT(A), +TASK(X)]
         +TASK(X) / AGT(A) >> [-AGT(A), +TASK(X)[{'to': A}]]
+
+        +TASK(X)[{'from': W}] >> [show_line("received belief from ", W), +TRIPLE(X, X, X)]
 
 
 # General agents
