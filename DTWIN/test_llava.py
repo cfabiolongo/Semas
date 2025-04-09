@@ -11,7 +11,7 @@ def describe_image(image_path, model="llava:13b-v1.6-vicuna-q8_0", temperature=0
     # Messaggio da inviare al modello
     data = {
         "model": model,
-        "prompt": "descrivi l’immagine",
+        "prompt": "Describe briefly the picture, with no further text.",
         "images": [image_base64],
         "temperature": temperature,
         "stream": False

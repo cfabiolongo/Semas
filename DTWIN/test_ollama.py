@@ -6,7 +6,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
 # CONTEXTO GLOBALE — puoi personalizzarlo
 system = """extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent
-             from the text of a scene, for example: The car runs on the highway—→ AGENT(CAR), RUNNING(CAR), PLACE(CAR, HIGHWAY).
+             from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).
 """
 
 # Manteniamo il contesto globale delle interazioni
