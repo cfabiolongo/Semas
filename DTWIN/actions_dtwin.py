@@ -496,7 +496,7 @@ def init_command():
 
 def turtle_thread_func():
     wn = turtle.Screen()
-    wn.title("Workers jobs assignment")
+    wn.title("Digital Twins assessment")
 
     # Mantenere la finestra sempre in primo piano
     cv = wn.cv

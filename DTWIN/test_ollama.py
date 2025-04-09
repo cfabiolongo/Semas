@@ -5,7 +5,8 @@ import json
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
 # CONTEXTO GLOBALE — puoi personalizzarlo
-CONTEXT = """Estrai regole (senza altro testo aggiuntivo) dalla frase in questa forma (ad esempio): Quando la temperatura dell'auto è maggiore di 200, la velocità diminuisce a 50 km/k ----> TEMPERATURE(200)  >> [-VEHICLE_SPEED(50), +VEHICLE_SPEED(50)]
+CONTEXT = """Extract only beliefs (without other text), and single-word (possible other words must be as additional beliefs arguments), related to an actor
+         from the text of a scene, for example: The car runs on the highway —→ ACTOR(CAR), RUNNING(CAR), PLACE(CAR, HIGHWAY)
 """
 
 # Estrai soltanto beliefs dalla frase in questa forma (ad esempio): La temperatura è 35 gradi ----> TEMPERATURE(35)
@@ -18,7 +19,8 @@ def ask_ollama_stream(prompt, model="qwen2.5:14b-instruct-q8_0"):
     payload = {
         "model": model,
         "prompt": full_prompt,
-        "stream": True  # Abilita lo streaming token per token
+        "stream": True,  # Abilita lo streaming token per token
+        "temperature": 0.8,
     }
 
     try:
