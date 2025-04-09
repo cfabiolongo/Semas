@@ -44,8 +44,8 @@ for i in range(len(agents)):
     instance = globals()[agents[i]]()
 
 # custom agent rocco
-globals()["rocco"] = create_custom_agent("rocco")
-instance = globals()["rocco"]()
+globals()["dtwin"] = create_custom_agent("dtwin")
+instance = globals()["dtwin"]()
 
 
 # ---------------------------------------------------------------------
@@ -100,7 +100,7 @@ for i in range(len(agents)):
     instance.start()
 
 # Custom agent
-instance = globals()["rocco"]()
+instance = globals()["dtwin"]()
 instance.start()
 
 main().start()
