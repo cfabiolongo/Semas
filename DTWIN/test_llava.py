@@ -32,8 +32,9 @@ def describe_image(image_path, model="llava:13b-v1.6-vicuna-q8_0", temperature=0
 # Esempio di utilizzo
 if __name__ == "__main__":
     image_path = "images/immagine_webcam.jpg"  # <-- Cambia con il percorso della tua immagine
-    temperatura = 0.1
+    temperatura = 0.8
     usa_stream = True  # imposta a True per usare streaming
     descrizione = describe_image(image_path, temperature=temperatura)
     print("Descrizione dell'immagine:")
     print(descrizione)
+
