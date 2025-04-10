@@ -27,9 +27,8 @@ def ask_ollama_stream(user_prompt, model="qwen2.5:14b-instruct-q8_0"):
         "stream": True,  # Abilita lo streaming token per token
         "temperature": 0.8,
     }
-
+    risposta = ""
     try:
-        risposta = ""
         with requests.post(OLLAMA_API_URL, json=payload, stream=True) as response:
             response.raise_for_status()
             for line in response.iter_lines():
@@ -48,6 +47,7 @@ def ask_ollama_stream(user_prompt, model="qwen2.5:14b-instruct-q8_0"):
 
     except requests.exceptions.RequestException as e:
         print(f"Errore nella richiesta: {e}")
+    return risposta
 
 # Loop interattivo da linea di comando
 if __name__ == "__main__":
