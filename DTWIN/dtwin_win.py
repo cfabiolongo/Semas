@@ -44,7 +44,7 @@ def ask_ollama_stream(user_prompt, system, temp, model=text_model):
         "system": system,
         "prompt": context_prompt,
         "stream": True,  # Abilita lo streaming token per token
-        "temperature": 0.8,
+        "temperature": temp,
     }
     risposta = ""
     try:
