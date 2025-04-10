@@ -16,6 +16,10 @@ system = """Extract only beliefs (without other text), and single-word (possible
 from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).
 """
 
+# Goal
+# Generate only a goal belief from the scene (without other text) in the shape of propositional logic, with and single-words predicates related to
+# an agent, from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)".
+
 multimodal_model = "llava:13b-v1.6-vicuna-q8_0"
 text_model = "qwen2.5:14b-instruct-q8_0"
 
