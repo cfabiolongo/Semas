@@ -16,9 +16,11 @@ system = """Extract only beliefs (without other text), and single-word (possible
 from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).
 """
 
+multimodal_model = "llava:13b-v1.6-vicuna-q8_0"
+text_model = "qwen2.5:14b-instruct-q8_0"
+
 image_prompt = "Describe briefly the picture, with no further text."
 image_temp = "0.8"
-
 beliefs_temp = "0.8"
 
 
@@ -26,7 +28,7 @@ beliefs_temp = "0.8"
 conversation_history = []
 
 # Funzione per inviare richieste in streaming
-def ask_ollama_stream(user_prompt, system, temp, model="qwen2.5:14b-instruct-q8_0"):
+def ask_ollama_stream(user_prompt, system, temp, model=text_model):
     # Costruiamo il prompt cumulativo
     context_prompt = ""
     for turn in conversation_history:
@@ -73,7 +75,7 @@ def image_to_base64(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 
-def describe_image(image_path, prompt, temp, model="llava:13b-v1.6-vicuna-q8_0"):
+def describe_image(image_path, prompt, temp, model=multimodal_model):
     image_base64 = image_to_base64(image_path)
 
     # Messaggio da inviare al modello
@@ -117,6 +119,7 @@ def run_inference():
     except ValueError:
         temp = 0.7  # valore di default se la temperatura non è valida
     # Esegue la chiamata LLM
+    print(f"\nAchieving image prediction with temperature {temp}...")
     descrizione = describe_image(image_path, prompt, temp)
 
     # Dopo l’inferenza, aggiorna la GUI nel thread principale
@@ -141,19 +144,22 @@ def achieve_beliefs():
     beliefs_text_field.config(state="disabled")
 
     # Recupera i valori di prompt e temperatura per i beliefs
-    beliefs_prompt = beliefs_prompt_entry.get()
+    beliefs_prompt = text_field.get("1.0", tk.END).strip()
+    beliefs_system_prompt = beliefs_prompt_entry.get().strip()
     try:
         beliefs_temperature = float(beliefs_temp_entry.get())
     except ValueError:
         beliefs_temperature = 0.7  # valore di default
 
     # Esegui inferenza per i beliefs in background
-    threading.Thread(target=run_beliefs_inference, args=(beliefs_prompt, beliefs_temperature), daemon=True).start()
+    threading.Thread(target=run_beliefs_inference, args=(beliefs_prompt, beliefs_system_prompt, beliefs_temperature), daemon=True).start()
 
 
-def run_beliefs_inference(prompt, temp):
+def run_beliefs_inference(prompt, system, temp):
 
-    prompt = text_field.get("1.0", tk.END).strip()
+    print(f"\nAchieving beliefs prediction with temperature {temp}...")
+    print(prompt)
+    print(system)
     outcome = ask_ollama_stream(prompt, system, temp)
     root.after(0, lambda: update_beliefs_result(outcome))
 
@@ -229,7 +235,7 @@ def edit_beliefs_prompt():
 # Creazione della finestra principale
 root = tk.Tk()
 root.title("DTwin Assessment")
-root.geometry("1200x800")
+root.geometry("1200x900")
 
 # Percorso dell'immagine .jpg
 image_path = "images/immagine_webcam.jpg"  # <-- Cambia con il percorso della tua immagine
@@ -256,7 +262,7 @@ temp_entry.insert(0, image_temp)
 temp_entry.pack(side="left")
 
 # Aggiunta della label "Prediction" sopra il text_field
-tk.Label(root, text="Prediction", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+tk.Label(root, text="Prediction ("+multimodal_model+")", font=("Arial", 14, "bold")).pack(pady=(10, 5))
 
 # Campo di testo per il risultato dell'inferenza
 text_field = tk.Text(root, height=4, width=140, wrap=tk.WORD)
@@ -287,7 +293,7 @@ beliefs_temp_entry.insert(0, beliefs_temp)
 beliefs_temp_entry.pack(side="left")
 
 # Aggiunta della label "Prediction" sopra il text_field
-tk.Label(root, text="Extracted beliefs from the Prediction", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+tk.Label(root, text="Extracted beliefs from the Prediction ("+text_model+")", font=("Arial", 14, "bold")).pack(pady=(10, 5))
 
 
 # Campo di testo per il risultato dei beliefs
