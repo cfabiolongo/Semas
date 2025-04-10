@@ -13,13 +13,12 @@ OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
 # CONTEXTO GLOBALE
 system = """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent
-             from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).
+from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).
 """
 
 image_prompt = "Describe briefly the picture, with no further text."
 image_temp = "0.8"
 
-beliefs_prompt = "extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent from the text of a scene, for example: The car runs on the highway—→ AGENT(CAR), RUNNING(CAR), PLACE(CAR, HIGHWAY):"
 beliefs_temp = "0.8"
 
 
@@ -207,7 +206,7 @@ def edit_beliefs_prompt():
 
     # Crea il campo di testo ancora più grande
     text_widget = tk.Text(dialog, height=20, width=70, wrap=tk.WORD)  # Aumento le dimensioni del campo di testo
-    text_widget.insert(tk.END, beliefs_prompt)  # Inserisci il valore corrente
+    text_widget.insert(tk.END, beliefs_prompt_entry.get()) # Inserisci il valore corrente
     text_widget.pack(padx=10, pady=10)
 
     # Funzione per salvare il testo modificato
@@ -274,7 +273,7 @@ achieve_beliefs_button.pack(anchor="w", padx=10, pady=(0, 5))
 # Campo prompt per beliefs
 tk.Label(beliefs_control_frame, text="System:").pack(side="left", padx=(10, 2))
 beliefs_prompt_entry = tk.Entry(beliefs_control_frame, width=100)
-beliefs_prompt_entry.insert(0, beliefs_prompt)
+beliefs_prompt_entry.insert(0, system)
 beliefs_prompt_entry.pack(side="left")
 
 # Bottone per modificare il beliefs_prompt
@@ -288,7 +287,7 @@ beliefs_temp_entry.insert(0, beliefs_temp)
 beliefs_temp_entry.pack(side="left")
 
 # Aggiunta della label "Prediction" sopra il text_field
-tk.Label(root, text="Extracted beliefs", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+tk.Label(root, text="Extracted beliefs from the Prediction", font=("Arial", 14, "bold")).pack(pady=(10, 5))
 
 
 # Campo di testo per il risultato dei beliefs
