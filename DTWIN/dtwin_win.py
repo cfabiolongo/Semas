@@ -152,10 +152,10 @@ def achieve_beliefs():
     threading.Thread(target=run_beliefs_inference, args=(beliefs_prompt, beliefs_temperature), daemon=True).start()
 
 
-def run_beliefs_inference(prompt, temperature):
+def run_beliefs_inference(prompt, temp):
 
-    prompt = beliefs_prompt_entry.get()
-    outcome = ask_ollama_stream(prompt, system, beliefs_temp)
+    prompt = text_field.get("1.0", tk.END).strip()
+    outcome = ask_ollama_stream(prompt, system, temp)
     root.after(0, lambda: update_beliefs_result(outcome))
 
 
@@ -173,7 +173,7 @@ def update_beliefs_result(descrizione):
 def load_image(image_path):
     if os.path.exists(image_path):
         img = Image.open(image_path)
-        img = img.resize((400, 300), Image.Resampling.LANCZOS)
+        img = img.resize((300, 225), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(img)
 
         image_label = tk.Label(root, image=photo)
@@ -206,7 +206,7 @@ def edit_beliefs_prompt():
     dialog.geometry(f"{dialog_width}x{dialog_height}+{position_left}+{position_top}")
 
     # Crea il campo di testo ancora più grande
-    text_widget = tk.Text(dialog, height=20, width=70)  # Aumento le dimensioni del campo di testo
+    text_widget = tk.Text(dialog, height=20, width=70, wrap=tk.WORD)  # Aumento le dimensioni del campo di testo
     text_widget.insert(tk.END, beliefs_prompt)  # Inserisci il valore corrente
     text_widget.pack(padx=10, pady=10)
 
@@ -256,6 +256,9 @@ temp_entry = tk.Entry(control_frame, width=5)
 temp_entry.insert(0, image_temp)
 temp_entry.pack(side="left")
 
+# Aggiunta della label "Prediction" sopra il text_field
+tk.Label(root, text="Prediction", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+
 # Campo di testo per il risultato dell'inferenza
 text_field = tk.Text(root, height=4, width=140, wrap=tk.WORD)
 text_field.pack(pady=10)
@@ -283,6 +286,10 @@ tk.Label(beliefs_control_frame, text="Temperatura:").pack(side="left", padx=(10,
 beliefs_temp_entry = tk.Entry(beliefs_control_frame, width=5)
 beliefs_temp_entry.insert(0, beliefs_temp)
 beliefs_temp_entry.pack(side="left")
+
+# Aggiunta della label "Prediction" sopra il text_field
+tk.Label(root, text="Extracted beliefs", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+
 
 # Campo di testo per il risultato dei beliefs
 beliefs_text_field = tk.Text(root, height=4, width=140, wrap=tk.WORD)
