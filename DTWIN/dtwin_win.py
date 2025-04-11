@@ -25,7 +25,7 @@ beliefs_temp = "0.8"
 prediction_prompts = {
     "beliefs": """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).""",
     "goal": """Formulate a single goal from the scene in the shape of predicate. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY). No additional text.""",
-    "action": """Formulate the most appropriate actions to achieve the goal in the described scene, without extra explanation."""
+    "action": """Formulate very briefly the most appropriate action to achieve the goal in the described scene, without extra explanation.."""
 }
 
 # Manteniamo il contesto globale delle interazioni
