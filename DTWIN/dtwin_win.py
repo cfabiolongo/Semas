@@ -233,7 +233,7 @@ def edit_beliefs_prompt():
 # Creazione della finestra principale
 root = tk.Tk()
 root.title("DTwin Assessment")
-root.geometry("1200x900")
+root.geometry("1200x800")
 
 # Layout a due colonne: immagine a sinistra, box etichette a destra
 top_frame = tk.Frame(root)
@@ -268,14 +268,13 @@ def load_image(image_path):
 # Funzione per aggiungere un campo con label e text box espanso
 def add_labeled_field(parent, label_text_with_emoji):
     frame = tk.Frame(parent)
-    frame.pack(anchor="w", pady=15, fill=tk.X, expand=True)
+    frame.pack(anchor="w", pady=10, fill=tk.X, expand=True)
 
-    # Label ampia e chiara
-    tk.Label(frame, text=label_text_with_emoji, width=12, anchor="w", font=("Arial", 13, "bold")).pack(side="left",
-                                                                                                       padx=(0, 10))
+    # Riduzione della dimensione del font della label
+    tk.Label(frame, text=label_text_with_emoji, width=12, anchor="w", font=("Arial", 10, "bold")).pack(side="left", padx=(0, 10))
 
-    # Campo testo più ampio
-    text = tk.Text(frame, height=2, width=80, wrap=tk.WORD, font=("Arial", 12))
+    # Riduzione della dimensione del font del campo di testo
+    text = tk.Text(frame, height=2, width=80, wrap=tk.WORD, font=("Arial", 9))
     text.pack(side="left", fill=tk.X, expand=True)
 
     return text
@@ -292,25 +291,38 @@ def on_acquire_image():
 # Funzione di esempio per aggiungere beliefs
 def add_belief_action():
     print("Add Beliefs action triggered")
-    # Qui puoi aggiungere logica per aggiungere un belief
+    beliefs_content = beliefs_text_field.get("1.0", tk.END).strip()
+
+    # Imposta il contenuto nel campo belief_field
+    belief_field.delete("1.0", tk.END)  # Pulisce il campo precedente
+    belief_field.insert(tk.END, beliefs_content)  # Inserisce il contenuto nel campo belief_field
 
 # Funzione di esempio per cambiare il goal
 def change_goal_action():
     print("Change Goal action triggered")
-    # Qui puoi aggiungere logica per cambiare il goal
+    goal_content = beliefs_text_field.get("1.0", tk.END).strip()
+
+    # Imposta il contenuto nel campo belief_field
+    goal_field.delete("1.0", tk.END)  # Pulisce il campo precedente
+    goal_field.insert(tk.END, goal_content)  # Inserisce il contenuto nel campo belief_field
 
 # Funzione di esempio per aggiungere una nuova azione
 def add_action_action():
     print("Add Action action triggered")
     # Qui puoi aggiungere logica per aggiungere un'azione
+    action_content = beliefs_text_field.get("1.0", tk.END).strip()
+
+    # Imposta il contenuto nel campo belief_field
+    action_field.delete("1.0", tk.END)  # Pulisce il campo precedente
+    action_field.insert(tk.END, action_content)  # Inserisce il contenuto nel campo belief_field
 
 
 
 # Campi con icone
-belief_field = add_labeled_field(right_frame, "🧠 Belief")
-goal_field = add_labeled_field(right_frame, "🎯 Goal")
-action_field = add_labeled_field(right_frame, "⚙️ Action")
-plan_field = add_labeled_field(right_frame, "📋 Plan")
+belief_field = add_labeled_field(right_frame, "🧠 Beliefs:")
+goal_field = add_labeled_field(right_frame, "🎯 Goal:")
+action_field = add_labeled_field(right_frame, "⚙️ Action:")
+plan_field = add_labeled_field(right_frame, "📋 Plan:")
 
 # Percorso dell'immagine .jpg
 image_path = "images/immagine_webcam.jpg"  # <-- Cambia con il percorso della tua immagine
@@ -408,7 +420,7 @@ buttons_frame.pack(pady=(5, 10), anchor="w", padx=10)
 add_beliefs_button = tk.Button(buttons_frame, text="Add beliefs", command=lambda: add_belief_action())
 add_beliefs_button.pack(side="left", padx=(0, 10))
 
-change_goal_button = tk.Button(buttons_frame, text="Change Goal", command=lambda: change_goal_action())
+change_goal_button = tk.Button(buttons_frame, text="Add Goal", command=lambda: change_goal_action())
 change_goal_button.pack(side="left", padx=(0, 10))
 
 add_action_button = tk.Button(buttons_frame, text="Add Action", command=lambda: add_action_action())
