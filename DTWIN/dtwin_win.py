@@ -21,6 +21,12 @@ image_prompt = "Describe briefly the picture, with no further text."
 image_temp = "0.8"
 beliefs_temp = "0.8"
 
+# Prompt predefiniti per ogni tipo
+prediction_prompts = {
+    "beliefs": """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).""",
+    "goal": """Formulate a single goal from the scene in the shape of predicate. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY). No additional text.""",
+    "action": """Formulate the most appropriate actions to achieve the goal in the described scene, without extra explanation."""
+}
 
 # Manteniamo il contesto globale delle interazioni
 conversation_history = []
@@ -28,15 +34,11 @@ conversation_history = []
 # Funzione per inviare richieste in streaming
 def ask_ollama_stream(user_prompt, system, temp, model=text_model):
     # Costruiamo il prompt cumulativo
-    context_prompt = ""
-    for turn in conversation_history:
-        context_prompt += f"Tu: {turn['user']}\nModello: {turn['model']}\n"
-    context_prompt += f"Tu: {user_prompt}\nModello:"
 
     payload = {
         "model": model,
         "system": system,
-        "prompt": context_prompt,
+        "prompt": user_prompt,
         "stream": True,  # Abilita lo streaming token per token
         "temperature": temp,
     }
@@ -54,10 +56,6 @@ def ask_ollama_stream(user_prompt, system, temp, model=text_model):
                     except json.JSONDecodeError as e:
                         print(f"\n[Errore parsing token JSON]: {e}")
             print()  # newline finale
-
-        # Aggiungiamo la nuova interazione alla cronologia
-        conversation_history.append({"user": user_prompt, "model": risposta.strip()})
-
 
     except requests.exceptions.RequestException as e:
         print(f"Errore nella richiesta: {e}")
@@ -362,14 +360,6 @@ text_field.pack(pady=10)
 # Sezione controlli per Achieve Beliefs
 beliefs_control_frame = tk.Frame(root)
 beliefs_control_frame.pack(pady=10, fill=tk.X, padx=10)
-
-# Prompt predefiniti per ogni tipo
-prediction_prompts = {
-    "beliefs": """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent
-from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).""",
-    "goal": """Formulate an optimal-single goal from the scene (without other text) in the shape of predicate, with single-words label related to an agent from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)""",
-    "action": """Extract the most appropriate action(s) in the shape of predicate, inferred from the context in the form of ACTION(agent, target), without extra explanation."""
-}
 
 # Callback per il cambio del tipo di prediction
 def on_prediction_type_change(value):
