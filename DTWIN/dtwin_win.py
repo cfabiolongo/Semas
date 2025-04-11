@@ -232,6 +232,7 @@ def edit_beliefs_prompt():
 root = tk.Tk()
 root.title("DTwin Assessment")
 root.geometry("1200x800")
+root.resizable(False, False)
 
 # Layout a due colonne: immagine a sinistra, box etichette a destra
 top_frame = tk.Frame(root)
@@ -345,7 +346,7 @@ prompt_entry.insert(0, image_prompt)
 prompt_entry.pack(side="left")
 
 # Campo temperatura
-tk.Label(control_frame, text="Temperatura:").pack(side="left", padx=(10, 2))
+tk.Label(control_frame, text="Temperature:").pack(side="left", padx=(10, 2))
 temp_entry = tk.Entry(control_frame, width=5)
 temp_entry.insert(0, image_temp)
 temp_entry.pack(side="left")
@@ -384,11 +385,11 @@ beliefs_prompt_entry.insert(0, prediction_prompts["beliefs"])  # Default prompt
 beliefs_prompt_entry.pack(side="left")
 
 # Bottone per modificare il beliefs_prompt
-edit_button = tk.Button(beliefs_control_frame, text="Modifica", command=edit_beliefs_prompt)
+edit_button = tk.Button(beliefs_control_frame, text="Change", command=edit_beliefs_prompt)
 edit_button.pack(side="left", padx=5)
 
 # Campo temperatura per beliefs
-tk.Label(beliefs_control_frame, text="Temperatura:").pack(side="left", padx=(10, 2))
+tk.Label(beliefs_control_frame, text="Temperature:").pack(side="left", padx=(10, 2))
 beliefs_temp_entry = tk.Entry(beliefs_control_frame, width=5)
 beliefs_temp_entry.insert(0, beliefs_temp)
 beliefs_temp_entry.pack(side="left")
