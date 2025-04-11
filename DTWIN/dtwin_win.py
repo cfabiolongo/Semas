@@ -11,11 +11,6 @@ import json
 # Endpoint locale di Ollama
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
-# CONTEXTO GLOBALE
-system = """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent
-from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).
-"""
-
 # Goal system
 # Formulate an optimal-single goal from the scene (without other text) in the shape of predicate, with single-words label related to an agent from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)"
 
@@ -161,8 +156,8 @@ def achieve_beliefs():
 def run_beliefs_inference(prompt, system, temp):
 
     print(f"\nAchieving beliefs prediction with temperature {temp}...")
-    print(prompt)
-    print(system)
+    print(f"system: {system}")
+    print(f"prompt: {prompt}")
     outcome = ask_ollama_stream(prompt, system, temp)
     root.after(0, lambda: update_beliefs_result(outcome))
 
@@ -240,9 +235,90 @@ root = tk.Tk()
 root.title("DTwin Assessment")
 root.geometry("1200x900")
 
+# Layout a due colonne: immagine a sinistra, box etichette a destra
+top_frame = tk.Frame(root)
+top_frame.pack(pady=10)
+
+# Frame sinistro: immagine
+left_frame = tk.Frame(top_frame)
+left_frame.pack(side=tk.LEFT, padx=20)
+
+# Frame destro: etichette Belief, Goal, Action, Plan
+# Frame destro con bordo, titolo e stile migliorato
+right_frame = tk.LabelFrame(top_frame, text="🧠 Agent Mental State", padx=20, pady=20,
+                            font=("Arial", 14, "bold"), labelanchor="n")
+right_frame.pack(side="left", fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+# Caricamento e posizionamento immagine nel frame sinistro
+def load_image(image_path):
+    if os.path.exists(image_path):
+        img = Image.open(image_path)
+        img = img.resize((300, 225), Image.Resampling.LANCZOS)
+        photo = ImageTk.PhotoImage(img)
+
+        image_label = tk.Label(left_frame, image=photo)
+        image_label.image = photo  # Previene garbage collection
+        image_label.pack()
+    else:
+        image_label = tk.Label(left_frame, text="Immagine non trovata")
+        image_label.pack()
+
+# Aggiunta delle label nel frame destro
+# Label e TextField dinamici nel frame destro
+# Funzione per aggiungere un campo con label e text box espanso
+def add_labeled_field(parent, label_text_with_emoji):
+    frame = tk.Frame(parent)
+    frame.pack(anchor="w", pady=15, fill=tk.X, expand=True)
+
+    # Label ampia e chiara
+    tk.Label(frame, text=label_text_with_emoji, width=12, anchor="w", font=("Arial", 13, "bold")).pack(side="left",
+                                                                                                       padx=(0, 10))
+
+    # Campo testo più ampio
+    text = tk.Text(frame, height=2, width=80, wrap=tk.WORD, font=("Arial", 12))
+    text.pack(side="left", fill=tk.X, expand=True)
+
+    return text
+
+
+def on_acquire_image():
+    print("Acquire image clicked")
+    # Qui puoi aggiungere il codice per acquisire un'immagine dalla webcam o altro
+    # Per esempio, puoi aggiornare image_path e ricaricare l'immagine:
+    # image_path = "images/immagine_webcam_nuova.jpg"
+    # load_image(image_path)
+
+
+# Funzione di esempio per aggiungere beliefs
+def add_belief_action():
+    print("Add Beliefs action triggered")
+    # Qui puoi aggiungere logica per aggiungere un belief
+
+# Funzione di esempio per cambiare il goal
+def change_goal_action():
+    print("Change Goal action triggered")
+    # Qui puoi aggiungere logica per cambiare il goal
+
+# Funzione di esempio per aggiungere una nuova azione
+def add_action_action():
+    print("Add Action action triggered")
+    # Qui puoi aggiungere logica per aggiungere un'azione
+
+
+
+# Campi con icone
+belief_field = add_labeled_field(right_frame, "🧠 Belief")
+goal_field = add_labeled_field(right_frame, "🎯 Goal")
+action_field = add_labeled_field(right_frame, "⚙️ Action")
+plan_field = add_labeled_field(right_frame, "📋 Plan")
+
 # Percorso dell'immagine .jpg
 image_path = "images/immagine_webcam.jpg"  # <-- Cambia con il percorso della tua immagine
 load_image(image_path)
+
+# Bottone "Acquire image" sotto l'immagine
+acquire_button = tk.Button(left_frame, text="Acquire image", command=on_acquire_image)
+acquire_button.pack(pady=(5, 20))
 
 # Frame principale per i controlli
 control_frame = tk.Frame(root)
@@ -265,7 +341,7 @@ temp_entry.insert(0, image_temp)
 temp_entry.pack(side="left")
 
 # Aggiunta della label "Prediction" sopra il text_field
-tk.Label(root, text="Prediction ("+multimodal_model+")", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+tk.Label(root, text="Multi-modal inference ("+multimodal_model+")", font=("Arial", 14, "bold")).pack(pady=(10, 5))
 
 # Campo di testo per il risultato dell'inferenza
 text_field = tk.Text(root, height=4, width=140, wrap=tk.WORD)
@@ -275,14 +351,34 @@ text_field.pack(pady=10)
 beliefs_control_frame = tk.Frame(root)
 beliefs_control_frame.pack(pady=10, fill=tk.X, padx=10)
 
+# Prompt predefiniti per ogni tipo
+prediction_prompts = {
+    "beliefs": """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent
+from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).""",
+    "goal": """Formulate an optimal-single goal from the scene (without other text) in the shape of predicate, with single-words label related to an agent from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)""",
+    "action": """Extract the most appropriate action(s) in the shape of predicate, inferred from the context in the form of ACTION(agent, target), without extra explanation."""
+}
+
+# Callback per il cambio del tipo di prediction
+def on_prediction_type_change(value):
+    beliefs_prompt_entry.delete(0, tk.END)
+    beliefs_prompt_entry.insert(0, prediction_prompts.get(value, ""))
+
 # Bottone "Achieve Beliefs"
-achieve_beliefs_button = tk.Button(beliefs_control_frame, text="Achieve Beliefs", command=achieve_beliefs)
-achieve_beliefs_button.pack(anchor="w", padx=10, pady=(0, 5))
+achieve_beliefs_button = tk.Button(beliefs_control_frame, text="Achieve", command=achieve_beliefs)
+achieve_beliefs_button.pack(side="left", padx=(5, 10), pady=(0, 5))
+
+# Menù a tendina per selezione tipo prediction
+tk.Label(beliefs_control_frame, text="Prediction type:").pack(side="left")
+prediction_type_var = tk.StringVar(root)
+prediction_type_var.set("beliefs")  # default
+prediction_menu = tk.OptionMenu(beliefs_control_frame, prediction_type_var, "beliefs", "goal", "action", command=on_prediction_type_change)
+prediction_menu.pack(side="left")
 
 # Campo prompt per beliefs
 tk.Label(beliefs_control_frame, text="System:").pack(side="left", padx=(10, 2))
-beliefs_prompt_entry = tk.Entry(beliefs_control_frame, width=100)
-beliefs_prompt_entry.insert(0, system)
+beliefs_prompt_entry = tk.Entry(beliefs_control_frame, width=65)
+beliefs_prompt_entry.insert(0, prediction_prompts["beliefs"])  # Default prompt
 beliefs_prompt_entry.pack(side="left")
 
 # Bottone per modificare il beliefs_prompt
@@ -296,13 +392,28 @@ beliefs_temp_entry.insert(0, beliefs_temp)
 beliefs_temp_entry.pack(side="left")
 
 # Aggiunta della label "Prediction" sopra il text_field
-tk.Label(root, text="Extracted beliefs from the Prediction ("+text_model+")", font=("Arial", 14, "bold")).pack(pady=(10, 5))
+tk.Label(root, text="Inference from Multi-modal inference ("+text_model+")", font=("Arial", 14, "bold")).pack(pady=(10, 5))
 
 
 # Campo di testo per il risultato dei beliefs
 beliefs_text_field = tk.Text(root, height=4, width=140, wrap=tk.WORD)
 beliefs_text_field.pack(padx=10)
 beliefs_text_field.config(state="disabled", fg="black")
+
+# Frame orizzontale per i pulsanti
+buttons_frame = tk.Frame(root)
+buttons_frame.pack(pady=(5, 10), anchor="w", padx=10)
+
+# Aggiungi i pulsanti nel frame orizzontale
+add_beliefs_button = tk.Button(buttons_frame, text="Add beliefs", command=lambda: add_belief_action())
+add_beliefs_button.pack(side="left", padx=(0, 10))
+
+change_goal_button = tk.Button(buttons_frame, text="Change Goal", command=lambda: change_goal_action())
+change_goal_button.pack(side="left", padx=(0, 10))
+
+add_action_button = tk.Button(buttons_frame, text="Add Action", command=lambda: add_action_action())
+add_action_button.pack(side="left", padx=(0, 10))
+
 
 # Avvio del loop dell'interfaccia
 root.mainloop()
