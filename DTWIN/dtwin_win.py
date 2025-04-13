@@ -6,6 +6,9 @@ import base64
 import requests
 import threading
 import json
+import cv2
+from datetime import datetime
+
 
 
 # Endpoint locale di Ollama
@@ -29,8 +32,8 @@ beliefs_temp = "0.8"
 # Prompt predefiniti per ogni tipo
 prediction_prompts = {
     "beliefs": """Extract only beliefs separated by commas (without other text), and single-word (possible other words as additional belief arguments), related to an actor from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ ACTOR(CAR),  RUN(CAR, HIGHWAY).""",
-    "goal": """Formulate a single goal for an external agent observing the described scene. No additional text.""",
-    "action": """Formulate very briefly the most appropriate action to achieve the goal , without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb and X=object of the action."""
+    "goal": """Formulate briefly a single goal for an external agent observing the described scene. No additional text.""",
+    "action": """Formulate very briefly the most appropriate action to achieve the goal for an agent in front of the scene, without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb and X=object of the action."""
 }
 
 # Manteniamo il contesto globale delle interazioni
@@ -238,28 +241,30 @@ right_frame = tk.LabelFrame(top_frame, text="🧠 Agent Mental State", padx=20, 
                             font=("Arial", 14, "bold"), labelanchor="n")
 right_frame.pack(side="left", fill=tk.BOTH, expand=True, padx=20, pady=20)
 
+
+button_frame = tk.Frame(left_frame)
+# Aggiungi i bottoni al button_frame...
+button_frame.pack(side=tk.TOP)
+
 # Caricamento e posizionamento immagine nel frame sinistro
 def load_image(image_path):
     global image_label
+
+    # Se esiste già un'immagine, la rimuoviamo
+    if image_label is not None:
+        image_label.destroy()
+
     if os.path.exists(image_path):
         img = Image.open(image_path)
         img = img.resize((300, 225), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(img)
 
-        if image_label is None:
-            image_label = tk.Label(left_frame, image=photo)
-            image_label.image = photo  # Previene garbage collection
-            image_label.pack()
-        else:
-            image_label.configure(image=photo)
-            image_label.image = photo  # Aggiorna l'immagine mantenendo il riferimento
+        image_label = tk.Label(left_frame, image=photo)
+        image_label.image = photo  # Previene garbage collection
+        image_label.pack(before=button_frame)
     else:
-        if image_label is None:
-            image_label = tk.Label(left_frame, text="Immagine non trovata")
-            image_label.pack()
-        else:
-            image_label.configure(text="Immagine non trovata")
-
+        image_label = tk.Label(left_frame, text="Immagine non trovata")
+        image_label.pack(before=button_frame)
 
 # Aggiunta delle label nel frame destro
 # Label e TextField dinamici nel frame destro
@@ -280,10 +285,37 @@ def add_labeled_field(parent, label_text_with_emoji):
 
 def on_acquire_image():
     print("Acquire image clicked")
-    # Qui puoi aggiungere il codice per acquisire un'immagine dalla webcam o altro
-    # Per esempio, puoi aggiornare image_path e ricaricare l'immagine:
-    # image_path = "images/immagine_webcam_nuova.jpg"
-    # load_image(image_path)
+
+    cap = cv2.VideoCapture(0)  # Usa la webcam di default
+
+    if not cap.isOpened():
+        print("Errore: impossibile accedere alla webcam")
+        return
+
+    ret, frame = cap.read()
+    if ret:
+        # Salva l'immagine acquisita
+
+        # Ottieni data e ora correnti in formato breve
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        # Definisci il nome del file con timestamp
+        acquired_image_path = f"images/webcam_{timestamp}.jpg"
+
+        cv2.imwrite(acquired_image_path, frame)
+
+        # Rilascia la webcam
+        cap.release()
+        cv2.destroyAllWindows()
+
+        # Aggiorna il path globale e carica l'immagine acquisita
+        global image_path
+        image_path = acquired_image_path
+        load_image(image_path)
+    else:
+        print("Errore nell'acquisizione dell'immagine")
+        cap.release()
+        cv2.destroyAllWindows()
 
 
 # Funzione di esempio per aggiungere beliefs
@@ -323,7 +355,7 @@ action_field = add_labeled_field(right_frame, "⚙️ Action:")
 plan_field = add_labeled_field(right_frame, "📋 Plan:")
 
 # Percorso dell'immagine .jpg
-image_path = "images/immagine_webcam.jpg"  # <-- Cambia con il percorso della tua immagine
+image_path = "images/noimage.jpg"  # <-- Cambia con il percorso della tua immagine
 load_image(image_path)
 
 def on_select_images():
