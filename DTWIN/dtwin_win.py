@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import Toplevel, filedialog
+
+# pip install pillow
 from PIL import Image, ImageTk
 import os
 import base64
 import requests
 import threading
 import json
+# pip install opencv-python
 import cv2
 from datetime import datetime
 
