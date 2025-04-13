@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Toplevel
+from tkinter import Toplevel, filedialog
 from PIL import Image, ImageTk
 import os
 import base64
@@ -11,11 +11,16 @@ import json
 # Endpoint locale di Ollama
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
+image_label = None  # dichiarazione globale
+
 # Goal system
 # Formulate an optimal-single goal from the scene (without other text) in the shape of predicate, with single-words label related to an agent from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)"
 
-multimodal_model = "llava:13b-v1.6-vicuna-q8_0"
-text_model = "qwen2.5:14b-instruct-q8_0"
+multimodal_model = "llava:13b-v1.5-q6_K"
+text_model = "mistral:latest"
+
+# home: llava:13b-v1.5-q6_K, llama3:8b-instruct-q8_0
+# work: llava:13b-v1.6-vicuna-q8_0, qwen2.5:14b-instruct-q8_0
 
 image_prompt = "Describe briefly the picture, with no further text."
 image_temp = "0.8"
@@ -23,9 +28,9 @@ beliefs_temp = "0.8"
 
 # Prompt predefiniti per ogni tipo
 prediction_prompts = {
-    "beliefs": """Extract only beliefs (without other text), and single-word (possible other words as additional belief arguments), related to an agent from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY).""",
-    "goal": """Formulate a single goal from the scene in the shape of predicate. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY). No additional text.""",
-    "action": """Formulate very briefly the most appropriate action to achieve the goal in the described scene, without extra explanation.."""
+    "beliefs": """Extract only beliefs separated by commas (without other text), and single-word (possible other words as additional belief arguments), related to an actor from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ ACTOR(CAR),  RUN(CAR, HIGHWAY).""",
+    "goal": """Formulate a single goal for an external agent observing the described scene. No additional text.""",
+    "action": """Formulate very briefly the most appropriate action to achieve the goal , without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb and X=object of the action."""
 }
 
 # Manteniamo il contesto globale delle interazioni
@@ -170,21 +175,6 @@ def update_beliefs_result(descrizione):
 
 # === Funzioni per l'interfaccia grafica ===
 
-# Caricamento dell'immagine
-def load_image(image_path):
-    if os.path.exists(image_path):
-        img = Image.open(image_path)
-        img = img.resize((300, 225), Image.Resampling.LANCZOS)
-        photo = ImageTk.PhotoImage(img)
-
-        image_label = tk.Label(root, image=photo)
-        image_label.image = photo  # Previene garbage collection
-        image_label.pack(pady=10)
-    else:
-        image_label = tk.Label(root, text="Immagine non trovata")
-        image_label.pack(pady=10)
-
-
 # Funzione per aprire la finestra di dialogo per modificare beliefs_prompt
 def edit_beliefs_prompt():
     # Crea una finestra di dialogo personalizzata
@@ -250,17 +240,26 @@ right_frame.pack(side="left", fill=tk.BOTH, expand=True, padx=20, pady=20)
 
 # Caricamento e posizionamento immagine nel frame sinistro
 def load_image(image_path):
+    global image_label
     if os.path.exists(image_path):
         img = Image.open(image_path)
         img = img.resize((300, 225), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(img)
 
-        image_label = tk.Label(left_frame, image=photo)
-        image_label.image = photo  # Previene garbage collection
-        image_label.pack()
+        if image_label is None:
+            image_label = tk.Label(left_frame, image=photo)
+            image_label.image = photo  # Previene garbage collection
+            image_label.pack()
+        else:
+            image_label.configure(image=photo)
+            image_label.image = photo  # Aggiorna l'immagine mantenendo il riferimento
     else:
-        image_label = tk.Label(left_frame, text="Immagine non trovata")
-        image_label.pack()
+        if image_label is None:
+            image_label = tk.Label(left_frame, text="Immagine non trovata")
+            image_label.pack()
+        else:
+            image_label.configure(text="Immagine non trovata")
+
 
 # Aggiunta delle label nel frame destro
 # Label e TextField dinamici nel frame destro
@@ -327,9 +326,29 @@ plan_field = add_labeled_field(right_frame, "📋 Plan:")
 image_path = "images/immagine_webcam.jpg"  # <-- Cambia con il percorso della tua immagine
 load_image(image_path)
 
-# Bottone "Acquire image" sotto l'immagine
-acquire_button = tk.Button(left_frame, text="Acquire image", command=on_acquire_image)
-acquire_button.pack(pady=(5, 20))
+def on_select_images():
+    file_paths = filedialog.askopenfilenames(
+        title="Seleziona immagini",
+        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")]
+    )
+    if file_paths:
+        print("Selected images:")
+        for path in file_paths:
+            print(path)
+        # Volendo puoi caricare la prima immagine selezionata
+        global image_path
+        image_path = file_paths[0]
+        load_image(image_path)
+
+
+button_frame = tk.Frame(left_frame)
+button_frame.pack(pady=(5, 20))
+
+acquire_button = tk.Button(button_frame, text="Acquire image", command=on_acquire_image)
+acquire_button.pack(side="left", padx=5)
+
+select_button = tk.Button(button_frame, text="Select images", command=on_select_images)
+select_button.pack(side="left", padx=5)
 
 # Frame principale per i controlli
 control_frame = tk.Frame(root)
