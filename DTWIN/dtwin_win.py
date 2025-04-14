@@ -15,6 +15,7 @@ from datetime import datetime
 
 
 # Endpoint locale di Ollama
+OLLAMA_API_URL_MULTI = "http://172.16.61.73:11434/api/generate"
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
 image_label = None  # dichiarazione globale
@@ -22,11 +23,11 @@ image_label = None  # dichiarazione globale
 # Goal system
 # Formulate an optimal-single goal from the scene (without other text) in the shape of predicate, with single-words label related to an agent from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)"
 
-multimodal_model = "llava:13b-v1.6-vicuna-q8_0"
+multimodal_model = "llava:34b-v1.6-fp16"
 text_model = "qwen2.5:14b-instruct-q8_0"
 
 # home: llava:13b-v1.5-q6_K, llama3:8b-instruct-q8_0
-# work: llava:13b-v1.6-vicuna-q8_0, qwen2.5:14b-instruct-q8_0
+# work: llava:34b-v1.6-fp16, llava:13b-v1.6-vicuna-q8_0, qwen2.5:14b-instruct-q8_0
 
 image_prompt = "Describe briefly the picture, with no further text."
 image_temp = "0.8"
@@ -82,7 +83,7 @@ def image_to_base64(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 
-def describe_image(image_path, prompt, temp, model=multimodal_model):
+def describe_image(OLLAMA_API_URL_MULTI, image_path, prompt, temp, model=multimodal_model):
     image_base64 = image_to_base64(image_path)
 
     # Messaggio da inviare al modello
@@ -95,7 +96,7 @@ def describe_image(image_path, prompt, temp, model=multimodal_model):
     }
 
     try:
-        response = requests.post("http://localhost:11434/api/generate", json=data)
+        response = requests.post(OLLAMA_API_URL_MULTI, json=data)
 
         if response.status_code == 200:
             result = response.json()
@@ -127,7 +128,7 @@ def run_inference():
         temp = 0.7  # valore di default se la temperatura non è valida
     # Esegue la chiamata LLM
     print(f"\nAchieving image prediction with temperature {temp}...")
-    descrizione = describe_image(image_path, prompt, temp)
+    descrizione = describe_image(OLLAMA_API_URL_MULTI, image_path, prompt, temp)
 
     # Dopo l’inferenza, aggiorna la GUI nel thread principale
     root.after(0, lambda: update_result(descrizione))
