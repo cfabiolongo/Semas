@@ -22,8 +22,8 @@ image_label = None  # dichiarazione globale
 # Goal system
 # Formulate an optimal-single goal from the scene (without other text) in the shape of predicate, with single-words label related to an agent from the text of the scene. Verbs can have two arguments. For example: "The car runs on the highway —→ AGENT(CAR),  RUN(CAR, HIGHWAY)"
 
-multimodal_model = "llava:13b-v1.5-q6_K"
-text_model = "mistral:latest"
+multimodal_model = "llava:13b-v1.6-vicuna-q8_0"
+text_model = "qwen2.5:14b-instruct-q8_0"
 
 # home: llava:13b-v1.5-q6_K, llama3:8b-instruct-q8_0
 # work: llava:13b-v1.6-vicuna-q8_0, qwen2.5:14b-instruct-q8_0
@@ -34,9 +34,9 @@ beliefs_temp = "0.8"
 
 # Prompt predefiniti per ogni tipo
 prediction_prompts = {
-    "beliefs": """Extract only beliefs separated by commas (without other text), and single-word (possible other words as additional belief arguments), related to an actor from the text of a scene beliefs related to verb can have two arguments. For example: The car runs on the highway —→ ACTOR(CAR),  RUN(CAR, HIGHWAY).""",
+    "beliefs": """Extract only beliefs separated by commas (without other text), and single-word (possible other words as additional belief arguments), related to an actor from the text of a scene beliefs related to verb can have two arguments. The belief ACTOR(X) must be present, where X is the main subject of the scene. For example: The car runs on the highway —→ ACTOR(CAR),  RUN(CAR, HIGHWAY).""",
     "goal": """Formulate briefly a single goal for an external agent observing the described scene. No additional text.""",
-    "action": """Formulate very briefly the most appropriate action to achieve the goal for an agent in front of the scene, without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb and X=object of the action."""
+    "action": """Formulate very briefly the most appropriate action to achieve the goal for an agent before the scene, without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb, ACTOR(X), where X is the man subject object of the action (in capital). Non other text is admitted."""
 }
 
 # Manteniamo il contesto globale delle interazioni
