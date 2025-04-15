@@ -12,7 +12,8 @@ import json
 import cv2
 from datetime import datetime
 
-
+# server:
+# OLLAMA_API_URL_MULTI = "http://172.16.61.73:11434/api/generate"
 
 # Endpoint locale di Ollama
 OLLAMA_API_URL_MULTI = "http://172.16.61.73:11434/api/generate"
@@ -26,18 +27,23 @@ image_label = None  # dichiarazione globale
 multimodal_model = "llava:34b-v1.6-fp16"
 text_model = "qwen2.5:14b-instruct-q8_0"
 
-# home: llava:13b-v1.5-q6_K, llama3:8b-instruct-q8_0
-# work: llava:34b-v1.6-fp16, llava:13b-v1.6-vicuna-q8_0, qwen2.5:14b-instruct-q8_0
+# home:
+# vision: llava:13b-v1.5-q6_K
+# text: llama3:8b-instruct-q8_0
 
-image_prompt = "Describe briefly the picture, with no further text."
+# work:
+# vision: llava:34b-v1.6-fp16, llava:13b-v1.6-vicuna-q8_0,  llama3.2-vision:11b-instruct-q8_0
+# text: llama3.3:70b-instruct-fp16, qwen2.5:14b-instruct-q8_0
+
+image_prompt = "Provide a brief list of subjects and actions from the picture, with no further text."
 image_temp = "0.8"
 beliefs_temp = "0.8"
 
 # Prompt predefiniti per ogni tipo
 prediction_prompts = {
     "beliefs": """Extract only beliefs separated by commas (without other text), and single-word (possible other words as additional belief arguments), related to an actor from the text of a scene beliefs related to verb can have two arguments. The belief ACTOR(X) must be present, where X is the main subject of the scene. For example: The car runs on the highway —→ ACTOR(CAR),  RUN(CAR, HIGHWAY).""",
-    "goal": """Formulate briefly a single goal for an external agent observing the described scene. No additional text.""",
-    "action": """Formulate very briefly the most appropriate action to achieve the goal for an agent before the scene, without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb, ACTOR(X) must be present, with X is the main object of the action (in capital). No other text is admitted."""
+    "goal": """You are a virtual assistant. Formulate briefly a single goal to carry out for the described scene. No additional text.""",
+    "action": """You are a virtual assistant. Formulate very briefly the most appropriate action to achieve the Goal, for the described scene, without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb, with X the object of the action (in capital). No other text is admitted."""
 }
 
 # Manteniamo il contesto globale delle interazioni
@@ -93,7 +99,8 @@ def describe_image(OLLAMA_API_URL_MULTI, image_path, prompt, temp, model=multimo
         "prompt": prompt,
         "images": [image_base64],
         "temperature": temp,
-        "stream": False
+        "stream": False,
+        "top_k": 0,
     }
 
     try:
