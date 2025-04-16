@@ -1,13 +1,11 @@
 import tkinter as tk
 from tkinter import Toplevel, filedialog
+from ollama_inference import ask_ollama_stream, describe_image
 
 # pip install pillow
 from PIL import Image, ImageTk
 import os
-import base64
-import requests
 import threading
-import json
 # pip install opencv-python
 import cv2
 from datetime import datetime
@@ -45,75 +43,6 @@ prediction_prompts = {
     "goal": """You are a virtual assistant. Formulate briefly a single goal to carry out for the described scene. No additional text.""",
     "action": """You are a virtual assistant. Formulate very briefly the most appropriate action to achieve the Goal, for the described scene, without additional text or explanation. Each action must be in the a predicate ACTION(X), where ACTION=verb, with X the object of the action (in capital). No other text is admitted."""
 }
-
-# Manteniamo il contesto globale delle interazioni
-conversation_history = []
-
-# Funzione per inviare richieste in streaming
-def ask_ollama_stream(user_prompt, system, temp, model=text_model):
-    # Costruiamo il prompt cumulativo
-
-    payload = {
-        "model": model,
-        "system": system,
-        "prompt": user_prompt,
-        "stream": True,  # Abilita lo streaming token per token
-        "temperature": temp,
-        "top_k": 0,
-    }
-    risposta = ""
-    try:
-        with requests.post(OLLAMA_API_URL, json=payload, stream=True) as response:
-            response.raise_for_status()
-            for line in response.iter_lines():
-                if line:
-                    try:
-                        token_json = json.loads(line.decode('utf-8'))
-                        token = token_json.get("response", "")
-                        print(token, end="", flush=True)
-                        risposta += token
-                    except json.JSONDecodeError as e:
-                        print(f"\n[Errore parsing token JSON]: {e}")
-            print()  # newline finale
-
-    except requests.exceptions.RequestException as e:
-        print(f"Errore nella richiesta: {e}")
-    return risposta
-
-
-
-
-# === Funzioni per la gestione dell'immagine e inferenza ===
-
-def image_to_base64(image_path):
-    with open(image_path, "rb") as img_file:
-        return base64.b64encode(img_file.read()).decode('utf-8')
-
-
-def describe_image(OLLAMA_API_URL_MULTI, image_path, prompt, temp, model=multimodal_model):
-    image_base64 = image_to_base64(image_path)
-
-    # Messaggio da inviare al modello
-    data = {
-        "model": model,
-        "prompt": prompt,
-        "images": [image_base64],
-        "temperature": temp,
-        "stream": False,
-        "top_k": 0,
-    }
-
-    try:
-        response = requests.post(OLLAMA_API_URL_MULTI, json=data)
-
-        if response.status_code == 200:
-            result = response.json()
-            return result.get("response", "Nessuna risposta dal modello.")
-        else:
-            return f"Errore: {response.status_code} - {response.text}"
-    except requests.exceptions.ConnectionError:
-        return "Errore: impossibile connettersi a Ollama. Verifica che sia in esecuzione su http://localhost:11434."
-
 
 # === Funzioni per Achieve ===
 
