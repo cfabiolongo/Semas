@@ -5,6 +5,7 @@ import threading
 from phidias.Types import *
 import xml.etree.ElementTree as ET
 from phidias.Main import *
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 from flask import Flask, request, jsonify
@@ -19,6 +20,7 @@ config.read('config.ini')
 # ONTOLOGY section
 FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
+TRIPLE_STORE = config.get('ONTOLOGY', 'TRIPLE_STORE')
 
 # RESTful service
 REST_ACTIVE = config.getboolean('REST', 'REST_ACTIVE')
@@ -180,7 +182,7 @@ class saveOnto(Action):
 # ----------------------------------
 
 
-class assert_beliefs_triples(Action):
+class assert_beliefs_local_triples(Action):
     """create sparql query from MST"""
     def execute(self):
 
@@ -217,6 +219,46 @@ class assert_beliefs_triples(Action):
             obj = obj.split("'")[1]
 
             self.assert_belief(TRIPLE(subj, prop, obj))
+
+
+
+
+class assert_beliefs_triples(Action):
+    """create sparql query from MST, querying a remote GraphDB"""
+
+    def execute(self):
+        q = PREFIX + f"""
+        SELECT ?subj ?prop ?obj WHERE {{
+            ?subj rdf:type ?subclass .
+            ?subclass rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .
+            ?subj ?prop ?obj .
+            ?obj rdf:type ?subclass2 .
+            ?subclass2 rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .
+        }}
+        """
+        print(f"\nQUERY: {q}")
+        print(f"\nTriples import in progress......")
+
+        # Imposta il wrapper SPARQL verso il tuo endpoint GraphDB
+        sparql = SPARQLWrapper(TRIPLE_STORE)
+        sparql.setQuery(q)
+        sparql.setReturnFormat(JSON)
+
+        try:
+            results = sparql.query().convert()
+
+            print(f"\n\nImported triples: {len(results['results']['bindings'])}")
+
+            for res in results["results"]["bindings"]:
+                subj = res["subj"]["value"]
+                prop = res["prop"]["value"].split("#")[-1]  # prendi solo il nome locale
+                obj = res["obj"]["value"]
+
+                self.assert_belief(TRIPLE(subj, prop, obj))
+
+        except Exception as e:
+            print(f"Errore durante la query SPARQL: {e}")
+
 
 # Funzione per avviare il server Flask in background
 

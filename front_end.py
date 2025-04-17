@@ -13,6 +13,7 @@ class init(Procedure): pass
 
 # Processing beliefs
 class load(Procedure): pass
+class load_local(Procedure): pass
 
 # Import OWL triples
 class pre_process(Procedure): pass
@@ -20,11 +21,12 @@ class pre_process(Procedure): pass
 class REST(Belief): pass
 
 
-# World initialization
+# World initialization (only for local usage ontologies)
 init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 
 # Importing related triples
-load() >> [show_line("\nAsserting all OWL 2 beliefs triples...\n"), assert_beliefs_triples(), pre_process()]
+load() >> [show_line("\nAsserting all OWL 2 beliefs from triple-store...\n"), assert_beliefs_triples(), pre_process()]
+load_local() >> [show_line("\nAsserting all OWL 2 beliefs...\n"), assert_beliefs_local_triples(), pre_process()]
 
 # Starting RESTful flask service
 start_rest() >> [show_line("\nStarting RESTful service...\n"), +REST("ACTIVE"), start_rest_service()]
