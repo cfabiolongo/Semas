@@ -171,7 +171,7 @@ This case-study provides a formalization about interactions between Scholars in 
 interaction in specific fields, the best University affiliation.
 
 
-#### Ontology initialization
+#### Ontology initialization (local)
 
 ---------------
 The details of the above formalization are all defined in config.ini. Both OWL 2 ontology and PHIDIAS classes can be initialised with the command *init()* as follows:
@@ -194,7 +194,7 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ![Image 3](images/individuals.png)![Image 4](images/properties.png)
 
-#### Ontology import
+#### Ontology import (local)
 
 ---------------
 
@@ -206,7 +206,7 @@ First, the PHIDIAS Knowledge Base (KB) can be inspected any time with the follow
 The procedure *load()* must be used to import the above ontology into the PHIDIAS environment as follows:
 
 ```sh
-eShell: main > load()
+eShell: main > load_local()
 
 Asserting all OWL 2 beliefs triples...
 Asserting triples ended.
@@ -236,6 +236,34 @@ CoAuthorship('Rocco', 'Misael')         CoAuthorship('Misael', 'Rocco')
 Affiliation('Misael', 'University-of-Catania')Affiliation('Rocco', 'Alma-Mater-Bologna')
 TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artificial-Intelligence')
 TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
+```
+
+#### Triple store GraphDB installation (Docker)
+
+---------------
+On terminal (Semas venv):
+
+```sh
+pip install SPARQLWrapper
+```
+
+On the same path containing docker-compose.yml:
+
+```sh
+docker compose up -d
+```
+
+After container installation, follow the link http://localhost:7200/ and import rdf files to create triple stores.  
+The file config.ini must contain (section [ONTOLOGY]) the triple store address in the idem TRIPLE_STORE.
+
+Afterward, in the Phidias shell, load triples as follows
+
+```sh
+eShell: main > load()
+
+Triples import in progress......
+
+Imported triples: XXXXXX
 ```
 
 #### SEMAS inference
