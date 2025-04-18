@@ -220,7 +220,7 @@ class assert_beliefs_local_triples(Action):
 
 
 class assert_beliefs_triples(Action):
-    """create sparql query from MST, querying a remote GraphDB"""
+    """create sparql query (query folder) from MST, querying a remote GraphDB"""
 
     def execute(self):
 
