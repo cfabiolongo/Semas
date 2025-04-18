@@ -28,9 +28,6 @@ REST_ACTIVE = config.getboolean('REST', 'REST_ACTIVE')
 # REASONING Section
 REASONING_ACTIVE = config.getboolean('REASONING', 'ACTIVE')
 REASONER = config.get('REASONING', 'REASONER').split(",")
-PREFIXES = config.get('REASONING', 'PREFIXES').split(",")
-PREFIX = " ".join(PREFIXES)
-PREFIX = PREFIX + f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
 
 # BDI-CLASSES Section
 ENTITIES = config.get('CLASSES', 'Entities').split(",")
@@ -222,11 +219,19 @@ class assert_beliefs_local_triples(Action):
 class assert_beliefs_triples(Action):
     """create sparql query (query folder) from MST, querying a remote GraphDB"""
 
-    def execute(self):
+    def execute(self, *args):
+        prop = str(args[0]())
+        obj = str(args[1]())
 
-        with open("query/query_local_triples.sparql.txt", "r") as file:
-            q = file.read()
-        print(f"\nQUERY: {q}")
+        print("----------> prop:", prop)
+        print("----------> obj:" , obj)
+
+        with open("query/query_local_triples_coauth.txt", "r") as file:
+            pre_query = file.read()
+
+        q = pre_query.replace('[OBJ]', obj)
+        q = q.replace('[PROP]', prop)
+        print(f"\n{q}")
 
         print(f"\nTriples import in progress......")
 
