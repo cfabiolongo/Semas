@@ -41,7 +41,9 @@ pre_process() >> [show_line("\nAsserting triples ended.\n")]
 
 # Desires/Intentions (shell)
 
-# Publish in the field X (return author/coauthor+university)
+# Publish in the field X
+# e.g. Publicationship('http://fossr.eu/kg/data/topics/2003') ----> Finance
+
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
 
