@@ -1,0 +1,17 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX acad: <http://test.org/academia.owl#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX academia: <http://test.org/scopus_semas_10-authors.owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?subj ?prop ?obj WHERE {
+  ?subj rdf:type ?subclass .
+  ?subclass rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .
+  
+  ?subj acad:isTopAuthorIn <[OBJ]> .
+  
+  BIND(acad:isTopAuthorIn AS ?prop)
+  BIND(<[OBJ]> AS ?obj)
+}
+
