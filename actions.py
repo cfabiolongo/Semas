@@ -186,10 +186,8 @@ class assert_beliefs_local_triples(Action):
     """create sparql query from MST"""
     def execute(self):
 
-        q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
-        q = q + (f"?subj rdf:type ?subclass .  ?subclass rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> ."
-                 f"  ?subj ?prop ?obj ."
-                 f" ?obj rdf:type ?subclass2 .  ?subclass2 rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .") + "}"
+        with open("query_local_triples.sparql.txt", "r") as file:
+            q = file.read()
         print(f"\nQUERY: {q}")
 
         my_world = owlready2.World()
@@ -225,16 +223,11 @@ class assert_beliefs_triples(Action):
     """create sparql query from MST, querying a remote GraphDB"""
 
     def execute(self):
-        q = PREFIX + f"""
-        SELECT ?subj ?prop ?obj WHERE {{
-            ?subj rdf:type ?subclass .
-            ?subclass rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .
-            ?subj ?prop ?obj .
-            ?obj rdf:type ?subclass2 .
-            ?subclass2 rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .
-        }}
-        """
+
+        with open("query/query_local_triples.sparql.txt", "r") as file:
+            q = file.read()
         print(f"\nQUERY: {q}")
+
         print(f"\nTriples import in progress......")
 
         # Imposta il wrapper SPARQL verso il tuo endpoint GraphDB
