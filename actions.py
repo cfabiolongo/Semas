@@ -250,6 +250,8 @@ class assert_beliefs_triples(Action):
         except Exception as e:
             print(f"Errore durante la query SPARQL: {e}")
 
+    print("Triples assertion ended.")
+
 
 # Funzione per avviare il server Flask in background
 
