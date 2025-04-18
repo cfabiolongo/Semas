@@ -187,8 +187,6 @@ class assert_beliefs_local_triples(Action):
     def execute(self):
 
         q = PREFIX + f" SELECT ?subj ?prop ?obj" + " WHERE { "
-        # q = q + f"?subj ?prop ?obj. ?subj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY. ?obj rdf:type/rdfs:subClassOf* {ONTO_NAME}:ENTITY." + "}"
-
         q = q + (f"?subj rdf:type ?subclass .  ?subclass rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> ."
                  f"  ?subj ?prop ?obj ."
                  f" ?obj rdf:type ?subclass2 .  ?subclass2 rdfs:subClassOf+ <http://www.co-ode.org/ontologies/ont.owl#ENTITY> .") + "}"
