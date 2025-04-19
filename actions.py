@@ -216,17 +216,57 @@ class assert_beliefs_local_triples(Action):
 
 
 
-class assert_beliefs_triples(Action):
+class assert_beliefs_triples_subj(Action):
+    """create sparql query (query folder) from MST, querying a remote GraphDB"""
+
+    def execute(self, *args):
+        prop = str(args[0]())
+        subj = str(args[1]())
+
+        print(f"-----------> property: {prop}, subj: {subj}")
+
+        with open("query/query_local_triples_subj.txt", "r") as file:
+            pre_query = file.read()
+
+        q = pre_query.replace('[SUBJ]', subj)
+        q = q.replace('[PROP]', prop)
+        print(f"\n{q}")
+
+        print(f"\nTriples import in progress......")
+
+        # Imposta il wrapper SPARQL verso il tuo endpoint GraphDB
+        sparql = SPARQLWrapper(TRIPLE_STORE)
+        sparql.setQuery(q)
+        sparql.setReturnFormat(JSON)
+
+        try:
+            results = sparql.query().convert()
+
+            print(f"\n\nImported triples: {len(results['results']['bindings'])}")
+
+            for res in results["results"]["bindings"]:
+                subj = res["subj"]["value"]
+                prop = res["prop"]["value"].split("#")[-1]  # prendi solo il nome locale
+                obj = res["obj"]["value"]
+
+                self.assert_belief(TRIPLE(subj, prop, obj))
+
+        except Exception as e:
+            print(f"Errore durante la query SPARQL: {e}")
+
+
+
+
+class assert_beliefs_triples_obj(Action):
     """create sparql query (query folder) from MST, querying a remote GraphDB"""
 
     def execute(self, *args):
         prop = str(args[0]())
         obj = str(args[1]())
 
-        print("----------> prop:", prop)
-        print("----------> obj:" , obj)
+        print(f"-----------> property: {prop}, object: {obj}")
 
-        with open("query/query_local_triples_coauth.txt", "r") as file:
+        with open("query/query_local_triples_obj.txt", "r") as file:
             pre_query = file.read()
 
         q = pre_query.replace('[OBJ]', obj)
@@ -255,7 +295,9 @@ class assert_beliefs_triples(Action):
         except Exception as e:
             print(f"Errore durante la query SPARQL: {e}")
 
-    print("Triples assertion ended.")
+
+
+
 
 
 # Funzione per avviare il server Flask in background
