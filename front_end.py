@@ -12,7 +12,8 @@ def_vars('X', 'Y', 'Z', 'U')
 class init(Procedure): pass
 
 # Processing beliefs
-class load(Procedure): pass
+class load_subj(Procedure): pass
+class load_obj(Procedure): pass
 class load_local(Procedure): pass
 
 # Import OWL triples
@@ -26,8 +27,9 @@ init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(
 
 # Importing all related triples
 # Importing filtered triples
-load(X, Y) >> [show_line("\nAsserting all OWL 2 beliefs related to ",X," and ",Y," from triple-store...\n"), assert_beliefs_triples(X, Y), pre_process()]
-load() >> [show_line("\nAsserting all OWL 2 beliefs from triple-store...\n"), assert_beliefs_triples(), pre_process()]
+load_subj(X, Y) >> [show_line("\nAsserting all OWL 2 beliefs related to ",X," (subj) and ",Y," from triple-store...\n"), assert_beliefs_triples_subj(X, Y), pre_process()]
+load_obj(X, Y) >> [show_line("\nAsserting all OWL 2 beliefs related to ",X," (obj) and ",Y," from triple-store...\n"), assert_beliefs_triples_obj(X, Y), pre_process()]
+load() >> [show_line("\nAsserting all OWL 2 beliefs from triple-store...\n"), assert_beliefs_triples_subj(), pre_process()]
 load_local() >> [show_line("\nAsserting all OWL 2 beliefs...\n"), assert_beliefs_local_triples(), pre_process()]
 
 
@@ -47,10 +49,10 @@ pre_process() >> [show_line("\nAsserting triples ended.\n")]
 # Publish in the field X
 # e.g. BeTopAuthorship('http://fossr.eu/kg/data/topics/2003') ----> Finance
 
-BeTopAuthorship(X) >> [show_line("\nPlanning to be top-author in ",X,"..."), load("acad:isTopAuthorIn", X), FindAffiliation()]
+BeTopAuthorship(X) >> [show_line("\nPlanning to be top-author in ",X,"..."), load_obj("acad:isTopAuthorIn", X), FindRelated(), Publicationship(X)]
 
-FindAffiliation() / ConsiderTopAuthor(X, Y) >> [-ConsiderTopAuthor(X, Y), +TopAuthorship(X, Y), show_line("\nFinding triples related with ",X,"..."), load("acad:hasAffiliationWith", X), load("acad:isCoathorWith", X), FindAffiliation()]
-FindAffiliation() >> [show_line("\nFinding triples related with ",X,"..."), ]
+FindRelated() / ConsiderTopAuthor(X, Y) >> [-ConsiderTopAuthor(X, Y), +TopAuthorship(X, Y), show_line("\nFinding triples related with ",X,"..."), load_subj("acad:hasAffiliationWith", X), load_subj("acad:coAuthorWith", X), load_obj("acad:coAuthorWith", X), FindRelated()]
+FindRelated() >> [show_line("\nFinding triples related with ",X,"..."), ]
 
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
 Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
