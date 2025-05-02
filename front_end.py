@@ -46,8 +46,8 @@ pre_process() >> [show_line("\nAsserting triples ended.\n")]
 # Desires/Intentions (shell)
 
 # Publish in the field X
-# e.g. BeTopAuthorship('http://fossr.eu/kg/data/topics/2003') ----> Finance (e.g.)
-# Assert in shell to handle Selectionshìp beliefs: +Selectionship('http://fossr.eu/kg/data/organizations/60000481') ---> Università degli Studi di Padova (e.g)
+# e.g. BeTopAuthorship('http://fossr.eu/kg/data/topics/2003') ----> Finance
+# Assert in shell to handle Selectionshìp beliefs: e.g. +Selectionship('http://fossr.eu/kg/data/organizations/60000481') ---> Università degli Studi di Padova
 
 BeTopAuthorship(X) >> [show_line("\nPlanning to be top-author in ",X,"..."), load_obj("acad:isTopAuthorIn", X), FindRelated(), Publicationship(X)]
 
