@@ -21,6 +21,7 @@ config.read('config.ini')
 FILE_NAME = config.get('ONTOLOGY', 'FILE_NAME')
 ONTO_NAME = config.get('ONTOLOGY', 'ONTO_NAME')
 TRIPLE_STORE = config.get('ONTOLOGY', 'TRIPLE_STORE')
+REMOTE_SOURCE = config.getboolean('ONTOLOGY', 'REMOTE_SOURCE')
 
 # RESTful service
 REST_ACTIVE = config.getboolean('REST', 'REST_ACTIVE')
@@ -49,6 +50,9 @@ except IOError:
     my_onto.save(file=FILE_NAME, format="rdfxml")
     exit()
 
+class REMOTE(Belief):
+    pass
+
 class start_rest(Procedure): pass
 
 if REST_ACTIVE:
@@ -64,7 +68,6 @@ dict_prop = {}
 # Phidias belief containing OWL triples
 class TRIPLE(Belief):
     pass
-
 
 
 with my_onto:
@@ -186,7 +189,8 @@ class assert_beliefs_local_triples(Action):
         with open("query/query_local_triples_all.txt", "r") as file:
             pre_query = file.read()
 
-        q = pre_query.replace('[ONTO_NAME]', ONTO_NAME)
+        PREFIX = f"PREFIX {ONTO_NAME}: <http://test.org/{FILE_NAME}#> "
+        q = PREFIX + pre_query.replace('[ONTO_NAME]', ONTO_NAME)
         print(f"\nQUERY: {q}")
 
         my_world = owlready2.World()
