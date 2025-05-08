@@ -183,8 +183,10 @@ class assert_beliefs_local_triples(Action):
     """create sparql query from MST"""
     def execute(self):
 
-        with open("query_local_triples.sparql.txt", "r") as file:
-            q = file.read()
+        with open("query/query_local_triples_all.txt", "r") as file:
+            pre_query = file.read()
+
+        q = pre_query.replace('[ONTO_NAME]', ONTO_NAME)
         print(f"\nQUERY: {q}")
 
         my_world = owlready2.World()
