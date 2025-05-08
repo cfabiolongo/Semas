@@ -199,7 +199,7 @@ All OWL beliefs/desires/intentions are defined by properties of individuals whic
 
 ---------------
 
-Triples can be imported from either local or remote source. In case of local ontology, the REMOTE_SOURCE variable in config.ini (group [ONTOLOGY]) must be set with "true", 
+Triples can be imported from either local or remote source. In case of local ontology, REMOTE_SOURCE variable in config.ini (group [ONTOLOGY]) must be set with "true", 
 otherwise with "false". Only in case of local resource (REMOTE_SOURCE = false), ontology must be initialized (whether the .owl file not existing) and loaded with load().
 
 #### Ontology import (local)
