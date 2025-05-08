@@ -238,7 +238,7 @@ TopAuthorship('Fabio', 'Artificial-Intelligence')TopAuthorship('Misael', 'Artifi
 TopAuthorship('Rocco', 'Applied-Ontology')Selectionship('Fabio', 'University-of-Catania')
 ```
 
-#### Triple store GraphDB installation (Docker)
+#### Triple store GraphDB installation (Remote) - Docker
 
 ---------------
 On terminal (Semas venv):
@@ -256,15 +256,6 @@ docker compose up -d
 After container installation, follow the link http://localhost:7200/ and import rdf files to create triple stores.  
 The file config.ini must contain (section [ONTOLOGY]) the triple store address in the idem TRIPLE_STORE.
 
-Afterward, in the Phidias shell, load triples as follows
-
-```sh
-eShell: main > load()
-
-Triples import in progress......
-
-Imported triples: XXXXXX
-```
 
 #### SEMAS inference
 
