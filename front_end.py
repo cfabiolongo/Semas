@@ -10,6 +10,8 @@ def_vars('X', 'Y', 'Z', 'U')
 
 # Ontology intialization
 class init(Procedure): pass
+class start(Procedure): pass
+
 
 # Processing beliefs
 class load_subj(Procedure): pass
@@ -22,6 +24,7 @@ class REST(Belief): pass
 
 
 # World initialization (only for local usage ontologies)
+start() >> [show_line("\nInitialiting config variables...\n"), +REMOTE(str(REMOTE_SOURCE))]
 init() >> [show_line("\nInitialiting Ontology...\n"), initWorld(), declareRules(), saveOnto()]
 load() >> [show_line("\nAsserting all OWL 2 beliefs...\n"), assert_beliefs_local_triples(), pre_process()]
 
@@ -29,7 +32,6 @@ load() >> [show_line("\nAsserting all OWL 2 beliefs...\n"), assert_beliefs_local
 # Importing filtered triples
 load_subj(X, Y) >> [show_line("\nAsserting all OWL 2 beliefs related to ",X," (subj) and ",Y," from triple-store...\n"), assert_beliefs_triples_subj(X, Y), pre_process()]
 load_obj(X, Y) >> [show_line("\nAsserting all OWL 2 beliefs related to ",X," (obj) and ",Y," from triple-store...\n"), assert_beliefs_triples_obj(X, Y), pre_process()]
-
 
 # Starting RESTful flask service
 start_rest() >> [show_line("\nStarting RESTful service...\n"), +REST("ACTIVE"), start_rest_service()]
@@ -42,7 +44,23 @@ pre_process() / TRIPLE(X, "selectedFor", Y) >> [-TRIPLE(X, "selectedFor", Y), +S
 pre_process() >> [show_line("\nAsserting triples ended.\n")]
 
 
-# Desires/Intentions (shell)
+# From local ontology
+
+# Publish in the field X (return coauthor only), e.g.  BeTopAuthorship("http://test.org/academia.owl#Artificial-Intelligence")
+# Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X)) >> [show_line("\nIndirect match: Coauthor with ",Z," if you want to publish in ",X,".\n"), +ProposeCoauthorship(Z, X)]
+
+BeTopAuthorship(X) / REMOTE('False') >> [show_line("\nPlanning to be top-author in ",X,"..."), Publicationship(X)]
+
+# Publish in the field X (return author/coauthor+university)
+Publicationship(X) / (REMOTE('False') & CoAuthorship(Z, Y) & ConsiderTopAuthor(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
+Publicationship(X) / (ConsiderTopAuthor(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -ConsiderTopAuthor(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+
++ProposeCoauthorship(X, Y) / (REMOTE('False') & REST("ACTIVE")) >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n"), build_json_response(Y, X)]
++ProposeCoauthorship(X, Y) / REMOTE('False') >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n")]
+
+
+
+# From remote Triple store
 
 # Publish in the field X
 # e.g. BeTopAuthorship('http://fossr.eu/kg/data/topics/2003') ----> Finance
@@ -56,9 +74,10 @@ FindRelated() >> [show_line("\nRelated triples retrived."), ]
 
 # Inference Stage (IF)
 # comment in case of no Selectionship handling
-Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U) & Selectionship(U)) >> [show_line("Direct match with Selectionship found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+# Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U) & Selectionship(U)) >> [show_line("Direct match with Selectionship found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+
 # comment in case of Selectionship handling
-# Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
 Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
 
 # Updating Triples Stage (UTS)
@@ -68,5 +87,6 @@ Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, 
 
 # Put here desires to automatically execute on start-up
 
+PHIDIAS.achieve(start(), "main")
 #PHIDIAS.achieve(start_rest(), "main")
 #PHIDIAS.achieve(load(), "main")
