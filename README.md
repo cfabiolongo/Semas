@@ -265,7 +265,7 @@ After container installation, follow the link http://localhost:7200/ and import 
 The file config.ini must contain (section [ONTOLOGY]) the triple store address in the idem TRIPLE_STORE.
 
 
-#### SEMAS inference
+#### SEMAS inference (local)
 
 ---------------
 To achieve inference, one of the defined DESIRES must be employed as PHIDIAS Procedure, which are: *Publicationship()*
@@ -280,19 +280,39 @@ Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Di
 +ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n")]
 ```
 
-the outcome will be as follows:
+
+#### SEMAS inference (remote)
+
+---------------
+Similarly to local inference, to achieve inference from a remote triple store set in config.ini (ONTOLOGY)
+execute the following procedure-desire (e.g. for the topic *Finance*):
 
 ```sh
-eShell: main > Publicationship("Applied-Ontology")
-
-Indirect match found at University-of-Catania.
-
-Direct match found at Alma-Mater-Bologna.
-
-Propose co-authorship with Misael to publish in the field of Applied-Ontology.
-
-Propose co-authorship with Rocco to publish in the field of Applied-Ontology.
+BeTopAuthorship('http://fossr.eu/kg/data/topics/2003')
 ```
+
+which involves the following production rules for ATS (Acquiring Triples Stage), IS (Inference Stage), UTS (Update Triples Stage):
+
+```sh
+BeTopAuthorship(X) >> [show_line("\nPlanning to be top-author in ",X,"..."), load_obj("acad:isTopAuthorIn", X), FindRelated(), Publicationship(X)]
+
+# Acquiring Triples Stage (ATS)
+FindRelated() / ConsiderTopAuthor(X, Y) >> [-ConsiderTopAuthor(X, Y), +TopAuthorship(X, Y), show_line("\nFinding triples related with ",X,"..."), load_subj("acad:hasAffiliationWith", X), load_subj("acad:coAuthorWith", X), load_obj("acad:coAuthorWith", X), FindRelated()]
+FindRelated() >> [show_line("\nRelated triples retrived."), ]
+
+# Inference Stage (IS)
+# comment in case of no Selectionship handling
+# Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U) & Selectionship(U)) >> [show_line("Direct match with Selectionship found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+
+# comment in case of Selectionship handling
+Publicationship(X) / (TopAuthorship(Y, X) & Affiliation(Y, U)) >> [show_line("Direct match found at ",U,".\n"), -TopAuthorship(Y, X), +ProposeCoauthorship(Y, X), Publicationship(X)]
+Publicationship(X) / (CoAuthorship(Z, Y) & TopAuthorship(Y, X) & Affiliation(Z, U)) >> [show_line("Indirect match found at ",U,".\n"), -CoAuthorship(Z, Y), +ProposeCoauthorship(Z, X), Publicationship(X)]
+
+# Updating Triples Stage (UTS)
++ProposeCoauthorship(X, Y) / REST("ACTIVE") >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n"), build_json_response(Y, X)]
++ProposeCoauthorship(X, Y) >> [show_line("Propose co-authorship with ",X," to publish in the field of ",Y,".\n")]
+```
+
 
 ### RESTful services
 
